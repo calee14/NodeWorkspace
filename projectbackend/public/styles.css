@@ -8,6 +8,7 @@ body {
 	border-color: blue;*/
 	/*overflow: scroll;*/
 }
+
 /*CSS FOR THE CATEGORY PANELS*/
 .category-holder {
 	/*MARGIN*/
@@ -84,3 +85,5 @@ body {
 .info-image {
 	float: left;
 }
+
+/* END OF CSS PANELS FOR HOME PAGE */

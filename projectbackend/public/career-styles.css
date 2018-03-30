@@ -1,0 +1,126 @@
+
+/* BEGINNING OF CAREER PANELS CSS */
+
+/*CAREER HOLDER*/
+.career-holder {
+    /*HIDE CAREER HOLDERS UNDER HOME BAR*/
+    /*overflow: hidden;*/
+    /*background-color: green;*/ /* for vizualization purposes */
+    margin-right: 25%;
+    margin-left: 25%;
+    /*text-align: center;*/
+    margin-top: 7px;
+    margin-bottom: 7px;
+}
+/*TEXT HOLDER*/
+.text-holder {
+    /*background-color: red;*/ /* for vizualization purposes */
+    display: inline-block;
+    margin: auto;
+    padding: 10px;
+    width: 320px;/* ADD 20 px for padding*/
+    /*BACKGROUND COLOR*/
+    background-color: #FFF;
+    border-radius: 2px;
+    box-shadow: 0px 0px 5px #888888;
+}
+
+/*TEXT HOLDER HEADER*/
+.text-holder h3 {
+    text-align: left;
+}
+/*TEXT HOLDER PARAGRAPH POSITIONING EDIT HOW <p> should look like*/
+.text-holder p {
+    /*width: 300px;*/
+    /*margin-bottom: 5px;
+    padding-bottom: 5px;*/
+    /*max-height: 300px;*/
+    /*overflow: hidden;*/
+    /*padding-right: 10px;
+    padding-left: 10px;*/
+}
+
+.text-holder a {
+    text-align: center;
+}
+.category-shadow {
+    box-shadow: 0px 0px 10px #888888;
+}
+
+/*FOR TEXT EXPANSION */
+/*.small {
+    height: 50px;
+    overflow:hidden;
+}
+.big {
+    height: auto;
+}*/
+/*END OF TEXT EXPANSION CSS*/
+.career-image {
+    /*float: left;*/
+}
+.more-info-text {
+    text-align: left;
+}
+/*TEXT HOLDER PARAGRAPH FONTS: EDIT: TEXT DESGIN*/
+.text-paragraph {
+    text-align: center;
+    /*text-overflow: ellipsis;*/
+    /*content: "";*/
+    /*background: -webkit-linear-gradient(#000, #fff);
+   -webkit-background-clip: text;
+   -webkit-text-fill-color: transparent;*/
+}
+/*FOR THE TEXT PARAGRAPH TO ALIGN LEFT*/
+.text-paragraph p {
+    /*width: 200px;*/
+    overflow: hidden;
+    text-align: left;
+    height: 3em;
+}
+.text-paragraph p:hover {
+    overflow: hidden;
+    text-align: left;
+    height: auto;
+    /*transition: height 4s ease;*/
+}
+/*END OF TEXT HOLDER*/
+
+/*BUTTON*/
+.button {
+    background-color: #44A0FF; /* BlUEISH */
+    border: none;
+    color: white;
+    padding: 16px 32px;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    /*-webkit-transition-duration: 0.4s; *//* Safari */
+    /*transition-duration: 0.4s;*/
+    cursor: pointer;
+}
+
+/*BUTTON ONE*/
+.button1 {
+    background-color: white; 
+    color: black; 
+    border: 2px solid #44A0FF;
+}
+/*BUTTON ONE HOVER*/
+.button1:hover {
+    background-color: #44A0FF;
+    color: white;
+}
+/*BUTTON ONE ACTIVE*/
+.button1:active {
+    transform: scale(0.7);
+}
+
+.hover:active {
+    transform: scale(0.7);
+}
+
+/* END OF CSS FOR CAREER PANELS*/
