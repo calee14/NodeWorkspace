@@ -1,6 +1,16 @@
 
 /* BEGINNING OF CAREER PANELS CSS */
 
+/*CAREER ROW*/
+.career-row {
+    width: 1110px;
+    margin: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding-right: 18px;
+    padding-left: 18px;
+}
+
 /*CAREER HOLDER*/
 .career-holder {
     /*HIDE CAREER HOLDERS UNDER HOME BAR*/
@@ -17,14 +27,20 @@
     /*background-color: red;*/ /* for vizualization purposes */
     display: inline-block;
     margin: auto;
+    margin-right: 18px;
+    margin-left: 18px;
     padding: 10px;
     width: 320px;/* ADD 20 px for padding*/
+    margin: ; /* calculated to fit the career row */
     /*BACKGROUND COLOR*/
     background-color: #FFF;
     border-radius: 2px;
     box-shadow: 0px 0px 5px #888888;
+    float: left;
 }
-
+/*.text-holder:hover {
+    box-shadow: 0px 0px 10px #888888;
+}*/
 /*TEXT HOLDER HEADER*/
 .text-holder h3 {
     text-align: left;
@@ -77,13 +93,14 @@
     overflow: hidden;
     text-align: left;
     height: 3em;
+    transition: height 0.3s;
 }
-.text-paragraph p:hover {
-    overflow: hidden;
-    text-align: left;
-    height: auto;
+/*.text-paragraph p:hover {*/
+    /*overflow: hidden;*/
+    /*text-align: left;*/
+    /*height: auto;*/
     /*transition: height 4s ease;*/
-}
+/*}*/
 /*END OF TEXT HOLDER*/
 
 /*BUTTON*/
