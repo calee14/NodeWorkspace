@@ -26,28 +26,28 @@ function showSlides(n) {
 
 showSlides(slideIndex);
 
-function expandList(hi) {
-  var ul = hi;
-  var li = ul.getElementsByTagName("li");
+function expandList() {
+  var ul = this;
+  var li = this.getElementsByTagName("li");
   for(var i=0;i<li.length;i++) {
     li[i].style.display = "";
   }
   var height = ul.scrollHeight;
-  hi.style.overflow = "";
-  hi.style.height = height + "px";
+  this.style.overflow = "";
+  this.style.height = height + "px";
 }
-function collapseList(hi, initial) {
-  var ul = hi;
-  var li = hi.getElementsByTagName("li");
+function collapseList() {
+  var ul = this;
+  var li = this.getElementsByTagName("li");
   /* Calculating the heights of the lists if collapsed */
   for(var j=0;j<li.length;j++) {
     if(j > 1) {
       li[j].style.display = "none";
     }
   }
-  hi.style.overflow = "hidden";
+  this.style.overflow = "hidden";
   console.log(initial);
-  hi.style.height = initial + "px";
+  this.style.height = "96" + "px";
 }
 
 var lists = document.getElementsByClassName("list");
@@ -61,12 +61,36 @@ for(var i=0;i<lists.length;i++) {
     }
   }
   lists[i].style.overflow = "hidden";
-  var initial = lists[i].scrollHeight;
+  var initial = lists[i].style.height;
   lists[i].style.height = initial + "px";
+  console.log(initial);
   lists[i].addEventListener('mouseenter', function() {
-    expandList(lists[i]);
+    var ul = this;
+    var li = this.getElementsByTagName("li");
+    for(var i=0;i<li.length;i++) {
+      li[i].style.display = "";
+    }
+    var height = ul.scrollHeight;
+    this.style.overflow = "";
+    this.style.height = height + "px";
   }, false);
   lists[i].addEventListener('mouseleave', function() {
-    collapseList(lists[i], initial);
+    var ul = this;
+    var li = this.getElementsByTagName("li");
+    /* Calculating the heights of the lists if collapsed */
+    for(var j=0;j<li.length;j++) {
+      if(j > 1) {
+        li[j].style.display = "none";
+      }
+    }
+    this.style.overflow = "hidden";
+    console.log(initial);
+    this.style.height = "96" + "px";
   }, false);
+  // lists[i].addEventListener('mouseenter', function() {
+  //   expandList(lists[i]);
+  // }, false);
+  // lists[i].addEventListener('mouseleave', function() {
+  //   collapseList(lists[i], initial);
+  // }, false);
 }
