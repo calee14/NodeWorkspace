@@ -15,7 +15,6 @@ function expandText() {
 	var p = this;
     var curHeight = p.height;
     var autoHeight = p.scrollHeight;
-   	console.log(autoHeight);
     p.style.height = autoHeight + "px";
 }
 
@@ -23,7 +22,6 @@ function collapseText() {
 	var p = this;
     var curHeight = p.height;
     var autoHeight = 3;
-   	console.log(autoHeight);
     p.style.height = autoHeight + "em";
 }
 

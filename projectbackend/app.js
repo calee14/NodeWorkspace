@@ -23,6 +23,10 @@ let row = [
 app.get('/hi', function(req, res) {
 	res.render("career", {row: row});
 })
+
+app.get('/career', function(req, res) {
+	res.render("careerinfo");
+})
 /* Hello World (Temporary)*/
 app.get('/Hello World', function(req, res) {
 	res.send("Hello World")
