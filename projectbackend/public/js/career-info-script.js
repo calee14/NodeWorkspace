@@ -26,30 +26,28 @@ function showSlides(n) {
 
 showSlides(slideIndex);
 
-function expandList() {
-  var ul = this;
-  var li = this.getElementsByTagName("li");
-  for(var i=0;i<li.length;i++) {
-    li[i].style.display = "";
-  }
-  var height = ul.scrollHeight;
-  this.style.overflow = "";
-  this.style.height = height + "px";
-}
-function collapseList() {
-  var ul = this;
-  var li = this.getElementsByTagName("li");
-  /* Calculating the heights of the lists if collapsed */
-  for(var j=0;j<li.length;j++) {
-    if(j > 1) {
-      li[j].style.display = "none";
+window.dataStorage = {
+    _storage: new WeakMap(),
+    put: function (element, key, obj) {
+        if (!this._storage.has(key)) {
+            this._storage.set(element, new Map());
+        }
+        this._storage.get(element).set(key, obj);
+    },
+    get: function (element, key) {
+        return this._storage.get(element).get(key);
+    },
+    has: function (element, key) {
+        return this._storage.get(element).has(key);
+    },
+    remove: function (element, key) {
+        var ret = this._storage.get(element).delete(key);
+        if (!this._storage.get(key).size === 0) {
+            this._storage.delete(element);
+        }
+        return ret;
     }
-  }
-  this.style.overflow = "hidden";
-  console.log(initial);
-  this.style.height = "96" + "px";
 }
-
 var lists = document.getElementsByClassName("list");
 
 for(var i=0;i<lists.length;i++) {
@@ -61,9 +59,9 @@ for(var i=0;i<lists.length;i++) {
     }
   }
   lists[i].style.overflow = "hidden";
-  var initial = lists[i].style.height;
+  var initial = lists[i].clientHeight;
+  dataStorage.put(lists[i], "initial", initial);
   lists[i].style.height = initial + "px";
-  console.log(initial);
   lists[i].addEventListener('mouseenter', function() {
     var ul = this;
     var li = this.getElementsByTagName("li");
@@ -78,19 +76,13 @@ for(var i=0;i<lists.length;i++) {
     var ul = this;
     var li = this.getElementsByTagName("li");
     /* Calculating the heights of the lists if collapsed */
-    for(var j=0;j<li.length;j++) {
-      if(j > 1) {
-        li[j].style.display = "none";
-      }
-    }
+    // for(var j=0;j<li.length;j++) {
+    //   if(j > 1) {
+    //     li[j].style.display = "none";
+    //   }
+    // }
     this.style.overflow = "hidden";
-    console.log(initial);
-    this.style.height = "96" + "px";
+    var initialHeight = dataStorage.get(this, "initial");
+    this.style.height = initialHeight + "px";
   }, false);
-  // lists[i].addEventListener('mouseenter', function() {
-  //   expandList(lists[i]);
-  // }, false);
-  // lists[i].addEventListener('mouseleave', function() {
-  //   collapseList(lists[i], initial);
-  // }, false);
 }
