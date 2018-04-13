@@ -150,6 +150,7 @@ img {vertical-align: middle;}
   .prev, .next,.text {font-size: 11px}
 }
 
+/*PANEL CSS*/
 .myPanel {
   border-color: red;
   border: 1px solid grey;
@@ -162,7 +163,7 @@ img {vertical-align: middle;}
 }
 
 .panelContent {
-  padding: 10px;
+  /*padding: 10px;*/
 }
 
 .career-image {
@@ -178,3 +179,12 @@ img {vertical-align: middle;}
 .duties-list {
   
 }
+.skills-list {
+  padding: 0px;
+  list-style-type: none;
+}
+.skills-list li {
+  padding: 10px;
+  border-bottom: 1px solid grey;
+}
+/*PANEL CSS ENDS HERE */
