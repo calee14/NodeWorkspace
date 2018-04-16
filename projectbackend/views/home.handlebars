@@ -4,14 +4,14 @@
 	<div class="category-holder">
 		<!-- HEADER -->
 		<div class="info-heading">
-			<h2><a href="/hi">{{this}}</a></h2>
+			<h2><a href="/hi">{{this.title}}</a></h2>
 		</div>
 		<!-- PARAGRAPH -->
 		<div class="info-text">
 			<p> Medical? Well what is the medical field? I don't know that's why I am asking you. Yes you, the user. There is for me to say but I got lazy and decided to fill this area with dummy text. Speaking of dummy text what is dummy text? Is it dumb? How can text be dumb? Am I dumb?</p>
-			<p>Salary: $102,590</p>
-			<p>Current Employment: 9,533.1</p>
-			<p>Job Outlook: 807.3 new jobs</p>
+			<p>Salary: {{this.average_salary}}</p>
+			<p>Current Employment: {{this.employment}}</p>
+			<p>Job Outlook: {{this.outlook}} new jobs</p>
 		</div>
 		<!-- IMAGE -->
 		<div class="info-image">

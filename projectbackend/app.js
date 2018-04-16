@@ -23,6 +23,7 @@ app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 /* set our view engine to be handlebars */
 app.set('view engine', 'handlebars');
 
+/* renders the home page: lists the major occupations from the majoroccupations table */
 app.get('/', function(req, res) {
 	pool.connect(function (err, client, done) {
 		if(err) {
@@ -35,10 +36,23 @@ app.get('/', function(req, res) {
 				console.log(err);
 				res.status(400).send(err);
 			}
-			res.status(200).send(result.rows[0]["employment_0"]);
+			var rows = result.rows;
+			var mo_list = [];
+			for(var i=0;i<rows.length;i++) {
+				if(i == 0) continue;
+				var row = rows[i];
+				const mo = {
+					title: row["national_employment_matrix_title_and_code_02016"],
+					average_salary: row["median_annual_wage_20161_0"],
+					employment: row["employment_0"],
+					outlook: row["change_2016–26_0"]
+				}
+				mo_list.push(mo);
+			}
+			/* Sending data from database to the website */
+			res.status(200).render("home", {msg: mo_list})
 		});
 	});
-	// res.render("home", {msg: ["Hello World", "Hello Word", "Hello World"]});
 });
 
 let row = [
