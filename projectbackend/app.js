@@ -30,7 +30,7 @@ app.get('/', function(req, res) {
 			console.log("not able to get connection " + err);
 			res.status(400).send(err);
 		}
-		client.query('SELECT * FROM majoroccupations', function(err, result) {
+		client.query(`SELECT * FROM majoroccupations`, function(err, result) {
 			done();
 			if(err) {
 				console.log(err);
@@ -53,6 +53,7 @@ app.get('/', function(req, res) {
 			res.status(200).render("home", {msg: mo_list})
 		});
 	});
+	// pool.end();
 });
 
 let row = [
@@ -61,8 +62,24 @@ let row = [
 	{careers: ['df', 'df', 'ds']}
 ]
 
-app.get('/hi', function(req, res) {
-	res.render("career", {row: row});
+app.get('/occupations/:id', function(req, res) {
+	const occupationName = req.params.id.replace(" occupations", "").split(' ').join('_');
+	pool.connect(function (err, client, done) {
+		if(err) {
+			console.log("not able to get connection " + err);
+			res.status(400).send(err);
+		}
+		client.query(`SELECT * FROM careergroup WHERE title = '${occupationName}';`, function(err, result) {
+			done();
+			if(err) {
+				console.log(err);
+				res.status(400).send(err);
+			}
+			res.status(200).send(result.rows);
+		});
+	});
+	// pool.end();
+	// res.render("career", {row: row});
 })
 
 app.get('/career', function(req, res) {
