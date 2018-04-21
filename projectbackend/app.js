@@ -30,7 +30,7 @@ app.get('/', function(req, res) {
 			console.log("not able to get connection " + err);
 			res.status(400).send(err);
 		}
-		client.query(`SELECT * FROM majoroccupations`, function(err, result) {
+		client.query(`SELECT * FROM major`, function(err, result) {
 			done();
 			if(err) {
 				console.log(err);
@@ -42,10 +42,11 @@ app.get('/', function(req, res) {
 				if(i == 0) continue;
 				var row = rows[i];
 				const mo = {
-					title: row["national_employment_matrix_title_and_code_02016"],
-					average_salary: row["median_annual_wage_20161_0"],
-					employment: row["employment_0"],
-					outlook: row["change_2016–26_0"]
+					title: row["title"],
+					average_salary: row["average_median_salary"],
+					employment: row["employment_2016"],
+					outlook: row["change_201626"],
+					link: row["occupation_group"]
 				}
 				mo_list.push(mo);
 			}
