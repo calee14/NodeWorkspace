@@ -1,8 +1,9 @@
 /* import modules */
-var express = require('express');
-var exphbs  = require('express-handlebars');
-var pg = require("pg");
-var app = express();
+const express = require('express');
+const exphbs  = require('express-handlebars');
+const pg = require("pg");
+const pgp = require("pg-promise")({});
+const app = express();
 
 /* connection string to for db */
 var config = {
@@ -13,8 +14,16 @@ var config = {
   max: 10, // max number of connection can be open to database
   idleTimeoutMillis: 30000, // how long a client is allowed to remain idle before being closed
 };
-var connectionString = "postgres://postgres:capsdatabase@localhost:5432/careersearchdb"
+const cn = {
+    host: 'localhost',
+    port: 5432,
+    database: 'careersearchdb',
+    user: 'postgres',
+    password: 'capsdatabase'
+};
+var connectionString = "postgres://postgres:capsdatabase@localhost:5432/careersearchdb";
 var pool = new pg.Pool(config);
+var db = pgp(cn);
 
 app.use(express.static('public'));
 
@@ -95,23 +104,22 @@ app.get('/occupations/:id', function(req, res) {
 })
 
 app.get('/occupations/:id/info', function(req, res) {
-	var occupationName = req.params.info;
-	console.log(occupationName)
-	pool.connect(function (err, client, done) {
-		if(err) {
-			console.log("not able to get connection " + err);
-			res.status(400).send(err);
-		}
-		client.query(`SELECT job_title FROM career_deatils LIMIT 10`, `SELECT job_title FROM summaries LIMIT 10`, function(err, result) {
-			done();
-			if(err) {
-				console.log(err);
-				res.status(400).send(err);
-			}
-			res.status(200).send(result)
-		})
-	})
+	var occupationName = req.params.id;
+	db.tx(t => {
+        return t.batch([
+            t.any(`SELECT * FROM careerdetails WHERE job_title = '${occupationName}';`),
+			t.any(`SELECT * FROM summaries WHERE job_title = '${occupationName}';`)
+        ]);
+    })
+    .then(data => {
+        // success;
+        res.status(200).send(data)
+    })
+    .catch(error => {
+        console.log(error); // print error;
+    });
 	// res.render("careerinfo");
+	// res.status(200).send(graph_data);
 })
 /* Hello World (Temporary)*/
 app.get('/Hello World', function(req, res) {
