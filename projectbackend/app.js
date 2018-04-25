@@ -4,7 +4,7 @@ const exphbs  = require('express-handlebars');
 const pg = require("pg");
 const pgp = require("pg-promise")({});
 const app = express();
-
+const tools = require("./models/tools.js")
 /* connection string to for db */
 var config = {
   user: 'postgres',
@@ -14,16 +14,9 @@ var config = {
   max: 10, // max number of connection can be open to database
   idleTimeoutMillis: 30000, // how long a client is allowed to remain idle before being closed
 };
-const cn = {
-    host: 'localhost',
-    port: 5432,
-    database: 'careersearchdb',
-    user: 'postgres',
-    password: 'capsdatabase'
-};
 var connectionString = "postgres://postgres:capsdatabase@localhost:5432/careersearchdb";
 var pool = new pg.Pool(config);
-var db = pgp(cn);
+var db = pgp(config);
 
 app.use(express.static('public'));
 
@@ -105,10 +98,13 @@ app.get('/occupations/:id', function(req, res) {
 
 app.get('/occupations/:id/info', function(req, res) {
 	var occupationName = req.params.id;
+	var specialOccupationName = tools.cleanString(occupationName);
+	console.log(specialOccupationName);
 	db.tx(t => {
         return t.batch([
             t.any(`SELECT * FROM careerdetails WHERE job_title = '${occupationName}';`),
-			t.any(`SELECT * FROM summaries WHERE job_title = '${occupationName}';`)
+			t.any(`SELECT * FROM summaries WHERE job_title = '${occupationName}';`),
+			t.any(`SELECT * FROM outlook WHERE title = '${specialOccupationName}'`)
         ]);
     })
     .then(data => {
