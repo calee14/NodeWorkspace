@@ -143,6 +143,141 @@
 		</ul>
 	</div>
 </div>
+<div class="graphs" id="graphJobContainer" width="400">
+	<canvas id="graphJobs" width="400" height="400"></canvas>
+</div>
+<div class="graphs" id="graphJobContainer" width = 400>
+	<canvas id="graphPercent" width="400" height="400"></canvas>
+</div>
+<script>
+	var label = {{{labels}}};
+	var data = {{data}};
+	var label2 = {{labels2}};
+	var data2 = {{data2}}
+	var config = {
+		type: 'line',
+		data: {
+			labels: label,
+			datasets: [{
+				label: 'Percentage',
+				backgroundColor: window.chartColors.red,
+				borderColor: window.chartColors.red,
+				data: data,
+				fill: false,
+			}]
+		},
+		options: {
+			responsive: true,
+			title: {
+				display: true,
+				text: 'Chart.js Line Chart'
+			},
+			tooltips: {
+				mode: 'point',
+				intersect: false,
+				callbacks: {
+					label: function(tooltipItem, data) {
+						var label = data.datasets[tooltipItem.datasetIndex].label || '';
+						if(label == 'Percentage') {
+							label += ': ';
+							label += tooltipItem.yLabel + '%';
+						}
+						if(label == 'Number of Jobs') {
+							label += ': ';
+							label += tooltipItem.yLabel;
+						}
+						return label;
+					}
+				}
+			},
+			hover: {
+				mode: 'point',
+				intersect: true
+			},
+			scales: {
+				xAxes: [{
+					display: true,
+					scaleLabel: {
+						display: true,
+						labelString: 'Month'
+					}
+				}],
+				yAxes: [{
+					display: true,
+					scaleLabel: {
+						display: true,
+						labelString: 'Value'
+					}
+				}]
+			}
+		}
+	};
+	var config2 = {
+		type: 'line',
+		data: {
+			labels: labels2,
+			datasets: [{
+				label: 'Number of Jobs',
+				fill: false,
+				backgroundColor: window.chartColors.blue,
+				borderColor: window.chartColors.blue,
+				data: data2,
+			}]
+		},
+		options: {
+			responsive: true,
+			title: {
+				display: true,
+				text: 'Chart.js Line Chart'
+			},
+			tooltips: {
+				mode: 'point',
+				intersect: false,
+				callbacks: {
+					label: function(tooltipItem, data) {
+						var label = data.datasets[tooltipItem.datasetIndex].label || '';
+						if(label == 'Percentage') {
+							label += ': ';
+							label += tooltipItem.yLabel + '%';
+						}
+						if(label == 'Number of Jobs') {
+							label += ': ';
+							label += tooltipItem.yLabel;
+						}
+						return label;
+					}
+				}
+			},
+			hover: {
+				mode: 'point',
+				intersect: true
+			},
+			scales: {
+				xAxes: [{
+					display: true,
+					scaleLabel: {
+						display: true,
+						labelString: 'Month'
+					}
+				}],
+				yAxes: [{
+					display: true,
+					scaleLabel: {
+						display: true,
+						labelString: 'Value'
+					}
+				}]
+			}
+		}
+	};
+	
+	window.onload = function() {
+		var ctx = document.getElementById('graphJobs').getContext('2d');
+		window.myLine = new Chart(ctx, config);
+		var ctx2 = document.getElementById('graphPercent').getContext('2d');
+		window.myLine = new Chart(ctx2, config2);
+	};
+</script>
 <script type="text/javascript" src="/js/career-info-script.js"></script>
 
 
