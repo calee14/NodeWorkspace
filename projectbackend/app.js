@@ -19,7 +19,6 @@ var pool = new pg.Pool(config);
 var db = pgp(config);
 
 app.use(express.static('public'));
-
 /* set main layout to be main.handlebars */
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 /* set our view engine to be handlebars */
@@ -99,7 +98,6 @@ app.get('/occupations/:id', function(req, res) {
 app.get('/occupations/:id/info', function(req, res) {
 	var occupationName = req.params.id;
 	var specialOccupationName = tools.cleanString(occupationName);
-	console.log(specialOccupationName);
 	db.tx(t => {
         return t.batch([
             t.any(`SELECT * FROM careerdetails WHERE job_title = '${occupationName}';`),
@@ -108,17 +106,20 @@ app.get('/occupations/:id/info', function(req, res) {
         ]);
     })
     .then(data => {
-        // success;
-        res.status(200).send(data)
+        var labels = ["2016", "2026"];
+        var data = [20, 30];
+        var labels2 = ["2016", "2026"];
+        var data2 = [3, 5];
+        res.status(200).render("careerinfo", {labels: labels, data: data, labels2: labels2, data2: data2});
     })
     .catch(error => {
         console.log(error); // print error;
     });
-	// res.render("careerinfo");
+	res.status(200).render("careerinfo");
 	// res.status(200).send(graph_data);
 })
 /* Hello World (Temporary)*/
-app.get('/Hello World', function(req, res) {
+app.get('/hello-world', function(req, res) {
 	res.send("Hello World")
 })
 app.listen(3000, function() {
