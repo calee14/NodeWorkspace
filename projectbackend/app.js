@@ -113,7 +113,7 @@ app.get('/occupations/:id/info', function(req, res) {
     	/* duties of career */
     	var career_duties = query_tools.getDuties(data, 0);
         var labels = ["2016", "2026"];
-        var data = [4100, 3000];
+        var data = query_tools.getPoints(data, 2)
         var labels2 = ["2016", "2026"];
         var data2 = [9, 3433];
         res.status(200).render("careerinfo", {duty: career_duties, labels: labels, datas: data, labels2: labels2, datas2: data2});
