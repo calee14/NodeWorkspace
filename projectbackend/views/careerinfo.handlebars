@@ -114,12 +114,10 @@
 			<img src="smiley.gif" height="100" width="100">
 		</div>
 		<ul class="list duties-list">
-			<li>Examine financial statements to ensure that they are accurate and comply with laws and regulations</li>
-			<li>Compute taxes owed, prepare tax returns, and ensure that taxes are paid properly and on time</li>
-			<li>Inspect account books and accounting systems for efficiency and use of accepted accounting procedures</li>
-			<li>Organize and maintain financial records</li>
-			<li>Assess financial operations and make best-practices recommendations to management</li>
-			<li>Suggest ways to reduce costs, enhance revenues, and improve profits</li>
+			{{#each duty}}
+				<!-- hi -->
+				<li>{{this}}</li>
+			{{/each}}
 		</ul>
 	</div>
 </div>
@@ -143,27 +141,32 @@
 		</ul>
 	</div>
 </div>
-<div class="graphs" id="graphJobContainer" width="400">
+<div class="graphs" id="graphJobContainer">
 	<canvas id="graphJobs" width="400" height="400"></canvas>
 </div>
-<div class="graphs" id="graphJobContainer" width = 400>
+<div class="graphs" id="graphPercentContainer">
 	<canvas id="graphPercent" width="400" height="400"></canvas>
 </div>
+<!-- FOR FLOATING PURPOSES -->
+<div style="clear:both;"></div>
 <script>
-	var label = {{{labels}}};
-	var data = {{data}};
-	var label2 = {{labels2}};
-	var data2 = {{data2}}
 	var config = {
 		type: 'line',
 		data: {
-			labels: label,
+			labels: [{{labels}}],
 			datasets: [{
 				label: 'Percentage',
 				backgroundColor: window.chartColors.red,
 				borderColor: window.chartColors.red,
-				data: data,
+				data: [{{datas}}],
 				fill: false,
+			},
+			{
+				label: 'Number of Jobs',
+				fill: false,
+				backgroundColor: window.chartColors.blue,
+				borderColor: window.chartColors.blue,
+				data: [{{datas2}}],
 			}]
 		},
 		options: {
@@ -203,6 +206,9 @@
 					}
 				}],
 				yAxes: [{
+					ticks: {
+						beginAtZero: true
+					},
 					display: true,
 					scaleLabel: {
 						display: true,
@@ -215,13 +221,13 @@
 	var config2 = {
 		type: 'line',
 		data: {
-			labels: labels2,
+			labels: [{{labels2}}],
 			datasets: [{
 				label: 'Number of Jobs',
 				fill: false,
 				backgroundColor: window.chartColors.blue,
 				borderColor: window.chartColors.blue,
-				data: data2,
+				data: [{{datas2}}],
 			}]
 		},
 		options: {
@@ -261,6 +267,9 @@
 					}
 				}],
 				yAxes: [{
+					ticks: {
+						beginAtZero: true
+					},
 					display: true,
 					scaleLabel: {
 						display: true,

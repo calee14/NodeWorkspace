@@ -4,7 +4,8 @@ const exphbs  = require('express-handlebars');
 const pg = require("pg");
 const pgp = require("pg-promise")({});
 const app = express();
-const tools = require("./models/tools.js")
+const tools = require("./models/tools.js");
+const query_tools = require("./models/query_tools");
 /* connection string to for db */
 var config = {
   user: 'postgres',
@@ -102,20 +103,25 @@ app.get('/occupations/:id/info', function(req, res) {
         return t.batch([
             t.any(`SELECT * FROM careerdetails WHERE job_title = '${occupationName}';`),
 			t.any(`SELECT * FROM summaries WHERE job_title = '${occupationName}';`),
-			t.any(`SELECT * FROM outlook WHERE title = '${specialOccupationName}'`)
+			t.any(`SELECT * FROM outlook WHERE title = '${specialOccupationName}'`),
+			t.any(`SELECT * FROM outlook WHERE NULLIF(replace(substring(projected_employment_2026_0, 2), ',', ''), '')::int = (SELECT max(NULLIF(replace(substring(projected_employment_2026_0, 2), ',', ''), '')::int) FROM outlook LIMIT 1);`),
+			t.any(`SELECT * FROM outlook WHERE NULLIF(replace(substring(change_201626_0, 1), ',', ''), '')::int = (SELECT max(NULLIF(replace(substring(change_201626_0, 1), ',', ''), '')::int) FROM outlook LIMIT 1);`)
         ]);
     })
     .then(data => {
+    	// res.send(data)
+    	/* duties of career */
+    	var career_duties = query_tools.getDuties(data, 0);
         var labels = ["2016", "2026"];
-        var data = [20, 30];
+        var data = [4100, 3000];
         var labels2 = ["2016", "2026"];
-        var data2 = [3, 5];
-        res.status(200).render("careerinfo", {labels: labels, data: data, labels2: labels2, data2: data2});
+        var data2 = [9, 3433];
+        res.status(200).render("careerinfo", {duty: career_duties, labels: labels, datas: data, labels2: labels2, datas2: data2});
     })
     .catch(error => {
         console.log(error); // print error;
     });
-	res.status(200).render("careerinfo");
+	// res.status(200).render("careerinfo");
 	// res.status(200).send(graph_data);
 })
 /* Hello World (Temporary)*/

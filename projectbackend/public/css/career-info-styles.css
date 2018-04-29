@@ -188,3 +188,20 @@ img {vertical-align: middle;}
   border-bottom: 1px solid grey;
 }
 /*PANEL CSS ENDS HERE */
+
+/* CHARTJS GRAPHS AND CHARTS HERE */
+.graphs {
+  /*clear: both;*/
+}
+#graphJobContainer {
+  position: relative;
+  width: 500px;
+  height: 500px;
+  float: left;
+}
+#graphPercentContainer {
+  position: relative;
+  width: 500px;
+  height: 500px;
+  float: left;
+}
