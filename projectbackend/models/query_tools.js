@@ -18,16 +18,16 @@ module.exports = {
 			if(new_object.hasOwnProperty(key)) {
 				howtobecome = new_object[key];
 				if(howtobecome == null) {continue;}
-				for (var i = 0; i < howtobecome.length; i++) {
-					if(howtobecome[i].includes("skills") || howtobecome[i].includes("skills")) {
-						var skills = []
-						for (var i = 0; i < howtobecome.length; i+=2) {
-							skills.push(howtobecome[i] + " "+ howtobecome[i+1]);
-						}
-						console.log(skills)
-						return skills;
+				
+				if(howtobecome[0].includes("skills") && howtobecome[0].length <= 50 || howtobecome[0].includes("skills") && howtobecome[0].length <= 50) {
+					var skills = []
+					for (var i = 0; i < howtobecome.length; i+=2) {
+						skills.push(howtobecome[i] + " "+ howtobecome[i+1]);
 					}
+					console.log(skills)
+					return skills;
 				}
+				
 			}
 			count += 1;
 		}
