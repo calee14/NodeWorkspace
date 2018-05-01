@@ -115,7 +115,6 @@
 		</div>
 		<ul class="list duties-list">
 			{{#each duty}}
-				<!-- hi -->
 				<li>{{this}}</li>
 			{{/each}}
 		</ul>
@@ -130,14 +129,9 @@
 		<!-- IMAGE -->
 		<h5>Skills you might need: </h5>
 		<ul class="list skills-list">
-			<li>Analytical skills. Accountants and auditors must be able to identify issues in documentation and suggest solutions. For example, public accountants use analytical skills in their work to minimize tax liability, and internal auditors use these skills to detect fraudulent use of funds.</li>
-			<li>Communication skills. Accountants and auditors must be able to listen carefully to facts and concerns from clients, managers, and others. They must also be able to discuss the results of their work in both meetings and written reports.</li>
-
-			<li>Detail oriented. Accountants and auditors must pay attention to detail when compiling and examining documentation.</li>
-
-			<li>Math skills. Accountants and auditors must be able to analyze, compare, and interpret facts and figures, although complex math skills are not necessary.</li>
-
-			<li>Organizational skills. Strong organizational skills are important for accountants and auditors, who often work with a range of financial documents for a variety of clients.</li>
+			{{#each skill}}
+				<li>{{this}}</li>
+			{{/each}}
 		</ul>
 	</div>
 </div>
