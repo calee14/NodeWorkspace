@@ -18,11 +18,11 @@ module.exports = {
 			if(new_object.hasOwnProperty(key)) {
 				howtobecome = new_object[key];
 				if(howtobecome == null) {continue;}
-				
 				if(howtobecome[0].includes("skills") && howtobecome[0].length <= 50 || howtobecome[0].includes("skills") && howtobecome[0].length <= 50) {
 					var skills = []
-					for (var i = 0; i < howtobecome.length; i+=2) {
-						skills.push(howtobecome[i] + " "+ howtobecome[i+1]);
+					var new_a = howtobecome.filter(function(i){return i.length > 1})
+					for (var i = 0; i < new_a.length; i+=2) {
+						skills.push(new_a[i] + " "+ new_a[i+1]);
 					}
 					console.log(skills)
 					return skills;
