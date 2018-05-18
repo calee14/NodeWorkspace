@@ -1,6 +1,6 @@
 module.exports = {
 	getDuties: function(object, index) {
-		return object[index][0]["duties"];
+		return object[index][0]["duties"].slice(1);
 	},
 	getHowToBecome: function(object, index) {
 		var new_object = object[index][0];
@@ -18,8 +18,11 @@ module.exports = {
 			if(new_object.hasOwnProperty(key)) {
 				howtobecome = new_object[key];
 				if(howtobecome == null) {continue;}
-				if(howtobecome[0].includes("skills") && howtobecome[0].length <= 50 || howtobecome[0].includes("skills") && howtobecome[0].length <= 50) {
+				console.log(howtobecome[0]);
+				if(howtobecome[0] == "Important Qualities") {
+					howtobecome = howtobecome.slice(1);
 					var skills = []
+					console.log(howtobecome);
 					var new_a = howtobecome.filter(function(i){return i.length > 1})
 					for (var i = 0; i < new_a.length; i+=2) {
 						skills.push(new_a[i] + " "+ new_a[i+1]);
@@ -27,7 +30,6 @@ module.exports = {
 					console.log(skills)
 					return skills;
 				}
-				
 			}
 			count += 1;
 		}

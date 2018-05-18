@@ -111,13 +111,14 @@ app.get('/occupations/:id/info', function(req, res) {
     .then(data => {
     	// res.send(data)
     	/* duties of career */
-    	var career_duties = query_tools.getDuties(data, 0);
+    	var career_duties = query_tools.getDuties(data, 0); // 0 is the index of array of career details
     	var skills = query_tools.getSkills(data, 0);
         var labels = ["2016", "2026"];
-        var data = query_tools.getPoints(data, 2)
+        var graph_data = query_tools.getPoints(data, 2); // 2 is the index of the array of graph data
         var labels2 = ["2016", "2026"];
         var data2 = [9, 3433];
-        res.status(200).render("careerinfo", {duty: career_duties, skill: skills, labels: labels, datas: data, labels2: labels2, datas2: data2});
+        // res.status(200).send(data);
+        res.status(200).render("careerinfo", {duty: career_duties, skill: skills, labels: labels, datas: graph_data, labels2: labels2, datas2: data2});
     })
     .catch(error => {
         console.log(error); // print error;
