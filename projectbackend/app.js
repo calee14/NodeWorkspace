@@ -45,7 +45,7 @@ app.get('/', function(req, res) {
 				var row = rows[i];
 				const mo = {
 					title: row["title"],
-					average_salary: row["average_median_salary"],
+					average_salary: row["average_median_wage"],
 					employment: row["employment_2016"],
 					outlook: row["change_201626"],
 					link: row["occupation_group"]
