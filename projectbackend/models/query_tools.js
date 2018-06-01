@@ -16,10 +16,8 @@ module.exports = {
 		while(result.trim().slice(-1) != ".") {
 			index += 1;
 			result += (" " + skills[index]);
-			console.log(result);
 		}
-		console.log(result);
-		return
+		return {result_skills: result, index: index};
 	},
 	getSkills: function(object, index) {
 		var new_object = object[index][0];
@@ -36,8 +34,10 @@ module.exports = {
 					// console.log(howtobecome);
 					var new_a = howtobecome.filter(function(i){return i.length > 1})
 					for (var i = 0; i < new_a.length; i+=2) {
-						var hi = module.exports.combineSkillElements(new_a, i, i);
-						skills.push(new_a[i] + " "+ new_a[i+1]);
+						var result = module.exports.combineSkillElements(new_a, i, i);
+						var sec_skill = module.exports.combineSkillElements(new_a, result.index, result.index);
+						skills.push(result.result + " "+ sec_skill.result);
+						i = sec_skill.index;
 					}
 					// console.log(skills)
 					return skills;
