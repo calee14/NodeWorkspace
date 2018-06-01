@@ -10,6 +10,17 @@ module.exports = {
 			}
 		}
 	},
+	combineSkillElements: function(skills, firstIndex, lastIndex) {
+		var result = skills[lastIndex];
+		var index = lastIndex;
+		while(result.trim().slice(-1) != ".") {
+			index += 1;
+			result += (" " + skills[index]);
+			console.log(result);
+		}
+		console.log(result);
+		return
+	},
 	getSkills: function(object, index) {
 		var new_object = object[index][0];
 		var count = 0;
@@ -18,16 +29,17 @@ module.exports = {
 			if(new_object.hasOwnProperty(key)) {
 				howtobecome = new_object[key];
 				if(howtobecome == null) {continue;}
-				console.log(howtobecome[0]);
+				// console.log(howtobecome[0]);
 				if(howtobecome[0] == "Important Qualities") {
 					howtobecome = howtobecome.slice(1);
 					var skills = []
-					console.log(howtobecome);
+					// console.log(howtobecome);
 					var new_a = howtobecome.filter(function(i){return i.length > 1})
 					for (var i = 0; i < new_a.length; i+=2) {
+						var hi = module.exports.combineSkillElements(new_a, i, i);
 						skills.push(new_a[i] + " "+ new_a[i+1]);
 					}
-					console.log(skills)
+					// console.log(skills)
 					return skills;
 				}
 			}
