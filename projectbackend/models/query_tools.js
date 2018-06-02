@@ -32,15 +32,22 @@ module.exports = {
 						if(index == new_a.length) {
 							break;
 						} else if(firstElement.trim().slice(-1) == ".") {
-							skills.push(firstElement);
+							skill_holder += (" " + firstElement);
+							// skills.push(firstElement);
 							completed += 1;
 						} else if(firstElement.trim().slice(-1) != ".") {
 							while(firstElement.trim().slice(-1) != ".") {
 								index += 1;
 								firstElement += (" " + new_a[index]);
 							}
-							skills.push(firstElement);
+							// skills.push(firstElement);
+							skill_holder += (" " + firstElement);
 							completed += 1;
+						}
+						if(completed == 2) {
+							skills.push(skill_holder);
+							skill_holder = "";
+							completed = 0;
 						}
 						index += 1;
 					}
