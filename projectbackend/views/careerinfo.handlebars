@@ -29,12 +29,13 @@
     </tr>
 </table> -->
 <div class="slideshow-container">
+{{#each step}}
 <div class="mySlides">
 	<!-- HOLDS THE TEXT AND INFO -->
 	<div class="text-container">
 		<!-- HEADER OF THE TEXT -->
 		<div class="text-container-header">
-			<h4>STEP ONE</h4>
+			<h4>{{this.title}}</h4>
 		</div>
 		<!-- IMAGE -->
 		<div class="career-image">
@@ -43,54 +44,12 @@
 		<!-- TEXT PARAGRAPHS -->
 		<div class="text-container-paragraph">
 			<div class="small">
-				<p class="text-expand-min">Randomness is most often used in statistics to signify well-defined statistical properties. Monte Carlo methods, which rely on random input (such as from random number generators or pseudorandom number generators), are important techniques in science, as, for instance, in computational science.[2] By analogy, quasi-Monte Carlo methods use quasirandom number generators.
-				LS:KDJNFL:THL:KDS</p>
+				<p class="text-expand-min">{{this.text}}</p>
 			</div>
 		</div>
 	</div>
 </div>
-
-<div class="mySlides">
-	<!-- HOLDS THE TEXT AND INFO -->
-	<div class="text-container">
-		<!-- HEADER OF THE TEXT -->
-		<div class="text-container-header">
-			<h4>STEP TWO</h4>
-		</div>
-		<!-- IMAGE -->
-		<div class="career-image">
-			<img src="smiley.gif" height="100" width="100">
-		</div>
-		<!-- TEXT PARAGRAPHS -->
-		<div class="text-container-paragraph">
-			<div class="small">
-				<p class="text-expand-min">Randomness is most often used in statistics to signify well-defined statistical properties. Monte Carlo methods, which rely on random input (such as from random number generators or pseudorandom number generators), are important techniques in science, as, for instance, in computational science.[2] By analogy, quasi-Monte Carlo methods use quasirandom number generators.
-				LS:KDJNFL:THL:KDS</p>
-			</div>
-		</div>
-	</div>
-</div>
-
-<div class="mySlides">
-	<!-- HOLDS THE TEXT AND INFO -->
-	<div class="text-container">
-		<!-- HEADER OF THE TEXT -->
-		<div class="text-container-header">
-			<h4>STEP THREE</h4>
-		</div>
-		<!-- IMAGE -->
-		<div class="career-image">
-			<img src="smiley.gif" height="100" width="100">
-		</div>
-		<!-- TEXT PARAGRAPHS -->
-		<div class="text-container-paragraph">
-			<div class="small">
-				<p class="text-expand-min">Randomness is most often used in statistics to signify well-defined statistical properties. Monte Carlo methods, which rely on random input (such as from random number generators or pseudorandom number generators), are important techniques in science, as, for instance, in computational science.[2] By analogy, quasi-Monte Carlo methods use quasirandom number generators.
-				LS:KDJNFL:THL:KDS</p>
-			</div>
-		</div>
-	</div>
-</div>
+{{/each}}
 
 <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
 <a class="next" onclick="plusSlides(1)">&#10095;</a>

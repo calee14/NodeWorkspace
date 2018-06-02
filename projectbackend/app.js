@@ -117,8 +117,13 @@ app.get('/occupations/:id/info', function(req, res) {
         var graph_data = query_tools.getPoints(data, 2); // 2 is the index of the array of graph data
         var labels2 = ["2016", "2026"];
         var data2 = [9, 3433];
-        // res.status(200).send(data);
-        res.status(200).render("careerinfo", {duty: career_duties, skill: skills, labels: labels, datas: graph_data, labels2: labels2, datas2: data2});
+        var steps = query_tools.getHowToBecome(data, 0);
+        var steps = {
+        	title: "Step One",
+        	text: "Randomness is most often used in statistics to signify well-defined statistical properties. Monte Carlo methods, which rely on random input (such as from random number generators or pseudorandom number generators), are important techniques in science, as, for instance, in computational science.[2] By analogy, quasi-Monte Carlo methods use quasirandom number generators."
+        }
+        res.status(200).send(data);
+        // res.status(200).render("careerinfo", {step: [steps], duty: career_duties, skill: skills, labels: labels, datas: graph_data, labels2: labels2, datas2: data2});
     })
     .catch(error => {
         console.log(error); // print error;

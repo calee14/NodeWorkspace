@@ -4,8 +4,12 @@ module.exports = {
 	},
 	getHowToBecome: function(object, index) {
 		var new_object = object[index][0];
+		var count = 0;
 		for(var key in new_object) {
+			if(count < 2) {count += 1; continue;}
 			if(new_object.hasOwnProperty(key)) {
+				var howtobecome = new_object[key];
+				if(howtobecome == null) {continue};
 				console.log(key + " -> " + new_object[key][0]);
 			}
 		}
@@ -16,7 +20,7 @@ module.exports = {
 		for(var key in new_object) {
 			if(count < 2) {count += 1; continue;}
 			if(new_object.hasOwnProperty(key)) {
-				howtobecome = new_object[key];
+				var howtobecome = new_object[key];
 				if(howtobecome == null) {continue;}
 				// console.log(howtobecome[0]);
 				if(howtobecome[0] == "Important Qualities") {
