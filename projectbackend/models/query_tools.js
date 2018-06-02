@@ -10,15 +10,6 @@ module.exports = {
 			}
 		}
 	},
-	combineSkillElements: function(skills, firstIndex, lastIndex) {
-		var result = skills[lastIndex];
-		var index = lastIndex;
-		while(result.trim().slice(-1) != ".") {
-			index += 1;
-			result += (" " + skills[index]);
-		}
-		return {result_skills: result, index: index};
-	},
 	getSkills: function(object, index) {
 		var new_object = object[index][0];
 		var count = 0;
@@ -33,13 +24,26 @@ module.exports = {
 					var skills = []
 					// console.log(howtobecome);
 					var new_a = howtobecome.filter(function(i){return i.length > 1})
-					for (var i = 0; i < new_a.length; i+=2) {
-						var result = module.exports.combineSkillElements(new_a, i, i);
-						var sec_skill = module.exports.combineSkillElements(new_a, result.index, result.index);
-						skills.push(result.result + " "+ sec_skill.result);
-						i = sec_skill.index;
+					var index = 0;
+					var completed = 0;
+					var skill_holder = "";
+					while(true) {
+						var firstElement = new_a[index];
+						if(index == new_a.length) {
+							break;
+						} else if(firstElement.trim().slice(-1) == ".") {
+							skills.push(firstElement);
+							completed += 1;
+						} else if(firstElement.trim().slice(-1) != ".") {
+							while(firstElement.trim().slice(-1) != ".") {
+								index += 1;
+								firstElement += (" " + new_a[index]);
+							}
+							skills.push(firstElement);
+							completed += 1;
+						}
+						index += 1;
 					}
-					// console.log(skills)
 					return skills;
 				}
 			}
