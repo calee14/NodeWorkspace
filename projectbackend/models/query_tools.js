@@ -41,7 +41,14 @@ module.exports = {
 					howtobecome = howtobecome.slice(1);
 					var skills = []
 					// console.log(howtobecome);
-					var new_a = howtobecome.filter(function(i){return i.length > 1})
+					var new_a = howtobecome;
+					var i = new_a.length;
+					while(i--) {
+						if(new_a[i].length == 1 && new_a[i] == ".") {
+							new_a[i-1] += new_a[i];
+							new_a.splice(i, 1);
+						}
+					}
 					var index = 0;
 					var completed = 0;
 					var skill_holder = "";
