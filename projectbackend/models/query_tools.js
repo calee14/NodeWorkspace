@@ -11,8 +11,22 @@ module.exports = {
 				var howtobecome = new_object[key];
 				if(howtobecome == null) {continue};
 				console.log(key + " -> " + new_object[key][0]);
+				var steps = [];
+				if(howtobecome[0] == "Education") {
+					howtobecome = howtobecome.slice(1);
+					console.log(howtobecome.length);
+					for(var i=0;i<howtobecome.length;i++) {
+						var education = {
+							title: "Education",
+							text: howtobecome[i]
+						};
+						steps.push(education);
+					}
+				}
+				return steps;
 			}
 		}
+		return -1;
 	},
 	getSkills: function(object, index) {
 		var new_object = object[index][0];
