@@ -118,8 +118,8 @@ app.get('/occupations/:id/info', function(req, res) {
         var labels2 = ["2016", "2026"];
         var data2 = [9, 3433];
         var steps = query_tools.getHowToBecome(data, 0);
-        res.status(200).send(data);
-        // res.status(200).render("careerinfo", {step: steps, duty: career_duties, skill: skills, labels: labels, datas: graph_data, labels2: labels2, datas2: data2});
+        // res.status(200).send(data);
+        res.status(200).render("careerinfo", {step: steps, duty: career_duties, skill: skills, labels: labels, datas: graph_data, labels2: labels2, datas2: data2});
     })
     .catch(error => {
         console.log(error); // print error;

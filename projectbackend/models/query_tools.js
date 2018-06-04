@@ -13,7 +13,7 @@ module.exports = {
 				var howtobecome = new_object[key];
 				if(howtobecome == null) {continue};
 				console.log(key + " -> " + new_object[key][0]);
-				if(howtobecome[0] == "Education") {
+				if(howtobecome[0] != "Important Qualities") {
 					howtobecome = howtobecome.slice(1);
 					console.log(howtobecome.length);
 					for(var i=0;i<howtobecome.length;i++) {
