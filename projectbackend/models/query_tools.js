@@ -5,28 +5,31 @@ module.exports = {
 	getHowToBecome: function(object, index) {
 		var new_object = object[index][0];
 		var count = 0;
+		var steps = []
+		var number = 0;
 		for(var key in new_object) {
 			if(count < 2) {count += 1; continue;}
 			if(new_object.hasOwnProperty(key)) {
 				var howtobecome = new_object[key];
 				if(howtobecome == null) {continue};
 				console.log(key + " -> " + new_object[key][0]);
-				var steps = [];
 				if(howtobecome[0] == "Education") {
 					howtobecome = howtobecome.slice(1);
 					console.log(howtobecome.length);
 					for(var i=0;i<howtobecome.length;i++) {
+						number += 1;
 						var education = {
 							title: "Education",
-							text: howtobecome[i]
+							text: howtobecome[i],
+							number: number
 						};
 						steps.push(education);
 					}
 				}
-				return steps;
+				// return steps;
 			}
 		}
-		return -1;
+		return steps;
 	},
 	getSkills: function(object, index) {
 		var new_object = object[index][0];
