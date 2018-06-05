@@ -11,7 +11,7 @@ body {
 
 /*NAV-BAR CSS*/
 .navbar-color {
-	background-color: #FF5E55;
+	background-color: #E84F42;
 }
 .navbar-brand:hover{
 	color: #FFF9F8;
@@ -68,7 +68,7 @@ body {
 	font-size: 30px;
 	text-decoration: none;
 	text-transform: uppercase;
-	color: #FF5E55;
+	color: #E84542;
 }
 
 /*WHEN THE USER HOVERS OVER THE LINK*/
