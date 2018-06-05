@@ -7,19 +7,39 @@ module.exports = {
 		var count = 0;
 		var steps = []
 		var number = 0;
+		var key_name = "";
 		for(var key in new_object) {
 			if(count < 2) {count += 1; continue;}
 			if(new_object.hasOwnProperty(key)) {
 				var howtobecome = new_object[key];
 				if(howtobecome == null) {continue};
 				console.log(key + " -> " + new_object[key][0]);
+				key_name = howtobecome[0];
 				if(howtobecome[0] != "Important Qualities") {
 					howtobecome = howtobecome.slice(1);
+					var index = 0;
+					var howtobecome_temp = []
+					while(true) {
+						var firstElement = howtobecome[index];
+						if(index == howtobecome.length) {
+							break;
+						} else if(firstElement.trim().slice(-1) == ".") {
+							howtobecome_temp.push(firstElement);
+						} else if(firstElement.trim().slice(-1) != ".") {
+							while(firstElement.trim().slice(-1) != ".") {
+								index += 1;
+								firstElement += (" " + howtobecome[index]);
+							}
+							howtobecome_temp.push(firstElement);
+						}
+						index += 1;
+					}
+					howtobecome = howtobecome_temp;
 					console.log(howtobecome.length);
 					for(var i=0;i<howtobecome.length;i++) {
 						number += 1;
 						var education = {
-							title: "Education",
+							title: key_name,
 							text: howtobecome[i],
 							number: number
 						};
