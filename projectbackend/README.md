@@ -5,7 +5,6 @@ This website will assist the user to help find the career that best fits them an
 - Finish graph
 - Add features to website
 # Possible features for website:
-Career Search Improvements:
 - Comparing job outlook:
   - get related jobs (data, projections, salary)
 -Simple search career: 	add tags to careers

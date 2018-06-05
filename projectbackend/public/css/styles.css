@@ -9,6 +9,17 @@ body {
 	/*overflow: scroll;*/
 }
 
+/*NAV-BAR CSS*/
+.navbar-color {
+	background-color: #FF5E55;
+}
+.navbar-brand:hover{
+	color: #FFF9F8;
+}
+.navbar-text {
+	color: #FFF9F8;
+}
+/*END OF NAV-BAR CSS*/
 /*CSS FOR THE CATEGORY PANELS*/
 .category-holder {
 	/*MARGIN*/
@@ -57,7 +68,7 @@ body {
 	font-size: 30px;
 	text-decoration: none;
 	text-transform: uppercase;
-	color: black;
+	color: #FF5E55;
 }
 
 /*WHEN THE USER HOVERS OVER THE LINK*/
