@@ -4,6 +4,7 @@ This website will assist the user to help find the career that best fits them an
 - Improve UI
 - Finish graph
 - Add features to website
+- Change line graphs to bar graphs and display growth in percent 
 # Possible features for website:
 - Comparing job outlook:
   - get related jobs (data, projections, salary)
