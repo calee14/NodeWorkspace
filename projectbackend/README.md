@@ -5,6 +5,7 @@ This website will assist the user to help find the career that best fits them an
 - Finish graph
 - Add features to website
 - Change line graphs to bar graphs and display growth in percent 
+- Get image API (looking at GettysImages, Google Search API, etc.)
 # Possible features for website:
 - Comparing job outlook:
   - get related jobs (data, projections, salary)

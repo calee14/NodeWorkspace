@@ -115,8 +115,5 @@ module.exports = {
 		var current_p = parseInt(object[index][0]["employment_2016_0"]);
 		var projected_p = parseInt(object[index][0]["projected_employment_2026_0"]);
 		return [current_p, projected_p];
-	},
-	getMaxEmployment: function(object, index) {
-		var max_e = parseInt(object[index][0][""])
 	}
 }
