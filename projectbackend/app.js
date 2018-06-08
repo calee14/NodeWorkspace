@@ -120,8 +120,8 @@ app.get('/occupations/:id/info', function(req, res) {
         var data2 = [9, 3433];
         var steps = query_tools.getHowToBecome(data, 0);
         var percent_e = query_tools.getEmploymentPercent(data, 2);
-        res.status(200).send(data);
-        // res.status(200).render("careerinfo", {step: steps, duty: career_duties, skill: skills, labels: labels, datas: graph_data, labels2: labels2, datas2: data2});
+        // res.status(200).send(data);
+        res.status(200).render("careerinfo", {step: steps, duty: career_duties, skill: skills, labels: labels, datas: graph_data, labels2: labels2, datas2: data2});
     })
     .catch(error => {
         console.log(error); // print error;

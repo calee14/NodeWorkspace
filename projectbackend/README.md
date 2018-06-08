@@ -2,6 +2,7 @@
 This website will assist the user to help find the career that best fits them and will guide them to help them get their career.
 # New NOTE (Goal Summer) Most important to Least Important (top - bottom):
 - Add description for Major Occupations
+  - Once scraped the descriptions from the ooh, Occupational Outlook Handbook, query from database and update the definition section of the home page.
 - The MVP for this website is to have to image api working adding images to website. 
 - Find the right display for the data.
 - Improve UI if time.
