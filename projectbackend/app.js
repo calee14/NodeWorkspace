@@ -16,10 +16,14 @@ var config = {
   max: 10, // max number of connection can be open to database
   idleTimeoutMillis: 30000, // how long a client is allowed to remain idle before being closed
 };
+/* connection string (no use) */
 var connectionString = "postgres://postgres:capsdatabase@localhost:5432/careersearchdb";
+/* setting pool to connect to the database */
 var pool = new pg.Pool(config);
+/* initializing pg-promise to connect to the database */
 var db = pgp(config);
 
+/* setting static tools (css, js, etc.) which will be located in the public folder*/
 app.use(express.static('public'));
 /* set main layout to be main.handlebars */
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
@@ -28,11 +32,14 @@ app.set('view engine', 'handlebars');
 
 /* renders the home page: lists the major occupations from the majoroccupations table */
 app.get('/', function(req, res) {
+	/* connect to the database using the config from when it was initialized with*/
 	pool.connect(function (err, client, done) {
+		/* check if there is an error*/
 		if(err) {
 			console.log("not able to get connection " + err);
 			res.status(400).send(err);
 		}
+		/* make a query to the database */
 		client.query(`SELECT * FROM major`, function(err, result) {
 			done();
 			if(err) {
@@ -62,35 +69,50 @@ app.get('/', function(req, res) {
 
 /* renders career page where all careers in the occupation are displayed*/
 app.get('/occupations/:id', function(req, res) {
+	/* set occupation name */
 	const occupationName = req.params.id.replace(" occupations", "").split(' ').join('_');
+	/* connect to the database */
 	pool.connect(function (err, client, done) {
+		/* if error then send a status 400 */
 		if(err) {
 			console.log("not able to get connection " + err);
 			res.status(400).send(err);
 		}
+		/* make a query to the database to get the data on careers with occupation */
 		client.query(`SELECT * FROM careergroup WHERE title = '${occupationName}';`, function(err, result) {
 			done();
+			/* send status 400 if error */
 			if(err) {
 				console.log(err);
 				res.status(400).send(err);
 			}
+			/* get the rows from the result */
 			var rows = result.rows;
 			var career_list = [];
+			/* get all careers and format it in 3 per array */
+			/* loop through all the rows and iterate by 3 */
 			for(var i=0;i<rows.length;i+=3) {
 				career_row = [];
+				/* loop through the 3 careers*/
 				for(var j=0;j<3;j++) {
+					/* if index is too big for the array */
 					if(i+j >= rows.length) continue;
+					/* get the row from array */
 					var row = rows[i+j];
+					/* make the career */
 					const career = {
 						title: row["occupation"],
 						discription: row["job_summary"],
 						education: row["entrylevel_eduation"],
 						salary: row["median_pay"]
 					}
+					/* add it to the array of 3 */
 					career_row.push(career);
 				}
+				/* add the array size 3 to the final array */
 				career_list.push({careers: career_row});
 			}
+			/* send the response */
 			res.status(200).render("career", {row: career_list});
 		});
 	});
