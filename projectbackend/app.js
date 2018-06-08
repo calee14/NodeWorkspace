@@ -60,6 +60,7 @@ app.get('/', function(req, res) {
 	// pool.end();
 });
 
+/* renders career page where all careers in the occupation are displayed*/
 app.get('/occupations/:id', function(req, res) {
 	const occupationName = req.params.id.replace(" occupations", "").split(' ').join('_');
 	pool.connect(function (err, client, done) {
@@ -97,6 +98,7 @@ app.get('/occupations/:id', function(req, res) {
 	// res.render("career", {row: row});
 })
 
+/* renders html file which displays data and info on the career the user has clicked on */
 app.get('/occupations/:id/info', function(req, res) {
 	var occupationName = req.params.id;
 	var specialOccupationName = tools.cleanString(occupationName);
@@ -129,10 +131,13 @@ app.get('/occupations/:id/info', function(req, res) {
 	// res.status(200).render("careerinfo");
 	// res.status(200).send(graph_data);
 })
-/* Hello World (Temporary)*/
+
+/* Hello World (Temporary) */
 app.get('/hello-world', function(req, res) {
 	res.send("Hello World")
 })
+
+/* The port the app is listening in */
 app.listen(3000, function() {
 	console.log('Career Search listening on port localhost:3000!');
 })
