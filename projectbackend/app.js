@@ -122,9 +122,13 @@ app.get('/occupations/:id', function(req, res) {
 
 /* renders html file which displays data and info on the career the user has clicked on */
 app.get('/occupations/:id/info', function(req, res) {
+	/* set the new occupation name (for querying) */
 	var occupationName = req.params.id;
+	/* set another occupation name (for another query) */
 	var specialOccupationName = tools.cleanString(occupationName);
+	/* run all the queries to get the data */
 	db.tx(t => {
+		/* returns the results from the queries*/
         return t.batch([
             t.any(`SELECT * FROM careerdetails WHERE job_title = '${occupationName}';`),
 			t.any(`SELECT * FROM summaries WHERE job_title = '${occupationName}';`),
@@ -134,17 +138,29 @@ app.get('/occupations/:id/info', function(req, res) {
         ]);
     })
     .then(data => {
+    	/* data is accessed here */
     	// res.send(data)
+    	/* using data in objects to pass on to the render */
+    	/* query_tools will assist in retrieving the right data from the results */
     	/* duties of career */
     	var career_duties = query_tools.getDuties(data, 0); // 0 is the index of array of career details table
+    	/* get the skills data with query tools*/
     	var skills = query_tools.getSkills(data, 0);
+    	/* temporary data for graph */
         var labels = ["2016", "2026"];
+        /* get the graph data for the graph */
         var graph_data = query_tools.getEmployment(data, 2); // 2 is the index of the array of graph data table
+        /* more temporary data */
         var labels2 = ["2016", "2026"];
+        /* more temporary data */
         var data2 = [9, 3433];
+        /* get the steps of how to become */
         var steps = query_tools.getHowToBecome(data, 0);
+        /* more temporary data */
         var percent_e = query_tools.getEmploymentPercent(data, 2);
+        /* send the data in raw form */
         // res.status(200).send(data);
+        /* render the page to display the data */
         res.status(200).render("careerinfo", {step: steps, duty: career_duties, skill: skills, labels: labels, datas: graph_data, labels2: labels2, datas2: data2});
     })
     .catch(error => {
