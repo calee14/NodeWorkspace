@@ -1,4 +1,15 @@
 module.exports = {
+	getDescription: function(row, description_list) {
+		var row_title = row["occupation_group"];
+		var description;
+		for(var i=0;i<description_list.length;i++) {
+			if(row_title == description_list[i]["job_title"].replace(/,/g,"").split(' ').join('_')) {
+				description = description_list[i]["header"].slice(1, description_list[i]["header"].length-2);
+				break;
+			}
+		}
+		return description;
+	},
 	getDuties: function(object, index) {
 		return object[index][0]["duties"].slice(1);
 	},

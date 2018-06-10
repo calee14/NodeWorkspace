@@ -35,7 +35,8 @@ app.get('/', function(req, res) {
 	db.tx(t => {
 		return t.batch([
 				/* data[0] is the table of major occupations and data about them */
-				t.any(`SELECT * FROM major`)
+				t.any(`SELECT * FROM major`),
+				t.any(`SELECT * FROM occupationdesc`)
 			]);
 	})
 	.then(data => {
@@ -49,7 +50,8 @@ app.get('/', function(req, res) {
 				average_salary: row["average_median_wage"],
 				employment: row["employment_2016"],
 				outlook: row["change_201626"],
-				link: row["occupation_group"]
+				link: row["occupation_group"],
+				description: query_tools.getDescription(row, data[1])
 			}
 			mo_list.push(mo);
 		}
