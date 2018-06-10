@@ -59,39 +59,6 @@ app.get('/', function(req, res) {
 		console.log(error);
 		res.status(400).send(error);
 	})
-	/* connect to the database using the config from when it was initialized with*/
-	// pool.connect(function (err, client, done) {
-	// 	/* check if there is an error*/
-	// 	if(err) {
-	// 		console.log("not able to get connection " + err);
-	// 		res.status(400).send(err);
-	// 	}
-	// 	/* make a query to the database */
-	// 	client.query(`SELECT * FROM major`, function(err, result) {
-	// 		done();
-	// 		if(err) {
-	// 			console.log(err);
-	// 			res.status(400).send(err);
-	// 		}
-	// 		var rows = result.rows;
-	// 		var mo_list = [];
-	// 		for(var i=0;i<rows.length;i++) {
-	// 			if(i == 0) continue;
-	// 			var row = rows[i];
-	// 			const mo = {
-	// 				title: row["title"],
-	// 				average_salary: row["average_median_wage"],
-	// 				employment: row["employment_2016"],
-	// 				outlook: row["change_201626"],
-	// 				link: row["occupation_group"]
-	// 			}
-	// 			mo_list.push(mo);
-	// 		}
-	// 		/* Sending data from database to the website */
-	// 		res.status(200).render("home", {msg: mo_list})
-	// 	});
-	// });
-	// pool.end();
 });
 
 /* renders career page where all careers in the occupation are displayed*/
