@@ -188,7 +188,7 @@ app.get('/hello-world', function(req, res) {
 })
 
 app.get('/gettyimages', function(req, res) {
-	res.send("Getty Images");
+	
 })
 
 /* The port the app is listening in */
