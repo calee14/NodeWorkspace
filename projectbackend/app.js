@@ -57,6 +57,7 @@ app.get('/', function(req, res) {
 	})
 	.catch(error => {
 		console.log(error);
+		res.status(400).send(error);
 	})
 	/* connect to the database using the config from when it was initialized with*/
 	// pool.connect(function (err, client, done) {
