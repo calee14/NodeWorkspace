@@ -36,28 +36,43 @@ app.get('/', function(req, res) {
 		return t.batch([
 				/* data[0] is the table of major occupations and data about them */
 				t.any(`SELECT * FROM major`),
+				/* data[1] is the table which holds the description for the occupations */
 				t.any(`SELECT * FROM occupationdesc`)
 			]);
 	})
 	.then(data => {
+		/* get the data from the first query */
 		var rows = data[0];
+		/* intialize a emtpy list to store the objects for the render */
 		var mo_list = [];
+		/* loop through all th rows from the queried data */
 		for(var i=0;i<rows.length;i++) {
+			/* skip the first element  */
 			if(i == 0) continue;
+			/* make a new variable to hold the current row */
 			var row = rows[i];
+			/* make a json object to hold the data for the major occupation group */
 			const mo = {
+				/* data to display for the major occupation */
+				/* data is located in the array row */
+				/* the variables in the json object are about the major occuaption */
 				title: row["title"],
 				average_salary: row["average_median_wage"],
 				employment: row["employment_2016"],
 				outlook: row["change_201626"],
 				link: row["occupation_group"],
+				/* use the query tool to find the right description for the according row (major occupation) */
 				description: query_tools.getDescription(row, data[1])
 			}
+			/* add the object to the list */
 			mo_list.push(mo);
 		}
+		/* render the new list */
 		res.status(200).render("home", {msg: mo_list})
 	})
 	.catch(error => {
+		/* if there is an error print it to the console */
+		/* send a status of 400 when error */
 		console.log(error);
 		res.status(400).send(error);
 	})
@@ -126,6 +141,7 @@ app.get('/occupations/:id/info', function(req, res) {
 	db.tx(t => {
 		/* returns the results from the queries*/
         return t.batch([
+        	/* data[0] is the */
             t.any(`SELECT * FROM careerdetails WHERE job_title = '${occupationName}';`),
 			t.any(`SELECT * FROM summaries WHERE job_title = '${occupationName}';`),
 			t.any(`SELECT * FROM outlook WHERE title = '${specialOccupationName}'`),
