@@ -187,6 +187,10 @@ app.get('/hello-world', function(req, res) {
 	res.send("Hello World")
 })
 
+app.get('/gettyimages', function(req, res) {
+	res.send("Getty Images");
+})
+
 /* The port the app is listening in */
 app.listen(3000, function() {
 	console.log('Career Search listening on port localhost:3000!');
