@@ -32,38 +32,64 @@ app.set('view engine', 'handlebars');
 
 /* renders the home page: lists the major occupations from the majoroccupations table */
 app.get('/', function(req, res) {
-	/* connect to the database using the config from when it was initialized with*/
-	pool.connect(function (err, client, done) {
-		/* check if there is an error*/
-		if(err) {
-			console.log("not able to get connection " + err);
-			res.status(400).send(err);
+	db.tx(t => {
+		return t.batch([
+				/* data[0] is the table of major occupations and data about them */
+				t.any(`SELECT * FROM major`)
+			]);
+	})
+	.then(data => {
+		var rows = data[0];
+		var mo_list = [];
+		for(var i=0;i<rows.length;i++) {
+			if(i == 0) continue;
+			var row = rows[i];
+			const mo = {
+				title: row["title"],
+				average_salary: row["average_median_wage"],
+				employment: row["employment_2016"],
+				outlook: row["change_201626"],
+				link: row["occupation_group"]
+			}
+			mo_list.push(mo);
 		}
-		/* make a query to the database */
-		client.query(`SELECT * FROM major`, function(err, result) {
-			done();
-			if(err) {
-				console.log(err);
-				res.status(400).send(err);
-			}
-			var rows = result.rows;
-			var mo_list = [];
-			for(var i=0;i<rows.length;i++) {
-				if(i == 0) continue;
-				var row = rows[i];
-				const mo = {
-					title: row["title"],
-					average_salary: row["average_median_wage"],
-					employment: row["employment_2016"],
-					outlook: row["change_201626"],
-					link: row["occupation_group"]
-				}
-				mo_list.push(mo);
-			}
-			/* Sending data from database to the website */
-			res.status(200).render("home", {msg: mo_list})
-		});
-	});
+		res.status(200).render("home", {msg: mo_list})
+	})
+	.catch(error => {
+		console.log(error);
+	})
+	/* connect to the database using the config from when it was initialized with*/
+	// pool.connect(function (err, client, done) {
+	// 	/* check if there is an error*/
+	// 	if(err) {
+	// 		console.log("not able to get connection " + err);
+	// 		res.status(400).send(err);
+	// 	}
+	// 	/* make a query to the database */
+	// 	client.query(`SELECT * FROM major`, function(err, result) {
+	// 		done();
+	// 		if(err) {
+	// 			console.log(err);
+	// 			res.status(400).send(err);
+	// 		}
+	// 		var rows = result.rows;
+	// 		var mo_list = [];
+	// 		for(var i=0;i<rows.length;i++) {
+	// 			if(i == 0) continue;
+	// 			var row = rows[i];
+	// 			const mo = {
+	// 				title: row["title"],
+	// 				average_salary: row["average_median_wage"],
+	// 				employment: row["employment_2016"],
+	// 				outlook: row["change_201626"],
+	// 				link: row["occupation_group"]
+	// 			}
+	// 			mo_list.push(mo);
+	// 		}
+	// 		/* Sending data from database to the website */
+	// 		res.status(200).render("home", {msg: mo_list})
+	// 	});
+	// });
 	// pool.end();
 });
 
