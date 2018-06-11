@@ -187,14 +187,6 @@ app.get('/hello-world', function(req, res) {
 	res.send("Hello World")
 })
 
-app.get('/googleapis', function(req, res) {
-	googleapis.discover('customsearch', 'v1').execute(function(err, client) {
-	  // set api key
-	  client.withApiKey('AIzaSyCbXOCbOSyfGj_XaTgort0OrwsXIuqZnrg');
-	  client.search.cse.list({ q: '...' }).execute(console.log);
-	});
-})
-
 /* The port the app is listening in */
 app.listen(3000, function() {
 	console.log('Career Search listening on port localhost:3000!');
