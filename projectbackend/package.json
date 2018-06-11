@@ -11,7 +11,6 @@
   "dependencies": {
     "express": "^4.16.3",
     "express-handlebars": "^3.0.0",
-    "googleapis": "^32.0.0",
     "pg": "^6.4.2",
     "pg-promise": "^8.4.0"
   }
