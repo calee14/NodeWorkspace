@@ -8,6 +8,10 @@ This website will assist the user to help find the career that best fits them an
 - Improve UI if time.
 - Add feature: Simple search career: add tags to careers
   - Match tags to key words in career which will represent the career in the search
+- Get node and modules installed on GoDaddy
+# Reminders:
+- Put links to install node on computer.
+- Ask josh to help me.
 # TODO:
 - Improve UI
 - Finish graph
