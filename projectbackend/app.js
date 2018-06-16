@@ -45,6 +45,7 @@ app.get('/', function(req, res) {
 		var rows = data[0];
 		/* intialize a emtpy list to store the objects for the render */
 		var mo_list = [];
+		var title_list = [];
 		/* loop through all th rows from the queried data */
 		for(var i=0;i<rows.length;i++) {
 			/* skip the first element  */
@@ -64,11 +65,12 @@ app.get('/', function(req, res) {
 				/* use the query tool to find the right description for the according row (major occupation) */
 				description: query_tools.getDescription(row, data[1])
 			}
+			title_list.push(row["title"]);
 			/* add the object to the list */
 			mo_list.push(mo);
 		}
 		/* render the new list */
-		res.status(200).render("home", {msg: mo_list})
+		res.status(200).render("home", {groupTitle: title_list, msg: mo_list})
 	})
 	.catch(error => {
 		/* if there is an error print it to the console */

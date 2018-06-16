@@ -1,7 +1,13 @@
+<div class="sidenavbar">
+  {{#each groupTitle}}
+  	<a href="#">{{this}}</a>
+  	{{/each}}
+</div>
+<div class="group-container">
 <!-- views/partials/navbar.handlebars -->
 {{#each msg}}
 	<!-- CATEGORY HOLDER -->
-	<div class="category-holder">
+	<div class="category-holder" id="{{this.title}}">
 		<!-- HEADER -->
 		<div class="info-heading">
 			<h2><a href="/occupations/{{this.link}}">{{this.title}}</a></h2>
@@ -17,3 +23,6 @@
 		</div>
 	</div>
 {{/each}}
+</div>
+<!-- FOR FLOATING PURPOSES -->
+<div style="clear:both;"></div>

@@ -20,6 +20,33 @@ body {
 	color: #8E8D8A;
 }
 /*END OF NAV-BAR CSS*/
+
+.sidenavbar {
+    width: 280px;
+    /*position: fixed;*/
+    float: left;
+    z-index: 1;
+    top: 20px;
+    left: 10px;
+    background: #eee;
+    overflow-x: hidden;
+    padding: 8px 0;
+}
+
+.sidenavbar a {
+    padding: 6px 8px 6px 16px;
+    text-decoration: none;
+    font-size: 10px;
+    color: #2196F3;
+    display: block;
+}
+
+.sidenavbar a:hover {
+    color: #064579;
+}
+.group-container {
+	float: left;
+}
 /*CSS FOR THE CATEGORY PANELS*/
 .category-holder {
 	/*MARGIN*/
