@@ -24,7 +24,6 @@ module.exports = {
 			if(new_object.hasOwnProperty(key)) {
 				var howtobecome = new_object[key];
 				if(howtobecome == null) {continue};
-				console.log(key + " -> " + new_object[key][0]);
 				key_name = howtobecome[0];
 				if(howtobecome[0] != "Important Qualities") {
 					howtobecome = howtobecome.slice(1);
@@ -46,7 +45,6 @@ module.exports = {
 						index += 1;
 					}
 					howtobecome = howtobecome_temp;
-					console.log(howtobecome.length);
 					for(var i=0;i<howtobecome.length;i++) {
 						number += 1;
 						var education = {

@@ -3,7 +3,7 @@ body {
 	margin: 0px;
 	padding: 0px;
 	/*BACKGROUND COLOR*/
-	background-color: #FFF8F4;
+	background-color: #EAE7DC !important;
 	/*border: solid;
 	border-color: blue;*/
 	/*overflow: scroll;*/
@@ -11,13 +11,13 @@ body {
 
 /*NAV-BAR CSS*/
 .navbar-color {
-	background-color: #E84F42;
+	background-color: #EAE7DC;
 }
 .navbar-brand:hover{
-	color: #FFF9F8;
+	color: #8E8D8A;
 }
 .navbar-text {
-	color: #FFF9F8;
+	color: #8E8D8A;
 }
 /*END OF NAV-BAR CSS*/
 /*CSS FOR THE CATEGORY PANELS*/
@@ -33,7 +33,7 @@ body {
 	margin-top: 7px;
 	margin-bottom: 7px;
 	/*BACKGROUND COLOR*/
-	background-color: #FFF;
+	background-color: #EAE7DC;
 	border-radius: 2px;
 	box-shadow: 0px 0px 5px #888888;
 }
