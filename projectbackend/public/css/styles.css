@@ -37,7 +37,7 @@ body {
 
 }
 #group-shown {
-	
+	display: block !important;
 }
 .sidenavbar a {
     padding: 6px 8px 6px 16px;

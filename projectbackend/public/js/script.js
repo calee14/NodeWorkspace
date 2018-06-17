@@ -36,11 +36,13 @@ for (var i = 0; i < holder.length; i++) {
    	// console.log(autoHeight);
     // p.style.height = autoHeight + "px";
 }
-var sidemenu = document.getElementById('sidemenu').
-[].forEach.call(sidemenu.querySelectorAll('a'), function(element) {
-  element.setAttribute('display', 'none');
+var sidemenu = document.getElementById('sidemenu');
+var a_list = sidemenu.children;
+for(var i=0;i<a_list.length;i++) {
+  var element = a_list[i];
+  console.log(element.textContent);
   element.addEventListener('click', function() {
     document.getElementById('group-shown').removeAttribute('group-shown');
     this.setAttribute("class", "group-shown");
   });
-});
+}
