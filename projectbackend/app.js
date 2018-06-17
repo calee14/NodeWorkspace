@@ -65,7 +65,7 @@ app.get('/', function(req, res) {
 				/* use the query tool to find the right description for the according row (major occupation) */
 				description: query_tools.getDescription(row, data[1])
 			}
-			title_list.push(row["title"].split(' ').join('-'));
+			title_list.push(row["title"]);
 			/* add the object to the list */
 			mo_list.push(mo);
 		}
