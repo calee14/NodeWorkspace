@@ -2,16 +2,19 @@
 This website will assist the user to help find the career that best fits them and will guide them to help them get their career.
 # New NOTE (Goal Summer) Most important to Least Important (top - bottom):
 - Add description for Major Occupations
-  - Once scraped the descriptions from the ooh, Occupational Outlook Handbook, query from database and update the definition section of the home page.
+  - ~~Once scraped the descriptions from the ooh, Occupational Outlook Handbook, query from database and update the definition section of the home page.~~
+  NOTE:well, still need to fix art and design occupation group
 - The MVP for this website is to have to image api working adding images to website. 
 - Find the right display for the data.
-- Improve UI if time.
+- Improve UI!
 - Add feature: Simple search career: add tags to careers
   - Match tags to key words in career which will represent the career in the search
-- Get node and modules installed on GoDaddy
+- ~~Get node and modules installed on GoDaddy~~ NOTE: will use heroku for hosting
+- Will refactor website if time to python and flask for GoDaddy.
 # Reminders:
-- Put links to install node on computer.
-- Ask josh to help me.
+- ~~Put links to install node on computer.~~
+- ~~Ask josh to help me.~~
+- Can't use GoDaddy anymore. Will use Heroku for hosting. Get instructions on how to load website on Heroku and host it.
 # TODO:
 - Improve UI
 - Finish graph
