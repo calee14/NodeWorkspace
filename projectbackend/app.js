@@ -102,6 +102,7 @@ app.get('/occupations/:id', function(req, res) {
 			/* get the rows from the result */
 			var rows = result.rows;
 			var career_list = [];
+			var title_list = [];
 			/* get all careers and format it in 3 per array */
 			/* loop through all the rows and iterate by 3 */
 			for(var i=0;i<rows.length;i+=3) {
@@ -119,6 +120,8 @@ app.get('/occupations/:id', function(req, res) {
 						education: row["entrylevel_eduation"],
 						salary: row["median_pay"]
 					}
+					/* add title of careers */
+					title_list.push(row["occupation"]);
 					/* add it to the array of 3 */
 					career_row.push(career);
 				}
@@ -126,7 +129,7 @@ app.get('/occupations/:id', function(req, res) {
 				career_list.push({careers: career_row});
 			}
 			/* send the response */
-			res.status(200).render("career", {row: career_list});
+			res.status(200).render("career", {careerTitle: title_list, row: career_list});
 		});
 	});
 	// pool.end();
