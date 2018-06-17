@@ -1,28 +1,30 @@
+<!-- SIDEBAR TO NAVIGATE THROUGH ALL THE CAREERS -->
 <div class="sidenavbar" id="sidemenu">
   {{#each groupTitle}}
   	<a href="#">{{this}}</a>
   	{{/each}}
 </div>
+
 <div class="group-container" id="group-container-id">
-<!-- views/partials/navbar.handlebars -->
-{{#each msg}}
-	<!-- CATEGORY HOLDER -->
-	<div class="category-holder" id="">
-		<!-- HEADER -->
-		<div class="info-heading">
-			<h2><a href="/occupations/{{this.link}}">{{this.title}}</a></h2>
-		</div>
-		<!-- PARAGRAPH -->
-		<div class="info-text">
-			<p>{{this.description}}</p>
-			<div class="occupation-stats">
-				<p>Salary: {{this.average_salary}}</p>
-				<p>Current Employment: {{this.employment}}</p>
-				<p>Job Outlook: {{this.outlook}} new jobs</p>
+	<!-- views/partials/navbar.handlebars -->
+	{{#each msg}}
+		<!-- CATEGORY HOLDER -->
+		<div class="category-holder" id="">
+			<!-- HEADER -->
+			<div class="info-heading">
+				<h2><a href="/occupations/{{this.link}}">{{this.title}}</a></h2>
+			</div>
+			<!-- PARAGRAPH -->
+			<div class="info-text">
+				<p>{{this.description}}</p>
+				<div class="occupation-stats">
+					<p>Salary: {{this.average_salary}}</p>
+					<p>Current Employment: {{this.employment}}</p>
+					<p>Job Outlook: {{this.outlook}} new jobs</p>
+				</div>
 			</div>
 		</div>
-	</div>
-{{/each}}
+	{{/each}}
 </div>
 <!-- FOR FLOATING PURPOSES -->
 <div style="clear:both;"></div>
