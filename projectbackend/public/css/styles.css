@@ -53,6 +53,9 @@ body {
 .group-container {
 	float: left;
 }
+#group-container-id {
+
+}
 /*CSS FOR THE CATEGORY PANELS*/
 .category-holder {
 	/*MARGIN*/

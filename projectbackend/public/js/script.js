@@ -38,11 +38,33 @@ for (var i = 0; i < holder.length; i++) {
 }
 var sidemenu = document.getElementById('sidemenu');
 var a_list = sidemenu.children;
+var group = document.getElementById('group-container-id').children;
+for (var i = 0; i < group.length; i++) {
+  if(i == 0) {
+    group[i].setAttribute("id", "group-shown");
+  }
+  group[i].setAttribute("style", "display:none;");
+}
 for(var i=0;i<a_list.length;i++) {
   var element = a_list[i];
-  console.log(element.textContent);
   element.addEventListener('click', function() {
-    document.getElementById('group-shown').removeAttribute('group-shown');
-    this.setAttribute("class", "group-shown");
+    var sidemenu = document.getElementById('sidemenu');
+    var list = sidemenu.children;
+    var index = 0;
+    for(var j=0;j<list.length;j++) {
+      if(list[j] == this) {
+        console.log(j);
+        index = j;
+        break;
+      }
+    }
+    var group = document.getElementById('group-container-id');
+    for (var i = 0; i < group.children.length; i++) {
+      if(i == index) {
+        document.getElementById('group-shown').removeAttribute('id');
+        var occupation = group.children[i];
+        occupation.setAttribute("id", "group-shown");
+      }
+    }
   });
 }

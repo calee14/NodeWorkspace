@@ -3,11 +3,11 @@
   	<a href="#">{{this}}</a>
   	{{/each}}
 </div>
-<div class="group-container">
+<div class="group-container" id="group-container-id">
 <!-- views/partials/navbar.handlebars -->
 {{#each msg}}
 	<!-- CATEGORY HOLDER -->
-	<div class="category-holder" id="{{this.title}}">
+	<div class="category-holder" id="">
 		<!-- HEADER -->
 		<div class="info-heading">
 			<h2><a href="/occupations/{{this.link}}">{{this.title}}</a></h2>
