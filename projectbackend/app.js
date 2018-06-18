@@ -103,13 +103,9 @@ app.get('/occupations/:id', function(req, res) {
 			var rows = result.rows;
 			var career_list = [];
 			var title_list = [];
-			/* get all careers and format it in 3 per array */
-			/* loop through all the rows and iterate by 3 */
+			/* get all careers from data */
+			/* loop through all the rows */
 			for(var i=0;i<rows.length;i++) {
-				/* loop through the 3 careers*/
-				// for(var j=0;j<3;j++) {
-				/* if index is too big for the array */
-				// if(i+j >= rows.length) continue;
 				/* get the row from array */
 				var row = rows[i];
 				/* make the career */
@@ -123,9 +119,7 @@ app.get('/occupations/:id', function(req, res) {
 				title_list.push(row["occupation"]);
 				/* add it to the array of 3 */
 				career_list.push(career);
-				// }
 				/* add the array size 3 to the final array */
-				// career_list.push({careers: career_row});
 			}
 			/* send the response */
 			res.status(200).render("career", {careerTitle: title_list, careers: career_list});
