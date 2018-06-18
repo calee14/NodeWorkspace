@@ -8,31 +8,25 @@
 <!-- GROUP CONTAINER TO HOLD THE CAREERS HOLDERS -->
 <div class="group-container" id="group-container-id">
 	<!-- THE CONTAINER FOR THE CAREER BOX -->
-	{{#each row}}
-		<div class="career-row">
-			{{#each careers}}
-				<!-- HOLDS THE TEXT AND INFO -->
-				<div class="text-holder">
-					<!-- HEADER OF THE TEXT -->
-					<div class="text-career-header">
-						<h3>{{this.title}}</h3>
-					</div>
-					<!-- TEXT PARAGRAPHS -->
-					<div class="text-paragraph">
-						<div class="small">
-							<p class="text-expand-min">{{this.discription}}</p>
-						</div>
-						<p>Educations Level: {{this.education}}</p>
-						<p>Average Salary: {{this.salary}}</p>
-					</div>
-					<!-- THE READ MORE BUTTON -->
-					<div class="text-read-more">
-						<p><a class="read-more button button1" href="/occupations/{{this.title}}/info">Read More</a></p>
-					</div>
+	{{#each careers}}
+		<!-- HOLDS THE TEXT AND INFO -->
+		<div class="text-holder">
+			<!-- HEADER OF THE TEXT -->
+			<div class="text-career-header">
+				<h3>{{this.title}}</h3>
+			</div>
+			<!-- TEXT PARAGRAPHS -->
+			<div class="text-paragraph">
+				<div class="small">
+					<p class="text-expand-min">{{this.discription}}</p>
 				</div>
-			{{/each}}
-			<!-- FOR FLOATING PURPOSES -->
-			<div style="clear:both;"></div>
+				<p>Educations Level: {{this.education}}</p>
+				<p>Average Salary: {{this.salary}}</p>
+			</div>
+			<!-- THE READ MORE BUTTON -->
+			<div class="text-read-more">
+				<p><a class="read-more button button1" href="/occupations/{{this.title}}/info">Read More</a></p>
+			</div>
 		</div>
 	{{/each}}
 </div>
