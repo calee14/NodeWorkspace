@@ -3,7 +3,7 @@ This website will assist the user to help find the career that best fits them an
 # New NOTE (Goal Summer) Most important to Least Important (top - bottom):
 - Add description for Major Occupations
   - ~~Once scraped the descriptions from the ooh, Occupational Outlook Handbook, query from database and update the definition section of the home page.~~
-  NOTE:well, still need to fix art and design occupation group
+  NOTE: well, still need to fix art and design occupation group
 - The MVP for this website is to have to image api working adding images to website. 
 - Find the right display for the data.
 - Improve UI!
@@ -17,6 +17,8 @@ This website will assist the user to help find the career that best fits them an
 - Can't use GoDaddy anymore. Will use Heroku for hosting. Get instructions on how to load website on Heroku and host it.
 # TODO:
 - Improve UI
+  - Change color theme for sidemenu
+  - Clean up the info page (Color Theme and HTML)
 - Finish graph
 - Add features to website
 - Change line graphs to bar graphs and display growth in percent 
