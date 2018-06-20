@@ -1,5 +1,9 @@
 # Career Search Website
 This website will assist the user to help find the career that best fits them and will guide them to help them get their career.
+# Planning Ahead:
+- will spend the next two lessons with Josh to improve UI and get website on Heroku
+- might spend the next two lessons on adding new features or improving and fixing bugs
+- if UI and hosting takes longer might as well spend the next for lessons fixing UI and the last two lessons on trying to get hosting
 # New NOTE (Goal Summer) Most important to Least Important (top - bottom):
 - Add description for Major Occupations
   - ~~Once scraped the descriptions from the ooh, Occupational Outlook Handbook, query from database and update the definition section of the home page.~~
