@@ -1,6 +1,7 @@
 module.exports = {
 	getDescription: function(row, description_list) {
 		var row_title = row["occupation_group"];
+		if(row_title == "Arts_Design_Entertainment_Sports_and_Media") { row_title = "Arts_and_Design"}
 		var description;
 		for(var i=0;i<description_list.length;i++) {
 			if(row_title == description_list[i]["job_title"].replace(/,/g,"").split(' ').join('_')) {
