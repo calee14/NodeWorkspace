@@ -27,13 +27,12 @@
     /*background-color: red;*/ /* for vizualization purposes */
     display: inline-block;
     margin: auto;
-    margin-right: 18px;
-    margin-left: 18px;
+    margin-top: 7px;
     padding: 10px;
-    width: 320px;/* ADD 20 px for padding*/
+    width: 800px;/* ADD 20 px for padding*/
     margin: ; /* calculated to fit the career row */
     /*BACKGROUND COLOR*/
-    background-color: #FFF;
+    background-color: #EAE7DC;
     border-radius: 2px;
     box-shadow: 0px 0px 5px #888888;
     float: left;
@@ -42,8 +41,9 @@
     box-shadow: 0px 0px 10px #888888;
 }*/
 /*TEXT HOLDER HEADER*/
-.text-holder h3 {
-    text-align: left;
+.text-career-header h3 {
+    color: #E84542;
+    text-align: center;
 }
 /*TEXT HOLDER PARAGRAPH POSITIONING EDIT HOW <p> should look like*/
 .text-holder p {
@@ -107,7 +107,7 @@
 .button {
     background-color: #44A0FF; /* BlUEISH */
     border: none;
-    color: white;
+    color: #E84542;
     padding: 16px 32px;
     text-align: center;
     text-decoration: none;
@@ -124,12 +124,13 @@
 .button1 {
     background-color: white; 
     color: black; 
-    border: 2px solid #44A0FF;
+    border: 2px solid #E84542;
 }
 /*BUTTON ONE HOVER*/
 .button1:hover {
-    background-color: #44A0FF;
+    background-color: #E84542;
     color: white;
+    text-decoration: none;
 }
 /*BUTTON ONE ACTIVE*/
 .button1:active {
