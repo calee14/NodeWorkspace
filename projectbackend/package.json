@@ -4,14 +4,18 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
   },
-  "author": "",
+  "author": "cap-lee",
   "license": "ISC",
   "dependencies": {
     "express": "^4.16.3",
     "express-handlebars": "^3.0.0",
     "pg": "^6.4.2",
     "pg-promise": "^8.4.0"
+  },
+  "engines": {
+    "node": "4.1.1"
   }
 }
