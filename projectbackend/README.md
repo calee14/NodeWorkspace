@@ -20,6 +20,11 @@ This website will assist the user to help find the career that best fits them an
 - ~~Ask josh to help me.~~
 - Can't use GoDaddy anymore. Will use Heroku for hosting. Get instructions on how to load website on Heroku and host it.
 # TODO:
+- add database to heroku hosting
+- get heroku/python installed
+- do josh's challenges
+- load python scripts on project folder
+- comment on machine learning scripts
 - Improve UI
   - Change the position of the descriptions and data for all pages
   - Change color theme for sidemenu
