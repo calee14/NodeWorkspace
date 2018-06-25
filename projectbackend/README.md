@@ -5,9 +5,9 @@ This website will assist the user to help find the career that best fits them an
 - might spend the next two lessons on adding new features or improving and fixing bugs
 - if UI and hosting takes longer might as well spend the next for lessons fixing UI and the last two lessons on trying to get hosting
 # New NOTE (Goal Summer) Most important to Least Important (top - bottom):
-- Add description for Major Occupations
+- ~~Add description for Major Occupations~~
   - ~~Once scraped the descriptions from the ooh, Occupational Outlook Handbook, query from database and update the definition section of the home page.~~
-  NOTE: well, still need to fix art and design occupation group
+  ~~NOTE: well, still need to fix art and design occupation group~~
 - The MVP for this website is to have to image api working adding images to website. 
 - Find the right display for the data.
 - Improve UI!
@@ -18,7 +18,7 @@ This website will assist the user to help find the career that best fits them an
 # Reminders:
 - ~~Put links to install node on computer.~~
 - ~~Ask josh to help me.~~
-- Can't use GoDaddy anymore. Will use Heroku for hosting. Get instructions on how to load website on Heroku and host it.
+- ~~Can't use GoDaddy anymore. Will use Heroku for hosting. Get instructions on how to load website on Heroku and host it.~~
 # TODO:
 - add database to heroku hosting
 - get heroku/python installed
