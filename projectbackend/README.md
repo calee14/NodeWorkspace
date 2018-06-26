@@ -5,6 +5,10 @@ This website will assist the user to help find the career that best fits them an
 - might spend the next two lessons on adding new features or improving and fixing bugs
 - if UI and hosting takes longer might as well spend the next for lessons fixing UI and the last two lessons on trying to get hosting
 # New NOTE (Goal Summer) Most important to Least Important (top - bottom):
+- Need to update database on Heroku
+  - ~~try making a seperate app to make changes to the database~~
+  - try running the code on the main app to update the database
+  - try uploading the database to the one on heroku
 - ~~Add description for Major Occupations~~
   - ~~Once scraped the descriptions from the ooh, Occupational Outlook Handbook, query from database and update the definition section of the home page.~~
   ~~NOTE: well, still need to fix art and design occupation group~~
