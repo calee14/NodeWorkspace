@@ -65,6 +65,7 @@ export function getPostData(id) {
 
   // Use gray-matter to parse the post metadata section
   const matterResult = matter(fileContents)
+  console.log(id)
 
   // Combine the data with the id
   return {
