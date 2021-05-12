@@ -15,7 +15,6 @@ function App() {
     </Folder>
     <Folder name="Applications"></Folder>
 
-    
     </div>;
 }
 
