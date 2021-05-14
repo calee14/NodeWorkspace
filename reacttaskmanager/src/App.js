@@ -31,7 +31,10 @@ function App() {
 
   // Toggle Reminder
   const toggleReminder = (id) => {
-    console.log(id);
+    setTasks(tasks.map((task) => 
+      task.id === id ? {...task, reminder: // the ...task copies the task object except changes reminder
+        !task.reminder } : task));
+    
   }
 
   return (
