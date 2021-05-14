@@ -24,10 +24,20 @@ function App() {
     },
   ]); // var in between useState is default
 
+  // Delete Task
+  const deleteTask = (id) => {
+    setTasks(tasks.filter((task) => task.id !== id)); // Use filter method to remove tasks with id.
+  }
+
+  // Toggle Reminder
+  const toggleReminder = (id) => {
+    console.log(id);
+  }
+
   return (
     <div className="container">
       <Header title='Task Tracker'/>
-      <Tasks tasks={tasks}/>
+      {tasks.length > 0 ? <Tasks tasks={tasks} onDelete={deleteTask} onToggle={toggleReminder} /> : 'There are no tasks to show.'}
     </div>
   );
 }
