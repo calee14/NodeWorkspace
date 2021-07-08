@@ -4,7 +4,7 @@ import styles from '../styles/Home.module.css'
 import { gql } from '@apollo/client'
 import client from '../apollo-client'
 
-export default function Home() {
+export default function Home({ countries }) {
   return (
     <div className={styles.container}>
       <Head>
@@ -68,4 +68,24 @@ export default function Home() {
       </footer>
     </div>
   )
+}
+
+export async function getStaticProps() {
+  const { data } = await client.query({
+    query: gql`
+      query Countries {
+        countries {
+          code
+          name
+          emoji
+        }
+      }
+    `,
+  })
+
+  return {
+    props: {
+      countries: data.countries.slice(0, 4)
+    }
+  }
 }
