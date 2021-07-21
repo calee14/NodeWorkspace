@@ -1,6 +1,8 @@
 import mongoose from 'mongoose'
 
-/* PetSchema will correspond to a collection in your MongoDB database. */
+// Schemas will be stored as collections in the DB
+// the PetSchema will be stored under 'pet'
+// use PetSchema.add() to add new key properties
 const PetSchema = new mongoose.Schema({
   name: {
     /* The name of this pet */
@@ -56,4 +58,9 @@ const PetSchema = new mongoose.Schema({
   },
 })
 
+PetSchema.query.byName = function(name) {
+  return this.where({ name: new RegExp(name, 'i') })
+};
+
+// Retrieve the model or compile a collectionn
 export default mongoose.models.Pet || mongoose.model('Pet', PetSchema)
