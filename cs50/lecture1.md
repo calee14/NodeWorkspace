@@ -1,6 +1,6 @@
 # Advanced JS
 ## Primative vs. Object
-- Objects are passed onto other variables by reference (pointers)
+- Objects are passed onto other variables (vars, params) by reference (pointers)
 - primatives are passed onto each other by value (copying val and placing it into the var)
 - __this__ keyword used to refer to the parent object. JS isn't neccesarily object-oriented but
  uses prototype inheritance
@@ -39,7 +39,7 @@ console.log(JSON.strinify(student)) // {'name': 'John'} NOTE: the greet func isn
 - Callbacks are important for asyncronous calls when they finish
 - For future lectures but the __`next()`__ in express.js/node.js is for skipping to the next middleware
     - https://stackoverflow.com/questions/10695629/what-is-the-parameter-next-used-for-in-express
-- `then()` is a function that returns `Promise`. If there's a success with the `Promise` then the `then` func will run. `catch()` is the function that will catch isthe Promise fails
+- `then()` is a function that returns `Promise`. If there's a success with the `Promise` then the `then` func will run. `catch()` is the function that will catch if the Promise fails
     - https://stackoverflow.com/questions/3884281/what-does-the-function-then-mean-in-javascript
     - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then
 
