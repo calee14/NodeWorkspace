@@ -30,3 +30,5 @@ const User = mongoose.model('User', userSchema);
 const doc = await User.create({ email: 'test@google.com' });
 doc.updated_at; // 2020-07-06T20:38:52.917Z
 ```
+__Mongoose.js__ = schema based odm to define your model `Collections`
+- tables = collections (in noSql terminology) 
