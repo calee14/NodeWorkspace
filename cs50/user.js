@@ -63,7 +63,7 @@ const userSchema = new mongoose.Schema({ // define the fields that the schema wi
 
 // must be an actual function that is set into the methods props
 userSchema.methods.sayHi = function() {
-    console.log('Hi');
+    console.log('Hi, my name is', this.name);
 }
 
 userSchema.statics.findByName = function(name) {
@@ -76,6 +76,24 @@ userSchema.query.byName = function(name) {
     return this.where('name').equals(name);
 }
 
+// schemas can have middleware. there's pre() or post()
+// where pre is before and post is after the function event occurs
+// options there are 'save', 'remove', 'validate'
+userSchema.pre('save', function(next) {
+    this.updatedAt = Date.now();
+    // must call the next() function to procede to the next middleware
+    // which the save function that will save to the db
+    // if you don't call the middleware then the data won't be saved
+    next();
+});
+
+// this schema middleware will occur after the save() func has run
+// the doc prop is a model of the schema which is an obj of some data
+// that has been queried into the collection 
+userSchema.post('save', function(doc, next) {
+    doc.sayHi();
+    next();
+})
 // this property var is available on all instances of the model
 // how ever it will have access to the current obj that has been queried
 userSchema.virtual('namedEmail').get(function() {
