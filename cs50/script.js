@@ -77,7 +77,13 @@ async function queries() {
     // query[0].bestFriend = '61bd6c3441a8b19a07f22c88';
     // await query[0].save();
 
-    console.log(query[0]);
+    // console.log(query[0]);
+
+    const customQuery = await User.findByName('Kyle');
+    console.log(customQuery[0])
+
+    const customQueryChained = await User.find().byName('Kyle');
+    console.log(customQueryChained[0].namedEmail)
 }
 
 queries();
