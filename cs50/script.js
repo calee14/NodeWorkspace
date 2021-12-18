@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const User = require('./user')
-mongoose.connect('mongodb+srv://cap:tothemoon@cluster0.7uudc.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', () => {
+mongoose.connect(process.env.DB_URI, () => {
     console.log('connected to the db');
 });
 
