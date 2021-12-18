@@ -27,11 +27,19 @@ async function run() {
 async function newRun() {
     const user = await User.create({
         name: "Kylo",
-        age: 29,
+        age: 30,
+        email: 'kylo@deathstar.com',
         hobbies: ['The Dark Side', 'Lightsaber training', 'Jerking'],
         address: {
             street: 'Officer Quarters 1233',
             city: 'Star Destroyer 1349'
         }
-    })
+
+        // catch the errors
+    }).catch(error => {
+        console.log('error is ', error.message);
+    });
+    console.log(user);
 }
+
+newRun();
