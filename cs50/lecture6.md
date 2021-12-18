@@ -90,3 +90,5 @@ db.users.updateMany({}, { $push: { friends: "John" } });
 // removes Matty as a frield from all users friends array in the db
 db.users.updateMany({}, { $push: { friends: "Matty" } });
 ```
+- By using the model functions `updateMany()` and `updateOne()` it won't go by the model validator.
+  - only the `.save()` function will run the validator function
