@@ -24,4 +24,14 @@ async function run() {
     console.log('we have finished the db query')
 }
 
-run();
+async function newRun() {
+    const user = await User.create({
+        name: "Kylo",
+        age: 29,
+        hobbies: ['The Dark Side', 'Lightsaber training', 'Jerking'],
+        address: {
+            street: 'Officer Quarters 1233',
+            city: 'Star Destroyer 1349'
+        }
+    })
+}
