@@ -36,3 +36,5 @@ doc.updated_at; // 2020-07-06T20:38:52.917Z
   - usually also known as a collection
 - __model__ = is an individual object or set of data from the collections
 - __query__ = query against the database
+__Mongoose.js__ = schema based odm to define your model `Collections`
+- tables = collections (in noSql terminology) 
