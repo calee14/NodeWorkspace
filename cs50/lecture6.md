@@ -30,3 +30,9 @@ const User = mongoose.model('User', userSchema);
 const doc = await User.create({ email: 'test@google.com' });
 doc.updated_at; // 2020-07-06T20:38:52.917Z
 ```
+
+## Advanced Mongoose.js (baby)
+- __schema__ = defines the structure of what your data looks like
+  - usually also known as a collection
+- __model__ = is an individual object or set of data from the collections
+- __query__ = query against the database
