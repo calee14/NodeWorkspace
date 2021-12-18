@@ -6,7 +6,8 @@ const addressSchema = new mongoose.Schema({
     city: String, 
 });
 
-const userSchema = new mongoose.Schema({ // define the fields that the schema will take in
+// define the fields that the schema will take in
+const userSchema = new mongoose.Schema({ 
     name: String,
     age: {
         type: Number,
@@ -29,8 +30,8 @@ const userSchema = new mongoose.Schema({ // define the fields that the schema wi
     },
     bestFriend: { 
         type: mongoose.SchemaTypes.ObjectId,
-        // the reference, `ref`, will help mongodb understand which schema to 
-        // reference to when querying the data
+        // the reference, `ref`, will help mongodb understand which schema/model 
+        // to reference to when querying the data
         // therefore when we want to populate a reference to the obj
         // then mongodb can easily retrieve the data because it's indexed
         // and display the data in the schema format
@@ -99,4 +100,5 @@ userSchema.post('save', function(doc, next) {
 userSchema.virtual('namedEmail').get(function() {
     return `${this.name} <${this.email}>`;
 })
+
 module.exports = mongoose.model('User', userSchema);
