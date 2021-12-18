@@ -33,13 +33,51 @@ async function newRun() {
         address: {
             street: 'Officer Quarters 1233',
             city: 'Star Destroyer 1349'
-        }
-
+        },
+        bestFriend: '61bd6c3441a8b19a07f22c88'
         // catch the errors
     }).catch(error => {
         console.log('error is ', error.message);
     });
+    
     console.log(user);
 }
 
-newRun();
+// newRun();
+
+
+async function queries() {
+    const user = await User.findById('61bd4bfde8e7b7150ee956f3')
+    .then(user => {
+        // console.log(user);
+    }).catch(error => {
+        console.log(error)
+    });
+
+    // find one entry in the db by a property specificed which is the name prop
+    const oneUser = await User.findOne({ name: 'Kylo'});
+    // console.log(oneUser);
+
+    // delete one entry in the db by a property specificed which is the name prop
+    // const deletedUser = await User.deleteOne({ name: 'Kylo'});
+    // console.log(deletedUser);
+
+    // query options have greater than, `gt()`; less than equal to, `lte()`;
+    // then the `where()` can be chained to the result after the first `where()`
+    // we can `limit()` the query results and `select()` certain props of the obj
+    // the `populate()` is very powerful for if you set the 'ref' variable 
+    // then you can join two different model obj in the query
+    const query = await User.where('age')
+                    .gt(12)
+                    .lte(30)
+                    .where('name')
+                    .equals('Kylo')
+                    .populate('bestFriend')
+                    .limit(2)
+    // query[0].bestFriend = '61bd6c3441a8b19a07f22c88';
+    // await query[0].save();
+
+    console.log(query[0]);
+}
+
+queries();
