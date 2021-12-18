@@ -29,7 +29,13 @@ const userSchema = new mongoose.Schema({ // define the fields that the schema wi
     },
     bestFriend: { 
         type: mongoose.SchemaTypes.ObjectId,
-        index: true
+        // the reference, `ref`, will help mongodb understand which schema to 
+        // reference to when querying the data
+        // therefore when we want to populate a reference to the obj
+        // then mongodb can easily retrieve the data because it's indexed
+        // and display the data in the schema format
+        ref: "User",
+        index: true,
     },
     hobbies: [String], // an array of strings
     address: addressSchema,
