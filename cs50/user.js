@@ -61,4 +61,24 @@ const userSchema = new mongoose.Schema({ // define the fields that the schema wi
     }
 });
 
+// must be an actual function that is set into the methods props
+userSchema.methods.sayHi = function() {
+    console.log('Hi');
+}
+
+userSchema.statics.findByName = function(name) {
+    return this.find({name: name});
+}
+
+// this function can only be used to chain after the find()
+// which returns a query obj
+userSchema.query.byName = function(name) {
+    return this.where('name').equals(name);
+}
+
+// this property var is available on all instances of the model
+// how ever it will have access to the current obj that has been queried
+userSchema.virtual('namedEmail').get(function() {
+    return `${this.name} <${this.email}>`;
+})
 module.exports = mongoose.model('User', userSchema);
