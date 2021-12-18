@@ -84,6 +84,12 @@ async function queries() {
 
     const customQueryChained = await User.find().byName('Kyle');
     console.log(customQueryChained[0].namedEmail)
+
+    customQueryChained[0].age = 32; 
+    // this will activate the save() middleware
+    // the middleware will actuomatically update for all calls
+    // to the save function
+    customQueryChained[0].save();
 }
 
 queries();
