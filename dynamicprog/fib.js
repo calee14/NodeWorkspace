@@ -5,6 +5,10 @@ const fib = (n) => {
     return fib(n-1) + fib(n-2);
 }
 
+fib(5) // dib(n) <= fib(n) <= lib(n)
+        // => fib(n) O(2^n) time
+        // thus fib(50) = 2^50 time
+
 console.log(fib(6));
 console.log(fib(9));
 
@@ -33,3 +37,12 @@ const dib = (n) => {
 dib() // O(2^n) time
     // O(n) space because the recur func call get's removed from stack
     // so the max size of stack is the height of the tree or 'n'
+
+const lib = (n) => {
+    if (n <= 1) return;
+    lib(n - 1);
+    lib(n - 1);
+}
+
+lib() // O(2^n/2) = O(2^n) time
+    // O(n) space
