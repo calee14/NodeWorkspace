@@ -34,7 +34,7 @@ const dib = (n) => {
     dib(n - 1);
 }
 
-dib() // O(2^n) time
+dib(3) // O(2^n) time
     // O(n) space because the recur func call get's removed from stack
     // so the max size of stack is the height of the tree or 'n'
 
