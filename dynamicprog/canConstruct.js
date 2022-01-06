@@ -17,6 +17,10 @@ const canConstruct = (targetWord, words, memo={}) => {
     return false;
 }
 
+// memoized
+// O(n*m^2) time
+// O(m^2) space
+
 console.log(canConstruct('abcdef', ['ab', 'abc', 'cd', 'def', 'abcd']));
 console.log(canConstruct('skateboard', ['ska', 'sk', 'kate', 'board', 't']));
 console.log(canConstruct('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeef', ['eee', 'ee', 'e', 'eeeeee', 'eeeeeeee']));
