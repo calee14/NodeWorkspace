@@ -21,3 +21,11 @@
             - then the values of the keys should have the value of that funciton
     - add a base case to return memo values that are already stored 
     - store return values into the memo
+
+# howSum notes
+- brute force
+    1. O(n^m * m) time
+    2. O(m) space
+- memoized:
+    1. O(n*m^2) time (no longer exponential in run time)
+    2. O(m^2) space (not exponential but polynomial)
