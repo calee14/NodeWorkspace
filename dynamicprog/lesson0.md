@@ -29,3 +29,20 @@
 - memoized:
     1. O(n*m^2) time (no longer exponential in run time)
     2. O(m^2) space (not exponential but polynomial)
+
+# Tabulation
+- tabluation is all about building a table to store values
+- fib(6) -> 8
+    - O(n) time
+    - O(n) space
+- logic is the same from memoization
+
+# Tabulation Recipe
+1. must visualize the problem as a table when trying to solve
+2. the size of the table is correlated with the inputs
+3. init the table with normal val
+    - choose a data type that's related to the answer or thing you're returning
+4. seed the trivial answer into the table
+    - find a base case or answer that you already know to be always true
+5. iterate through the table
+6. fill adjacent or further positions based on the current position and algo
