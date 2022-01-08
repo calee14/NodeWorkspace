@@ -3,9 +3,11 @@ const howSum = (targetSum, numbers) => {
     table[0] = [];
 
     for(let i=0;i<=table.length;i++) {
-        for(let num of numbers) {
-            if(table[i] !== null && i+num < table.length) {
-                table[i+num] = [...table[i], num];
+        if(table[i] !== null) {
+            for(let num of numbers) {
+                if(table[i] !== null && i+num < table.length) {
+                    table[i+num] = [...table[i], num];
+                }
             }
         }
     }
