@@ -46,3 +46,10 @@
     - find a base case or answer that you already know to be always true
 5. iterate through the table
 6. fill adjacent or further positions based on the current position and algo
+
+# Dynamic Programming
+- notice any overlapping subproblems
+- decide what is the trivially smallest input
+- think recursively for Memoization
+- think iteratively to use Tabulation
+- draw the stuff out
