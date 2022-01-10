@@ -16,7 +16,7 @@ const countConstruct = (targetWord, words) => {
     return table[targetWord.length]
 };
 
-console.log(countConstruct('abcdef', ['ab', 'abc', 'cd', 'def', 'abcd', 'ab', 'c']));
+console.log(countConstruct('abcdef', ['ab', 'abc', 'cd', 'def', 'abcd', 'ef', 'c']));
 console.log(countConstruct('skateboard', ['ska', 'sk', 'kate', 'board', 't']));
 console.log(countConstruct('enterapotentpot', ['a', 'p', 'ent', 'enter', 'ot', 'o', 't']))
 console.log(countConstruct('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeef', ['eee', 'ee', 'e', 'eeeeee', 'eeeeeeee']));
