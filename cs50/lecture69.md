@@ -1,0 +1,14 @@
+# User Authentication with Node.js, Passport.js, Express.js
+- User Auth choices:
+	- session
+	- jwt
+	- __OAuth__
+		- a protocol to give access rights to users who want to use an API
+		- seperates user authentication into authentication and authorization (which user has access to what)
+- __Passport.js__
+	- passport.js is a middleware that will handle user authentication
+	- this middleware will run on every http request to the server
+		- passport.js will use a __"strategy"__ to determine if the user has access to view the app
+	- the strategies that passport uses are cookies, express-sessions, and auth logic
+	- passport.js middleware also contain other middleware that connect with other auth strategies
+	-
