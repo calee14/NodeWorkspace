@@ -24,6 +24,8 @@
 		- server will set the resp headers, instructions/info for the client
 		- contains type of what the data sent from the server
 		- there's a 'set-cookie' header to store cookies
+			- good for storing user sessions in the application
+			- these cookies have an expiration date
 	4. entity header - contains info about the body of the header
 - a http client can be any device that connects to the internet
 - a http server contains the information that the clients want to access or run actions
