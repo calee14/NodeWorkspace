@@ -29,3 +29,29 @@
 	4. entity header - contains info about the body of the header
 - a http client can be any device that connects to the internet
 - a http server contains the information that the clients want to access or run actions
+
+# Express middleware
+```js
+const express = require('express');
+
+const app = express()
+
+// use a global middleware
+app.use(middleware)
+
+function middleware(request, response, next) {
+	console.log('I am a middleware');
+	// the next param is a func that when invoked will call the next middleware
+	next(); 
+}
+
+// the paramteters are all objs from the express lib
+function callback(request, response, nextMiddleware) {
+	res.send('<h1>Hello World</h1>');
+}
+
+// first run a route-specific middleware() code then callback()
+app.get('/', middleware, callback);
+
+app.listen(5000)
+```
