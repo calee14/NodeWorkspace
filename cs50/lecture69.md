@@ -92,3 +92,47 @@ app.use(errorMiddleware);
 
 app.listen(5000)
 ```
+
+# Express session 
+- passport local uses express session under the hood
+- state management handled on the front end
+	- but backend still can have influence over app state
+```js
+const express = require('express');
+const mongoose = require('mongoose');
+const session = require('express-session');
+
+const MongoStore = require('connect-mongo')(session);
+
+var app = express();
+const dbString = 'mongodb://localhost:27017/tutorial_db';
+const dbOptions = {
+	useNewUrlParser: true,
+	useUnifiedTopology: true,
+}
+
+const connection = mongoose.createConnection(dbString, dbOptions);
+
+// parse the request obj
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
+
+const sessionStore = new MongoStore({
+	mongooseConnection: connection,
+	collection: "sessions"
+});
+
+app.use(session({
+	secret: 'some-secret',
+	resave: false,
+	saveUninitialized: true,
+	store: sessionStore,
+	cookie: {
+		maxAge: 1000 * 60 * 60 * 24 // one day
+	}
+}));
+
+app.get('/', (req, res, next) => {
+	res.send('hello world');
+});
+```
