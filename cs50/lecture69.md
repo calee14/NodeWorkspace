@@ -34,15 +34,22 @@
 ```js
 const express = require('express');
 
-const app = express()
+const app = express();
 
-// use a global middleware
-app.use(middleware)
+// use a global middleware that will run on every request to the server
+// order of the middleware matters
+app.use(middleware0);
+app.use(middleware1);
 
-function middleware(request, response, next) {
+function middleware0(request, response, next) {
 	console.log('I am a middleware');
 	// the next param is a func that when invoked will call the next middleware
 	next(); 
+}
+
+function middleware1(request, response, next) {
+	console.log('I am the second middleware');
+	next();
 }
 
 // the paramteters are all objs from the express lib
@@ -51,7 +58,12 @@ function callback(request, response, nextMiddleware) {
 }
 
 // first run a route-specific middleware() code then callback()
-app.get('/', middleware, callback);
+app.get('/', middleware0, middleware1 callback);
+
+app.get('/', (req, res, next) => {
+	console.log('code for home route');
+	res.send('<h1>Hello World</h1>');
+});
 
 app.listen(5000)
 ```
