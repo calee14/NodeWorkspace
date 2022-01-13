@@ -43,12 +43,17 @@ app.use(middleware1);
 
 function middleware0(request, response, next) {
 	console.log('I am a middleware');
+	// express middleware will take the request js object
+	// and append new properties to the request obj.
+	request.customVal = 100;
+
 	// the next param is a func that when invoked will call the next middleware
 	next(); 
 }
 
 function middleware1(request, response, next) {
 	console.log('I am the second middleware');
+	console.log('Our custom value', request.customVal);
 
 	const errorObj = new Error('Error found');
 
@@ -77,7 +82,7 @@ app.get('/', middleware2, callback);
 
 app.get('/', (req, res, next) => {
 	console.log('code for home route');
-	res.send('<h1>Hello World</h1>');
+	res.send(`<h1>Hello World, ${req.customVal}</h1>`);
 });
 
 // error handler should be placed after all middleware
