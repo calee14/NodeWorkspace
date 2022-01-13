@@ -49,7 +49,22 @@ function middleware0(request, response, next) {
 
 function middleware1(request, response, next) {
 	console.log('I am the second middleware');
+
+	const errorObj = new Error('Error found');
+
+	next(errorObj);
+}
+
+function middleware2(request, response, next) {
+	console.log("I'm the third middleware");
 	next();
+}
+
+
+function errorMiddleware(error, request, response, next) {
+	if (error) {
+		res.send('There was an error please try again');
+	}
 }
 
 // the paramteters are all objs from the express lib
