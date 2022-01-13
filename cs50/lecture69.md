@@ -97,6 +97,8 @@ app.listen(5000)
 - passport local uses express session under the hood
 - state management handled on the front end
 	- but backend still can have influence over app state
+- for sessions server can store user data and more of it rather than putting it all into the cookie
+	- session is stored on the server and cookie is client
 ```js
 const express = require('express');
 const mongoose = require('mongoose');
@@ -122,17 +124,31 @@ const sessionStore = new MongoStore({
 	collection: "sessions"
 });
 
+// session middleware 
+// will store a session_id in the client
 app.use(session({
 	secret: 'some-secret',
 	resave: false,
 	saveUninitialized: true,
 	store: sessionStore,
 	cookie: {
-		maxAge: 1000 * 60 * 60 * 24 // one day
+		maxAge: 1000 * 60 * 60 * 24 // for cookie expiration: one day
 	}
 }));
 
 app.get('/', (req, res, next) => {
-	res.send('hello world');
+	// the express-session will parse the cookie session_id
+	// and store the cookie obj in the session
+	console.log(req.session);
+	if (req.session.viewCount) {
+		// when we set the viewCount to the session obj
+		// the value persisted in the db
+		req.session.viewCount = req.session.viewCount + 1;
+	} else {
+		req.session.viewCount = 1;
+	}
+	res.send('hello world. the world has visited, ', req.session.viewCount, 'times');
 });
+
+app.listen(5000);
 ```
