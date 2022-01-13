@@ -73,12 +73,17 @@ function callback(request, response, nextMiddleware) {
 }
 
 // first run a route-specific middleware() code then callback()
-app.get('/', middleware0, middleware1 callback);
+app.get('/', middleware2, callback);
 
 app.get('/', (req, res, next) => {
 	console.log('code for home route');
 	res.send('<h1>Hello World</h1>');
 });
+
+// error handler should be placed after all middleware
+// should an error appear in our middleware or routes then
+// it will skip to the middleware that handles the errors
+app.use(errorMiddleware);
 
 app.listen(5000)
 ```
