@@ -152,3 +152,19 @@ app.get('/', (req, res, next) => {
 
 app.listen(5000);
 ```
+
+# Passport serialize and deserialize
+```js
+/**
+ * this middleware will print out the passport req obj
+ */
+app.use((req, res, nex) => {
+	// prints the express session cookie
+	console.log(req.session);
+	// will print out the user stored in the database
+	console.log(req.user);
+})
+```
+- serializeUser will grab the user.id to store it in the passport auth cookie
+- deserializeUser will get the full user data stored in the database based off the id in the cookie
+- 
