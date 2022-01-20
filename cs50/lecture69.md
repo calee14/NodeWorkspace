@@ -167,4 +167,38 @@ app.use((req, res, nex) => {
 ```
 - serializeUser will grab the user.id to store it in the passport auth cookie
 - deserializeUser will get the full user data stored in the database based off the id in the cookie
-- 
+# Public key cryptography
+- Asymetric cryptography is when there are public and private keys. These keys are be used for two of the following:
+	1. __encrypt data__
+		- encrypt with public key
+		- decrypt with private key
+	2. __verify identities__
+		- encrypt with private key
+		- decrypt with public key
+- VPN's use symetric cryptography where the decryption and encryption key are the same and kept on one system
+	- useful to send data through an insecure internet data channel
+- __trap door__ functions
+	- a one way function that takes a big piece of data and compresses it into something small to represent that data.
+		- that is the definition of an __hash function__. one example of a hash function is the `sha256`
+		- one way. so once the data is encrypted then there's no way to get the original data
+	- this mathematically links the private key with the public key
+	- use an __elliptic curve cryptography__ for the hash funciton to generate the public key
+
+```js
+const crypto = require('crypto');
+
+function genKeyPair() {
+	const keyPair = crypto.generateKeyPairSync('rsa', {
+		modulusLength: 4096, // bits
+		publicKeyEncoding: {
+			type: 'pkcs1', // cryptography standards
+			format: 'pem'
+		},
+		privateKeyEncoding: {
+			type: 'pkcs1',
+			format: 'pem'
+		}
+	});
+}
+```
+
