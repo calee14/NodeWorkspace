@@ -202,3 +202,57 @@ function genKeyPair() {
 }
 ```
 
+# jwt
+- three components of the token seperated by periods
+	1. header
+	2. payload
+	3. signature
+- token is encoded in base-64-url. better for transmitting data over the internet. 
+- jwt token have __claims__
+	- 'iss' issuer claim. identifies the issuer of the token
+	- 'sub' subject claim. identifies the subject of the jwt. the owner or identity that the jwt represents
+	- 'aud' audience claim. identifies the identity of the audience. 
+
+```js
+/**
+ * create a jwt token
+ * ex: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+ */
+
+const crypto = require('crypto');
+const signature = crypto.createSign('RSA-SHA256');
+const fs = require('fs');
+const base64url = require('base64url');
+
+const header = {
+	alg: 'RS256',
+	typ: 'JWT'
+};
+
+const payload = {
+	sub: '1234567890',
+	name: 'John Doe',
+	admin: true,
+	iat: 12110142022,
+};
+
+const headerObjStr = JSON.stringify(header);
+const playloadObjStr = JSON.stringify(payload);
+
+// correct format for header and payload
+const base64UrlHeader = base64url(headerObjStr);
+const base64UrlPayload = base64url(playloadObjStr);
+
+// hash the header and paylaod data
+signature.write(base64UrlHeader + '.' + base64UrlPayload);
+signature.end();
+
+const PRIV_KEY = process.env.PRIV_KEY;
+const signatureBase64 = signature.sign(PRIV_KEY, 'base64');
+
+const signatureBase64Url = base64url.fromBase64(signatureBase64);
+
+console.log(signatureBase64);
+
+```
+- jwt tokens are good for protocols like OAuth 2.0 when there are refresh tokens to continuously retrieve new jwts
