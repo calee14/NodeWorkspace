@@ -1,0 +1,39 @@
+# Introducing Google Cloud
+- Cloud-computing customers go through **automated interface** (no human)
+    - scale usage and pay as go <- better bc no need to invest so much into infra
+- Rent virtual computing, still maintain lots of control
+- Infrastructure aaS - compute power, storage, network
+- Platform aaS - libraries to connect to IaaS and build applications (APIs)
+- **NOTE:** zones good for performance
+- **NOTE:** pay-by-sec good for users with lots of VMs
+- Deploy in diff zones prevent loss of application
+- GC has security in the hardware (chips) and software (2FA, boot stack)
+- Google Networks handle 40% of the internet 100 PoPs
+    - 5ms latency for zones in network
+- Kubernetes can set quotas on requests to API
+# Getting started with Google Cloud
+- **IAM = Identity and Access Management**
+- Create organization roles, project manager roles
+    - Policies created are inherited by children
+- Services + resources per project basis
+- Put projects in folders to share policies
+- IAM - Instance Admin Role in Projects
+- Control Google Cloud Platform; web interface; console, SDK, API
+- Cloud marketplace: easily start up web apps, VMs
+- **Appache HTTP server** - open-source server software that delivers data accross the internet.
+    - Runs the server, helps the server accept HTTP requests and receive and send data
+    - Competitors are **NGINX** (Flask is best run on this type of server software)
+        - NGINX also is known as a **reverse proxy** web server 
+        - web broswer (outside info) -> NGINX (reverse) -> webserver
+# Virtual Machines in the CLoud
+- Virtual Private Cloud Networks - contained in Projects
+    - VMs IP. address will be in the VPC network.
+        - New subnets will allocate new address to current IP
+        - VPC subsets have regional scope
+- **Compute Engine** helps create VM
+    - configure CPU, memory, SSD, disks
+- **Preemptible VMs** - cheap but will restart if CPU is needed elsewhere
+- Cloud Load Balancing - one single IP address for project
+    - sent to google backbone and route to nearest PoP
+- DNS translates domain names to IP address
+- Google CP interconnect help with business current networks connect to GCP routes/apps
