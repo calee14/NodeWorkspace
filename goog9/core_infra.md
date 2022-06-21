@@ -33,7 +33,48 @@
 - **Compute Engine** helps create VM
     - configure CPU, memory, SSD, disks
 - **Preemptible VMs** - cheap but will restart if CPU is needed elsewhere
-- Cloud Load Balancing - one single IP address for project
+- **global Cloud Load Balancing** - one single IP address for project
     - sent to google backbone and route to nearest PoP
+    - allows cross regional load-balancing
+    - no warning/warming ticket needed for spike in traffic
+    - Load Balancing options:
+        - **Global HTTP(s) **- allows cross-regional load-balancing
+        - **Global SSL Proxy** - load-balancing of non-HTTPS SSL traffic
+        - **Global TCP Proxy** - LB for non-SSL TCP traffic
+        - **Regional** - load-balance across a region
+        - **Regional internal** - load-balance inside a VPC
 - DNS translates domain names to IP address
 - Google CP interconnect help with business current networks connect to GCP routes/apps
+- Google has a CDN network.
+    - It also may be part of the interconnected CDN network with other services
+- **NOTE:** In GCP projects, VPC networks are global and the subnets are regional
+- **NOTE:** VPC routers and firewalls are handled solely by Google
+- **NOTE:** GC Load-balancing allows HTTP traffic across Compute Engines (regions)
+    - 
+## Lab notes
+```bash
+# display the zones in our region
+gcloud compute zones list | grep us-central1
+# set our current working dir's zone to be in the 'b' zone
+gcloud config set compute/zone us-central1-b
+# create a new vm in this the zone we chose
+gcloud compute instances create "my-vm-2" \
+--machine-type "n1-standard-1" \
+--image-project "debian-cloud" \
+--image-family "debian-10" \
+--subnet "default"
+# a nice exit out of the shell
+exit
+
+# open shell for vm in zone 'b' and we ping vm 'a'
+ping my-vm-1.us-central1-a
+# switch vm's install nginx for vm 'a'
+sudo apt-get install nginx-light -y
+# use text editor to change index page
+sudo nano /var/www/html/index.nginx-debian.html
+# make a request to the localhost on vm 'a'
+curl http://localhost/
+# go on vm 'b' and make a request to vm 'a'
+curl http://my-vm-1.us-central1-a/
+# as we can see these vm's although in diff zones have network access to each other.
+```
