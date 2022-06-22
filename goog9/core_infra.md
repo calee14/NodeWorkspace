@@ -78,3 +78,24 @@ curl http://localhost/
 curl http://my-vm-1.us-central1-a/
 # as we can see these vm's although in diff zones have network access to each other.
 ```
+# Storage in the Cloud
+- **Cloud Storage** - binary large-object storage
+    - high perf; scalable; _no capacity management_
+    - give a piece of bytes data and the storage will associate that piece of binary with a **unique key** (urls)
+    - **NOTE:** not a file system; instead it has buckets (geo loc, unique id, always encrypted)
+        - all data is encrypted (in transit and on disk); objects in these buckets are **immutable**
+            - However, there is **object versioning** keeps track of change; if do not use then new replaces old
+- Storage Bucket classes:
+    - **Multi-regional storage buckets** - good for storing frequent data but expensive
+    - **Regional storage buckets** - good for putting data to where it will be accessed most (VMs, Kubernetes clusters)
+    - **Nearline** - good for storing data that is accessed once a month
+    - **Coldline** - good for backups, archiving, disaster recovery
+- Online transfers; Transfer Appliance (download onto disk and ship)
+- **Cloud Bigtable** - NoSQL database, persistent hashtable, store a lot with low latency
+    - Always encrypted
+    - has an API for applications
+    - data can be streamed
+- **Cloud SQL** - offers MySQL and PostgresSQL databases
+    - can handle terabytes of data
+    - However, we can run these database servers inside our Compute Engine VM.
+    - 
