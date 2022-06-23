@@ -161,3 +161,30 @@ gsutil acl ch -u allUsers:R gs://$DEVSHELL_PROJECT_ID/my-excellent-blog.png
         - The config also has the ability to have **rolling updates** which helps remove down time when new versions of code come up
 - **Anthos** is a hybrid multi-cloud systems and service management. Good for enterprises that want to keep some of their code on-premise
 - **NOTE:** Kubernetes allows you to manage container clusters from multiple cloud providers
+# Lab Notes
+```bash
+# create env var for zone
+export MY_ZONE=us-central1-a
+
+# create a cluster with two nodes
+gcloud container clusters create webfrontend --zone $MY_ZONE --num-nodes 2
+
+# check the verison of kubernetes
+kubectl version
+
+# creates a single pod with a container of an nginx container
+kubectl create deploy nginx --image=nginx:1.17.10
+
+# see the amount pods running in cluster
+kubectl get pods
+
+# expose the nginx container to the internet/www by creating a "service" and using a Loadbalancer to route requests
+kubectl expose deployment nginx --port 80 --type LoadBalancer
+
+# List the "service" info and IP address
+kubectl get services
+
+# scale the number of pods to increase amount of resources for an application
+kubectl scale deployment nginx --replicas 3
+```
+# Applications in the Cloud
