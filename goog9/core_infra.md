@@ -96,7 +96,7 @@ curl http://my-vm-1.us-central1-a/
 - **Cloud Bigtable** - NoSQL database, persistent hashtable, store a lot with low latency
     - Always encrypted
     - has an API for applications
-    - data can be streamed
+    - data can be streamed (an important feature)
 - **Cloud SQL** - offers MySQL and PostgresSQL databases
     - can handle terabytes of data
     - However, we can run these database servers inside our Compute Engine VM.
@@ -110,8 +110,8 @@ curl http://my-vm-1.us-central1-a/
     - Offer's SQL-like queries unlike _Cloud BigTable_
 - Use Cases:
     - **Cloud Datastore** - semi-structure application from app engine apps.
-    - **Cloud Bigtable** - (heavy analytical) Adtech, Financial and IoT data
-    - **Cloud Storage** - unstructured binary/obj. data. (img files, movies, backups)
+    - **Cloud Bigtable** - (heavy analytical) Adtech, Financial and IoT data, for data to be streamed
+    - **Cloud Storage** - unstructured binary/obj. data. (img files, movies, backups, long-term data, center of data being moved in the cloud)
     - **Cloud SQL** - Web frameworks, existing apps
     - **Cloud Spanner** - large scale apps (whenever there is high input/output, or global consistency is required)
 ## Lab Notes
@@ -138,3 +138,26 @@ gsutil acl ch -u allUsers:R gs://$DEVSHELL_PROJECT_ID/my-excellent-blog.png
 
 # our MySQL db server will have network access to our VM in our compute engine
 ```
+# Containers in the Cloud
+- **Compute Engine** - IaaS; GCP allows you to run VMs in the cloud and gives persistent storage and networking
+- **App Engine** - PaaS; easily deploy apps by using APIs to access IaaS
+- **Containers** - role of a container is to give apps the independent ability to scale the hardware (IaaS)
+    - The container acts as an invisble box around the code/app
+        - _Allows us to virutalize the OS, so we can treat the OS as a **black box**_. We don't need to boot up a new instance of OS for each new container
+            - They abstract the unecessary details and specificities of an OS. Thus, we no worry OS type and version
+        - Makes the code very **portable**. _Can make a ton of new instances of web servers on new nodes/host_
+- **NOTE:** IaaS = share resources with others by virtualizing the hardware. Each VM has an instance of an OS so that user can build and run apps on it
+- **Kubernetes Engine** - allows to easily run many containers on many hosts; scale containers; change versions
+    - we can create a single container with software like **Docker** to package an app with the _specifications of the VM_ to run our app
+    - _Kubernetes controls a **set of nodes and its master** (this is known as a **cluster**)_
+        - Nodes are computing instances (GCP nodes = VMs in Compute Engines)
+    - when Kubernetes makes a container it puts it into a **pod**.
+        - **pods** can have multiple containers that are shared and accessible to each other through local host ports.  
+            - these containers share networking and disk space
+        - Pods have unique IPs and are given ports for containers
+    - Kubernetes include a **Load balancer** to attach a public IP address to our **"service"** _which is our nodes in our cluster_
+        - the pods in our nodes might not be stable thus we would need to manage the client that would make requests to the backend. Thus, it's better to have one stable IP and have a load balancer direct the incoming requests
+    - Kubernetes has a **configuration file** that allows to specify the number of pods in a cluster.
+        - The config also has the ability to have **rolling updates** which helps remove down time when new versions of code come up
+- **Anthos** is a hybrid multi-cloud systems and service management. Good for enterprises that want to keep some of their code on-premise
+- **NOTE:** Kubernetes allows you to manage container clusters from multiple cloud providers
