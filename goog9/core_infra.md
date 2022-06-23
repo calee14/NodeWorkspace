@@ -21,7 +21,7 @@
 - IAM - Instance Admin Role in Projects
 - Control Google Cloud Platform; web interface; console, SDK, API
 - Cloud marketplace: easily start up web apps, VMs
-- **Appache HTTP server** - open-source server software that delivers data accross the internet.
+- **Apache HTTP server** - open-source server software that delivers data accross the internet.
     - Runs the server, helps the server accept HTTP requests and receive and send data
     - Competitors are **NGINX** (Flask is best run on this type of server software)
         - NGINX also is known as a **reverse proxy** web server 
@@ -115,5 +115,26 @@ curl http://my-vm-1.us-central1-a/
     - **Cloud SQL** - Web frameworks, existing apps
     - **Cloud Spanner** - large scale apps (whenever there is high input/output, or global consistency is required)
 ## Lab Notes
-```
+```bash
+# lines to download apache server software and boot php app
+apt-get update
+apt-get install apache2 php php-mysql -y
+service apache2 restart
+
+# make a env var that specifiies our proj location
+export LOCATION=US
+
+# make a bucket and give it a global unique id (we can use our proj id since that is a global unique id)
+gsutil mb -l $LOCATION gs://$DEVSHELL_PROJECT_ID
+
+# copy/download file from another cloud storage location
+gsutil cp gs://cloud-training/gcpfci/my-excellent-blog.png my-excellent-blog.png
+
+# copy the new file into our cloud storage bucket
+gsutil cp my-excellent-blog.png gs://$DEVSHELL_PROJECT_ID/my-excellent-blog.png
+
+# change the read access rule to the new bucket obj we made
+gsutil acl ch -u allUsers:R gs://$DEVSHELL_PROJECT_ID/my-excellent-blog.png
+
+# our MySQL db server will have network access to our VM in our compute engine
 ```
