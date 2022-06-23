@@ -11,6 +11,7 @@
 - Google Networks handle 40% of the internet 100 PoPs
     - 5ms latency for zones in network
 - Kubernetes can set quotas on requests to API
+    - **Kubernetes** is meant to run containerized applications across multiple nodes
 # Getting started with Google Cloud
 - **IAM = Identity and Access Management**
 - Create organization roles, project manager roles
@@ -85,6 +86,7 @@ curl http://my-vm-1.us-central1-a/
     - **NOTE:** not a file system; instead it has buckets (geo loc, unique id, always encrypted)
         - all data is encrypted (in transit and on disk); objects in these buckets are **immutable**
             - However, there is **object versioning** keeps track of change; if do not use then new replaces old
+    - **NOTE:** Good for image files, movies, videos
 - Storage Bucket classes:
     - **Multi-regional storage buckets** - good for storing frequent data but expensive
     - **Regional storage buckets** - good for putting data to where it will be accessed most (VMs, Kubernetes clusters)
@@ -98,4 +100,20 @@ curl http://my-vm-1.us-central1-a/
 - **Cloud SQL** - offers MySQL and PostgresSQL databases
     - can handle terabytes of data
     - However, we can run these database servers inside our Compute Engine VM.
-    - 
+    - Auto replicate data to diff zones (backup)
+    - Compute Engines can be authorized to access Cloud SQL
+    - Allows **Vertical Scaling = adding more hardware (cpu, mem, storage) to increase perf.** and horizontal scaling 
+- **Cloud Spanner** - automatic replication and consistent queries (good for **horizontal scaling = ability to add a lot of new instances)**
+- **Cloud Datastore** - another NoSQL database for application backends and structured data
+    - Auto replications and backups
+    - Cloud datastore can span App Engine and Compute Engine apps
+    - Offer's SQL-like queries unlike _Cloud BigTable_
+- Use Cases:
+    - **Cloud Datastore** - semi-structure application from app engine apps.
+    - **Cloud Bigtable** - (heavy analytical) Adtech, Financial and IoT data
+    - **Cloud Storage** - unstructured binary/obj. data. (img files, movies, backups)
+    - **Cloud SQL** - Web frameworks, existing apps
+    - **Cloud Spanner** - large scale apps (whenever there is high input/output, or global consistency is required)
+## Lab Notes
+```
+```
