@@ -188,3 +188,73 @@ kubectl get services
 kubectl scale deployment nginx --replicas 3
 ```
 # Applications in the Cloud
+- **App Engine** - (**PaaS**) manages the hardware and networking infra. 
+    - Just give the App Engine your code and the rest is taken care of. Focuses on deployment, maintenance, scalability
+    - App Engine is well-suited for web apps and mobile dev. bc the workload is unpredictable
+    - **App Engine Runtimes** (Enviroments):
+    - **Standard Enviroment** - Usage based and free daily quotas (meaning low usage apps run at no charge*)
+        - Has SDKs for deployment 
+        - Runs in **sandboxes** -> Rules: no local files, 60 sec request timeout, limits on thirdparty software
+        - There are APIs and services for App Engine instances
+    - **Flexible Enivorment** - let's programmer specify the container and its details
+        - Can choose any programmer langauge but instance startup times are slower
+        - Flexible is better if the progammer wants more control over their app and features    
+        - Let's the programmer chose where the container is located
+- **API Application Programming Interface** - interface/controller for accessing software. 
+    - New versions of an API might contain calls that the old version didn't have
+    - **Cloud Endpoint** - easily expose APIs and manage them.
+        - control json web tokens and Google API keys
+        - Identity users with authentication
+        - Has API proxies to route to service
+        - **Apigee Edge** helps with takign legacy systems transition to APIs. It peels off parts of the old system into microsystems until the whole thing is on the Cloud w/ APIs
+- **NOTE:** App Engine Standard = billing can be zero bc daily quota and no users :(, scaling requires more **details and attention**, google keeps track of r**untime binaries (libraries)**
+- **NOTE:** App Engine Flexible - can ssh into apps, install third-party binaries (software/libs), app can write to local disk
+- **NOTE:** Apigee Edge is good if working with Customer endpoints
+## Lab notes
+```bash
+# the GCP shell is a VM that gives access to user GCP resources
+# list accounts on the GCP proj.
+gcloud auth list
+
+# list all proj 
+gcloud config list project
+
+# use the app engine to make a new GCP app
+# it will prompt to select region
+gcloud app create --project=$DEVSHELL_PROJECT_ID
+
+# download a starting repo to our vm
+git clone https://github.com/GoogleCloudPlatform/python-docs-samples
+
+# locate the proj
+cd python-docs-samples/appengine/standard_python3/hello_world
+
+# make a dockerfile
+touch Dockerfile
+
+# fill the docker file with this code
+FROM python:3.7
+WORKDIR /app
+COPY . .
+RUN pip install gunicorn
+RUN pip install -r requirements.txt
+ENV PORT=8080
+CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 main:app
+
+# build a container image of our Python virtual enviroment
+# this will help run our python app
+docker build -t test-python . 
+
+# this will the container and our python app on a local host
+docker run --rm -p 8080:8080 test-python 
+
+'''
+in the same dir as our proj deploy the applicaiton
+the application must have a .yaml file to indicate where 
+to look for the routes in the app
+'''
+gcloud app deploy
+
+# use the browse command to view our app
+gcloud app browse
+```
