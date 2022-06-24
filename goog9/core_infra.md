@@ -31,7 +31,7 @@
     - VMs IP. address will be in the VPC network.
         - New subnets will allocate new address to current IP
         - VPC subsets have regional scope
-- **Compute Engine** helps create VM
+- **Compute Engine** - service that helps create VM
     - configure CPU, memory, SSD, disks
 - **Preemptible VMs** - cheap but will restart if CPU is needed elsewhere
 - **global Cloud Load Balancing** - one single IP address for project
@@ -333,3 +333,62 @@ curl -sSO https://dl.google.com/cloudagents/install-monitoring-agent.sh
 
 sudo bash install-monitoring-agent.sh
 ```
+# Big Data and Machine Learning in the Cloud
+- "Every company is going to be a data company for that advantage"
+- **Serverless** = don't worry about provisioning server instances to run jobs
+    - Computation for services are fully managed by GCP and _pay-by-use_
+    - All data services are integrated to be used together if wanted
+- **Cloud Dataproc (Hadoop)** - Hadoop = open source framework for big data. Based on MapReduce model
+    - **MapReduce model** = a way to quickly access and process big data stored on the Hadoop database system.
+        - Divide and Conquer strats. There are several **mapper** funcs the partition the data and process them concurrently
+            - The output from the **mapper** funcs are sent to the **reducer** funcs
+    - Use **Dataproc** to boot up clusters. This process is scalable
+        - Can run **Dataproc** clusters on **preemptible compute engine instances**
+    - **Spark ML Libraries** are available in **Dataproc** to run classification algos.
+- **Cloud Dataflow** - for data pipelines when data is continuously flowing/streaming in.
+    - processes data using Compute Engine instances
+    - Scales automatically. no need to manage clusters
+    - **Extract/Transform/Load** pipelines to move data
+        - Data analysis can occur.
+        - Integrates with other GCP services and applications for live stream of data
+- **BigQuery** - auto. managed data warehouse uses SQL syntax (real time interaction)
+    - pay-by-use. and scalable. there is discount for long-term storage
+    - Can write queries for BigQuery from other services like Cloud Dataflow, Spark, etc.
+- **Cloud Pub/Sub** - reliable and scalable messaging
+    - asyncronous messaging, apps sub to topics to receive messages
+    - used for data ingestion, Internet of Things, Marketing analytics
+        - good for streaming data.
+        - connect apps across GCP for push/pull messages between Compute Engine and App Engine
+- **Cloud Datalab** - Project Jupyter for interactive data exploration enviroment
+    - runs in a Compute Engine VM
+    - Integrated with BigQuery, Cloud Storage, Compute Engine
+- **Machine Learning APIs** - provides pretrained models and tools to customize one
+    - tensorflow open-source lib built by google
+    - provides models for **structured data (class., regr., reccommendation, anamoly)** and **unstructured data (image rec., text analysis)**
+    - **Cloud Vision** - analyze images
+    - **Cloud Natural Language** - return text in realtime from diff. languages, audio, images
+    - **Cloud Video Intelligence** - annotate vids, analyze
+- **NOTE:** `gs://` stands for google (cloud) storage
+- **NOTE:** **Cloud Dataproc** - does/migrate Hadoop process in cloud. analysis on datasets of known size
+- **NOTE** Cloud Pub/Sub = good for IoT apps, Decoupling sys, streaming data
+- **NOTE:** Cloud Dataflow - **orchestration (coordinate services that manage data)** of data, extract/transform/load
+## Lab notes
+```bash
+# sql query for finding the amount of hits to server by hour
+select int64_field_6 as hour, count(*) as hitcount from logdata.accesslog
+group by hour
+order by hour
+
+# shell command to run query to BigQuery
+bq query "select string_field_10 as request, count(*) as requestcount from logdata.accesslog group by request order by requestcount desc"
+```
+## Summary and Review
+- Use **Cloud Router** to allow VPNs into Googel VPC despite the routing changes
+- **App Engine** leaves most of the infrastructure work to Google but **Flexible Env** give some control to the programmer
+- **Cloud Spanner** is a relational (SQL) db that scales horizontally, meaning it will allocate my resources automatically to store higher workload of data
+- **Cloud Bigtable** vs **Cloud Datastore**
+    - **Bigtable** is a NoSQL table for objects but only lookup based on single key
+    - **Datastore** is also a NoSQL db for objects but has SQL-like queries
+- **Loadbalancers:** for inbound traffic
+    - **Global HTTP(S)** - connects one public IP to all backend instances including diff regions and routes incoming traffic from world
+    - **Regional (internal)** - load balance TCP and UDP traffic for any **arbitrary port number**
