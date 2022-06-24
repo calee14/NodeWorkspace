@@ -383,7 +383,11 @@ order by hour
 bq query "select string_field_10 as request, count(*) as requestcount from logdata.accesslog group by request order by requestcount desc"
 ```
 ## Summary and Review
-- Use **Cloud Router** to allow VPNs into Googel VPC despite the routing changes
+- **Interconnect options**:
+    - Use **Cloud Router** to allow **VPNs** into Googel VPC despite the routing changes
+    - **Direct Peering** privately connect with google servers for hybrid cloud network
+    - **Carrier Peering** - connect through service providers
+    - **Dedicated Interconnect** - connect transport circuits for private cloud traffic to Google Cloud at Google PoPs
 - **App Engine** leaves most of the infrastructure work to Google but **Flexible Env** give some control to the programmer
 - **Cloud Spanner** is a relational (SQL) db that scales horizontally, meaning it will allocate my resources automatically to store higher workload of data
 - **Cloud Bigtable** vs **Cloud Datastore**
