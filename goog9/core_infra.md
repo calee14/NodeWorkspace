@@ -280,4 +280,56 @@ gcloud app browse
         - **Trace:** sample latency and performance speed of urls
         - **Error Reporting:** stacks and tracks errors (old and new)
         - **Debugger:** connects production data with source code (no need to add logging statements). view proj state when in production
-        - Profiler: 
+- **NOTE:** Stackdriver filters logs from apps and search for them. It also helps define metrics based on logs
+## Lab notes
+```bash
+# specify zone in env var
+export MY_ZONE=us-central1-a
+
+# copy a template yaml for deployment manager to local dir. in VM
+gsutil cp gs://cloud-training/gcpfcoreinfra/mydeploy.yaml mydeploy.yaml
+
+# use the sed command to replace the proj. id sections in the yaml file
+sed -i -e "s/PROJECT_ID/$DEVSHELL_PROJECT_ID/" mydeploy.yaml
+
+# use the sed command again to replace zone in the yaml file
+sed -i -e "s/ZONE/$MY_ZONE/" mydeploy.yaml
+
+# the yaml file looks something like 
+resources:
+  - name: my-vm
+    type: compute.v1.instance
+    properties:
+      zone: us-central1-a
+      machineType: zones/us-central1-a/machineTypes/n1-standard-1
+      metadata:
+        items:
+        - key: startup-script
+          value: "apt-get update; apt-get install nginx-light -y"
+      disks:
+      - deviceName: boot
+        type: PERSISTENT
+        boot: true
+        autoDelete: true
+        initializeParams:
+          sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-9-stretch-v20180806
+      networkInterfaces:
+      - network: https://www.googleapis.com/compute/v1/projects/qwiklabs-gcp-dcdf854d278b50cd/global/networks/default
+        accessConfigs:
+        - name: External NAT
+          type: ONE_TO_ONE_NAT
+
+# build a deployment from the yaml file
+gcloud deployment-manager deployments create my-first-depl --config mydeploy.yaml
+
+# if changes are made to the yaml we can change the deployment to the new version and specification
+gcloud deployment-manager deployments update my-first-depl --config mydeploy.yaml
+
+# this command will artificially increase CPU usage for monitoring for Stackdriver
+dd if=/dev/urandom | gzip -9 >> /dev/null &
+
+# the two commands will help install the monitoring agent, Stackdriver, from GCP
+curl -sSO https://dl.google.com/cloudagents/install-monitoring-agent.sh
+
+sudo bash install-monitoring-agent.sh
+```
