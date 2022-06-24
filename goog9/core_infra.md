@@ -258,3 +258,26 @@ gcloud app deploy
 # use the browse command to view our app
 gcloud app browse
 ```
+# Developing, Deploying, and Monitoring in the Cloud
+- **Cloud Source Repositories** - git repos hosted on GCP
+- **Cloud Functions** - single purpose functions that respond to events without a server or runtime binaries
+    - No need to worry about booting up servers to do this
+        - Easy to scale to meet workload demand
+    - only need to configure when to run the function (write JS code)
+        - Choose an event and write JS functions for when events trigger
+    - Don't need to worry about scaling too much and some projects that are built on microservices can run on cloud functions
+- _Declarative vs. Imperative_ - declaritive is writing instructions to set something up whereas imperative is physicall/manually performing actions to set up an enviroment (in GCP context)
+- **Deployment Manager** - Infrastructure management services that automates creation and management of GCP resources (aka. **infra as code**)
+    - Use a template file (.yaml or .py) which describes the enviroment of the GCP
+        - Version control the template manager
+- **Monitoring: Proactive instrumentation**
+    - **Stackdriver** - GCP tools for monitoring, logging and diagnostics.
+        - It can give signals for the infrastructure, VMs, containers, and application levels of proj.
+        - Gives insight to apps health
+    - Core compoenents:
+        - **Monitoring:** check endpoints of web apps on cloud env.; uptime and health checks; alerts
+        - **Logging:** view logs, filter and search them; 
+        - **Trace:** sample latency and performance speed of urls
+        - **Error Reporting:** stacks and tracks errors (old and new)
+        - **Debugger:** connects production data with source code (no need to add logging statements). view proj state when in production
+        - Profiler: 
