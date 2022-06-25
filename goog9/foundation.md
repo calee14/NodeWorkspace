@@ -50,12 +50,13 @@ sudo /opt/bitnami/ctlscript.sh restart
     - It's global and spans all regions in the world simultaneously
     - segregate resources through **subnetworks**
     - Every **project** has a main, default network.
-    - Default Mode:
+    - **Default Mode:**
         - there is a **subnet for each region**
         - regional IP allocation and fixed IP ranges `/20` for a subnet.
-    - Custom Mode: (can come from auto but not the other way around)
+    - **Custom Mode:** (can come from auto but not the other way around)
         - no default subnets
         - custom regional IP ranges
+        - recommended for Production to be in custom because IP ranges may overlap if they are automatically created.
     - VMs on the same network can communicate through the **interal IPs** despite being in **diff regions**
         - Conversely, VMs on diff networks must use **external IPs** despite being in **same regions**
             - However, the traffic doesn't reach the public internet and goes through the **Google Router**
