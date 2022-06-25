@@ -153,3 +153,29 @@ NOTE: VPCs are private virtual networks
 """
 ping -c 3 <Enter mynet-eu-vms external IP here>
 ```
+- **Common Networking Designs:**
+    - If need to **increase availability in a region** then put two VMs in DIFFERENT zones but SAME subnet
+        - This allows for more availability and less additional security complexity
+        - Also helps with isolation of infrastructure incase of software failure
+    - Globalization with multiple regions
+        - putting instances in different regions further improves isolation and helps with **robust** systems when there is failure.
+        - Use the **Global HTTP(s) Load Balancer** to route traffic to the region that is closest to the user
+    - Only assign Internal IP addresses to VM instances
+    - **Cloud NAT (Network Address Translation)** - provision app instances without public IP addresses while also allowing the instances access the internet
+        - There is an **Outbound** NAT that allows it to access an update server.
+        - The Cloud NAT blocks any inbound hosts that want to have access to the server. 
+    - Enable **Private Google Access** to allow VMs with internal IPs to access external IPs of Google services and APIs.
+        - instances with internal IPs only can't access resources outside the VPC network
+        - Private Google Access doesn't affect VMs with external IPs
+## Lab notes
+```bash
+# ssh into a vm instance 
+gcloud compute ssh vm-internal --zone us-central1-c --tunnel-through-iap
+
+# copying fies from a cloud storage to another (in cloud shell bc it has an external ip)
+gsutil cp gs://cloud-training/gcpnet/private/access.svg gs://$MY_BUCKET
+
+# if you're in the vm instance and have Private Google Access enabled then can copy stuff over
+gsutil cp gs://<your_bucket_name>/*.svg .
+
+```
