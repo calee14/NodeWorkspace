@@ -82,3 +82,19 @@ sudo /opt/bitnami/ctlscript.sh restart
     - **Alias IP Range** - assign a range of internal IP addresses as an alias to a VMs network interface
         - good if you have multiple services on a VM and you want to assign a diff IP address to each service. 
             - Good if you have multiple containers or applications (flask, node.js) running on the same VM
+- **Routes** - networks have routes that lets instances in the network to send traffic directly to each other. 
+    - There is also a **default route** that directs packets to destinations outside the network
+    - However, the **firewall** rules must allow these packets
+    - Routes match packets by destination IP addresses, but the traffic must match the firewall rule
+        - A route is created when a network and/or subnet is created. this allows VMs in the same network to communicate
+- **Firewall** protect VM instances from unapproved connections
+    - connections are allowed or denied at the compute instance level. 
+    - **Firewall rules are stateful** so once the first connection is approved any subsequent traffic from that connection is allowed. 
+    - **ingress (incoming connections)** vs. **egress (exiting connections)**
+        - no Firewall rules?? default is deny all ingress and allow all egress
+    - Parameters of a Firewall rule:
+        - `direciton`, `source or destination`, `protocol` and `port`, `action`, `priority`, `rule assignment`
+    - **Egress Firewall rules** - allow rules: allow connections that match ports and addresses. deny rules: block matching non-permitted ports and addresses.
+        - protect against connecting to undesired connections externally
+    - **Ingress Firewall rules** - allow rules: allow connections with permitted addresses and ports. deny rules: block connections with contections with undesired ports and addresses. 
+        - protect against connecting to undesired connections externally
