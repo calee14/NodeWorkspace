@@ -98,3 +98,57 @@ sudo /opt/bitnami/ctlscript.sh restart
         - protect against connecting to undesired connections externally
     - **Ingress Firewall rules** - allow rules: allow connections with permitted addresses and ports. deny rules: block connections with contections with undesired ports and addresses. 
         - protect against connecting to undesired connections externally
+# Lab notes
+```bash
+"""
+Every VM in a VPC needs a network that's why there is a default one which is on 'auto' mode. These nets and 'subnets' are virtualized in Google's datacenters and connected through the Global Wide Area Network (WAN)
+There is one Route for each network and one for each subnet. These Routes tell VMs and the VPC network how to send packets/traffic to a destrination, an address inside or outside Google Cloud.
+Common Firewall rules that sit between instances in a network are the Ingress rules. These rules are allow icmp, rdp, ssh and internal. ICMP (Internet Control Message Protocol = used for network diagnostics e.g. 'ping'). RDP (Remote Desktop Protocol = for controlling computers remotely). SSH (Seccure Shell = allows two computers to communicate for remote login and commandline execution). The Internal rule is for the regional internal communication e.g.: TCP, UDP, and ICM.
+"""
+# shell command to make a new custom mode network for a project
+gcloud compute networks create managementnet --project=qwiklabs-gcp-00-0dc303e69700 --subnet-mode=custom --mtu=1460 --bgp-routing-mode=regional 
+
+# shell command to create a subnet with IP range and a region
+gcloud compute networks subnets create managementsubnet-us --project=qwiklabs-gcp-00-0dc303e69700 --range=10.130.0.0/20 --stack-type=IPV4_ONLY --network=managementnet --region=us-central1
+
+# command to make a firewall rule for a network ingress connections
+gcloud compute --project=qwiklabs-gcp-00-0dc303e69700 firewall-rules create managementnet-allow-icmp-ssh-rdp --direction=INGRESS --priority=1000 --network=managementnet --action=ALLOW --rules=tcp:22,tcp:3389,icmp --source-ranges=0.0.0.0/0
+
+# equivalent commandline for making a vm connecting to network and subnet
+gcloud compute instances create managementnet-us-vm --project=qwiklabs-gcp-00-0dc303e69700 --zone=us-central1-c --machine-type=f1-micro --network-interface=network-tier=PREMIUM,subnet=managementsubnet-us --metadata=enable-oslogin=true --maintenance-policy=MIGRATE --provisioning-model=STANDARD --service-account=1069817479610-compute@developer.gserviceaccount.com --scopes=https://www.googleapis.com/auth/devstorage.read_only,https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring.write,https://www.googleapis.com/auth/servicecontrol,https://www.googleapis.com/auth/service.management.readonly,https://www.googleapis.com/auth/trace.append --create-disk=auto-delete=yes,boot=yes,device-name=managementnet-us-vm,image=projects/debian-cloud/global/images/debian-10-buster-v20220621,mode=rw,size=10,type=projects/qwiklabs-gcp-00-0dc303e69700/zones/us-central1-c/diskTypes/pd-balanced --no-shielded-secure-boot --shielded-vtpm --shielded-integrity-monitoring --reservation-affinity=any
+
+# create a custom network in VPC
+gcloud compute networks create privatenet --subnet-mode=custom
+
+# make a subnet in a region for a network
+gcloud compute networks subnets create privatesubnet-us --network=privatenet --region=us-central1 --range=172.16.0.0/24
+
+# make a subnet in a diff region for a network
+gcloud compute networks subnets create privatesubnet-eu --network=privatenet --region=europe-west1 --range=172.20.0.0/20
+
+# display all networks in proj
+gcloud compute networks list
+
+# show all subnets
+gcloud compute networks subnets list --sort-by=NETWORK
+
+"""
+create a firewall rule that's ingress for a network. the 0.0.0.0/0 is the default internet
+gateway or traffic from anyway in the network (the internet)
+"""
+gcloud compute firewall-rules create privatenet-allow-icmp-ssh-rdp --direction=INGRESS --priority=1000 --network=privatenet --action=ALLOW --rules=icmp,tcp:22,tcp:3389 --source-ranges=0.0.0.0/0
+
+# create a vm instance that will go to a region within the specificied subnet
+gcloud compute instances create privatenet-us-vm --zone=us-central1-c --machine-type=f1-micro --subnet=privatesubnet-us --image-family=debian-10 --image-project=debian-cloud --boot-disk-size=10GB --boot-disk-type=pd-standard --boot-disk-device-name=privatenet-us-vm
+
+# list all vm instances in a project
+gcloud compute instances list --sort-by=ZONE
+
+"""
+VM instances in the same network can ping and communicate with each other using internal addresses and network protocols
+VM instances that are outside of each others network need to use the external IP address
+However, VM instances in the same project but different network can communicate with each other through VPC Peering or VPNs.
+NOTE: VPCs are private virtual networks
+"""
+ping -c 3 <Enter mynet-eu-vms external IP here>
+```
