@@ -178,4 +178,6 @@ gsutil cp gs://cloud-training/gcpnet/private/access.svg gs://$MY_BUCKET
 # if you're in the vm instance and have Private Google Access enabled then can copy stuff over
 gsutil cp gs://<your_bucket_name>/*.svg .
 
+# hosts outside of the private intance with an internal IP address only can only respond to the connection request and not initiate a connection with the host
 ```
+- **NOTE:** - Using tags with Firewall rules will help make it easy to assign rules to VM instances despite a different IP address that the instance might have.
