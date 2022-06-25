@@ -157,7 +157,7 @@ ping -c 3 <Enter mynet-eu-vms external IP here>
     - If need to **increase availability in a region** then put two VMs in DIFFERENT zones but SAME subnet
         - This allows for more availability and less additional security complexity
         - Also helps with isolation of infrastructure incase of software failure
-    - Globalization with multiple regions
+    - **Globalization** with multiple regions
         - putting instances in different regions further improves isolation and helps with **robust** systems when there is failure.
         - Use the **Global HTTP(s) Load Balancer** to route traffic to the region that is closest to the user
     - Only assign Internal IP addresses to VM instances
@@ -181,3 +181,11 @@ gsutil cp gs://<your_bucket_name>/*.svg .
 # hosts outside of the private intance with an internal IP address only can only respond to the connection request and not initiate a connection with the host
 ```
 - **NOTE:** - Using tags with Firewall rules will help make it easy to assign rules to VM instances despite a different IP address that the instance might have.
+# Virtual Machines
+- **VM** consists of virtual CPU, mem, and storage, networking
+    - **Compute** - network scales 2gb per vCPU
+        - a vCPU (virtual CPU) is equal to one **hyper-thread** (dividing CPU cores into virtual cores or threads)
+    - **Storage** - Standard, SSD, Local SSD (data disappears when instances dies)
+    - **Network** - default, auto, custom networks
+        - inbound/outbound firewall rules with tags
+        - global and regional loadbalancing.

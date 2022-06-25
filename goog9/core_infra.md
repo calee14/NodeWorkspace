@@ -39,7 +39,7 @@
     - allows cross regional load-balancing
     - no warning/warming ticket needed for spike in traffic
     - Load Balancing options:
-        - **Global HTTP(s) **- allows cross-regional load-balancing
+        - **Global HTTP(s)** - allows cross-regional load-balancing
         - **Global SSL Proxy** - load-balancing of non-HTTPS SSL traffic
         - **Global TCP Proxy** - LB for non-SSL TCP traffic
         - **Regional** - load-balance across a region
