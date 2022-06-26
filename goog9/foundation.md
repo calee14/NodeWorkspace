@@ -318,7 +318,8 @@ sudo screen -S mcs java -Xmx1024M -Xms1024M -jar server.jar nogui
 sudo screen -r mcs
 
 # minecraft usually runs on the tcp port 25565
-# need to write firewall rules to allow 0.0.0.0/0 any IPs to reach the server
+# need to write firewall rules to allow 0.0.0.0/0 any ingress IPs connection requests to reach the server
+# use tags so the firewall rule is applied to the VM instance network config
 
 # make a cloud storage bucket to store backups
 export BUCKET=<bucket name>
