@@ -189,3 +189,91 @@ gsutil cp gs://<your_bucket_name>/*.svg .
     - **Network** - default, auto, custom networks
         - inbound/outbound firewall rules with tags
         - global and regional loadbalancing.
+    - access to the VM through SSH or RDP make sure to configure firewall rules to allow **tcp:22 and tcp:3389 respectively.**
+    - can change the state of the VM through `gcloud`
+    - Availability policies: automatic restart, on host maintenance, live migrations
+- **Patch Management** - apply OS patches/updates across a set of VMs
+    - can approve patches, schedule them
+## Lab notes
+```bash
+# run diagnostics on the VM
+# show how much memory is used
+free
+
+# see type of ram installed on computer
+sudo dmidecode -t 17
+
+# show num of processors
+nproc
+
+# list cpu details
+lscpu
+```
+- Machine Families:
+    - **E2** - day to day computing at low cost - good for web and app serving, small-med dbs, virtual desktops, microservices, development envs
+    - **N2, N2D, N1** - balanced price/performance for VMs. Web, apps, med-large dbs, media/streaming
+    - **Tau T2D** - scale out optimzed - large scale java apps, media transcoding, containerized microservices, 
+    - **C2** - Ultra high performance - high-perf web serving, media transcoding, ad serving, gaming (AAA game servers)
+    - **C2D** - Ultra-ultra high performance - high perf dbs, high-perf computing, electronic design
+    - **M1** - ultra high memory workloads - in-mem dbs, SQL servers, workloads that require lots of mem.
+    - **M2** - ultra high memory workloads - large in-mem dbs, in-mem analytics for business, ai, big data
+    - **A2** - high performance computing - good for GPU workloads, best for AI, ML training, massive parallel computing
+- Pricing for machines and compute:
+    - long-term commitments
+        - there are discounts regular compute machines ~57%
+        - there is a 70% discount for memory optimized machines
+    - There is a recommendation Engine for underutilized resources
+    - There is sustained discounts for keeping an instance up for a periods (month)
+- **Preemptible** - a compute instance that can be shut down at any time.
+    - lower price for interruptible service (up to 91%)
+    - lifetime of 24 hours
+    - No live migrate; no auto restart
+    - **Spot VMs** - latest version of preemptible VMs
+        - no maximum runtime; but it might shut down
+- **Sole-tenant nodes** - rent out the whole server computer in the datacenter so all VMs can run on the same host
+- **Shielded VMs** - Secure boot, virtual trusted platform module (vTPM), integrity monitoring. Confident that no malware came from boot or kernel-level
+- **Confidential VM** - encrypts data while its being processed.
+    - easy to use without making changes to the code
+    - works on the N2D Compute Engine VM
+    - Supports parallel and compute heavy workloads so the encryption doesnt hinder performance
+- **Disk Image** - boot loader, OS, file sys structure, software (preinstalled), customizations
+    - **Machine Images** are backups or instance cloning and replication
+- **Boot Disk** - VM comes with a single root persistent disk
+    - Images get load onto the disk during first boot
+    - Durable can survive if VM terminates but make sure configurations are set rights
+- **Cloud Persistent Disk** - Attached to a VM through the network. You can attach to a VM and boot from it
+    - Share disks with other instances and even make them read-only
+    - **Zonal persistent disks** are good and safe for storage
+    - **Regional persistent disks** - have active disk replication across zones which are good for high performance dbs
+        - **standard persistent disks** - backed by hard disk drive
+        - **balanced persistent disks** - backed by solid state drives
+        - **ssd persistent disks** - backed by ssds.
+        - **extreme persistent disk** - high perf. disks for dbs that are backed by ssd
+    - By default Google Cloud encrypts all data that rests in disks
+        - Use **Google Key Management Service** to create and manage custom key encryption keys.
+    - **Local SSD** - physically attached to the VM.
+        - Lower latency, total 3TB, can survive a reset but not a stop or terminate
+            - connected to the specific hardware of the VM but it might change after terminate
+    - **RAM disk** - fastest performance available except **memory**. have a persistent disk to backup the ram data. Data will disappear with restart or stop
+    - If having a lot of Persistent SSDs then make sure network throughput is enough to handle the ingress and egress throughput on top of the drive's throughput
+    - Summary: partitioning, repartition disk, reformat for allocating more storage for OS, have backups, encryption all handled by **Cloud Persistent Disks**
+- **Compute Engine Actions**
+    - Every VM stores metadata on a metadata server
+        - **Metadata server** is good for startup and shutdown scripts
+    - Move instance to a new zone
+        - `gcloud compute isntances move`
+        - To move the vm must shutdown the vm and update references that were pointing to the old IP of the address
+    - Move instance sto a new region
+        - must make a snapshot of all of persistent disks on the VM
+        - make new persistent disks at the destination and restore the snapshots
+        - give the VM a new IP
+        - Update refernces again
+    - **Snapshot**: Backup crticial data
+        - stored in cloud storage; used to migrate data between zones and regions
+        - also use a snapshot to transform data from a hdd to a ssd
+    - **Persitent disk snapshots**
+        - only available for hdd and ssd, **not local ssd.**
+        - creates incremental/periodic backups to Cloud Storage
+            - Automatically compressed. 
+        - snapshots can be restored to a new persistent disks
+    - **Resize Persistent Disks** - can grow disk size but never shrink them.
