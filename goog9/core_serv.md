@@ -1,0 +1,20 @@
+# Idenity and Access Management
+- Heirarchy - Organization, Folders (Departments), Projects, Resources
+    - Rules for the Organization is inherited down, same for the other levels
+- **Organiztaion Role**: 
+    - **Super Admin.** - Assign Org. Roles to users
+    - **Org. Admin** - Control all cloud resources
+        - Creator, Viewer, Admin types
+    - **Project creator** - Below Org. Admin (inherited) - controls who can access/create projects
+        - There is a creator and deleter specification
+    - Can work in **folders** which are considered sub organizations withing the **Cloud Organization**
+        - Org. Role might have access to only one folder
+- Services have their own roles (Compute Engine):
+    - **Compute Engine**, **Network**, **Storage**
+- Make custom roles with GCP but they will not be automatically updated when services and resources are updated
+- IAM cannot make users and groups but can only apply rules to them.
+    - Use Cloud Identity or Workspace to make groups and users
+- **IAM Policies** - contains many **bindings** of which they are connected to a bunch of acccounts, groups, services, and domains. 
+- **Role** a list of permissions defined by IAM
+    - The less restrictive role overrides the more restrictive role
+        - So best to follow least-privilege
