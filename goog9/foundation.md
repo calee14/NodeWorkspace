@@ -277,3 +277,74 @@ lscpu
             - Automatically compressed. 
         - snapshots can be restored to a new persistent disks
     - **Resize Persistent Disks** - can grow disk size but never shrink them.
+# Lab notes
+```bash
+# make a new dir for storing minecraft
+sudo mkdir -p /home/minecraft
+
+# formatting a disk to create a file system
+sudo mkfs.ext4 -F -E lazy_itable_init=0,\
+lazy_journal_init=0,discard \
+/dev/disk/by-id/google-minecraft-disk
+
+# mount the additional persistent disk to a directory
+sudo mount -o discard,defaults /dev/disk/by-id/google-minecraft-disk /home/minecraft
+
+# minecraft requires the Java Runtime Enviroment (JRE) which is a Java virtual machine plus some libraries.
+# download JRE headless which doesn't have the graphical interface
+sudo apt-get install -y default-jre-headless
+
+# locate to the minecraft directory
+cd /home/minecraft
+
+# install the wget command
+sudo apt-get install wget
+
+# download the minecraft server application
+sudo wget https://launcher.mojang.com/v1/objects/d0d0fe2b1dc6ab4c65554cb734270872b72dadd6/server.jar
+
+# accept the terms for running the minecraft server in the eula.txt file
+sudo nano eula.txt
+
+"""install screen to allow us to make a virtual terminal that can be 'detached' and run in the background or 'reattached' to a foreground process. 
+detaching a virtual terminal will continue to run in the VM whether or not we're connected to the shell
+"""
+
+# use screen to start the miencraft server in the virtual terminal
+sudo screen -S mcs java -Xmx1024M -Xms1024M -jar server.jar nogui
+
+# type CTRL+A and CTRL+D to exit out of the virtual terminal
+# run this command to reenter the virtual terminal
+sudo screen -r mcs
+
+# minecraft usually runs on the tcp port 25565
+# need to write firewall rules to allow 0.0.0.0/0 any IPs to reach the server
+
+# make a cloud storage bucket to store backups
+export BUCKET=<bucket name>
+gsutil mb gs://$BUCKET-minecraft-backup
+
+# check out the minecraft directory
+cd /home/minecraft
+sudo nano /home/minecraft/backup.sh
+
+# make a bash script to backup the minecraft server
+#!/bin/bash
+screen -r mcs -X stuff '/save-all\n/save-off\n'
+/usr/bin/gsutil cp -R ${BASH_SOURCE%/*}/world gs://${BUCKET}-minecraft-backup/$(date "+%Y%m%d-%H%M%S")-world
+screen -r mcs -X stuff '/save-on\n'
+
+# make the shell script executable
+sudo chmod 755 /home/minecraft/backup.sh
+
+# this runs the shell script to backup
+. /home/minecraft/backup.sh
+
+# make a cron job to backup the server every period
+sudo crontab -e
+# type at the bottom of the file 
+0 */4 * * * /home/minecraft/backup.sh
+
+# stop the minecraft server in the background
+sudo screen -r -X stuff '/stop\n'
+```
