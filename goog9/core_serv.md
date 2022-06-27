@@ -18,3 +18,35 @@
 - **Role** a list of permissions defined by IAM
     - The less restrictive role overrides the more restrictive role
         - So best to follow least-privilege
+- **IAM Conditions** - conditions must be met in order for members to get access to services/identities
+- **Organization Policies** - config of restrictions applied to org. node, folders, projects
+- **Single-Sign On (SSO)** - Sign-in through third-party or exisiting solutions
+- **Service Accounts** - give identity to applications so that it can have access to resources without user credentials
+    - identified by a generated email
+    - **Compute Engine VMs** - have default service accounts when created
+    - **Scopes** - used to determine which applications have authorization or permissions based on their service accounts
+        - These scopes come in the form of access tokens given by authorization servers
+    - Users can also be assigned to a **service accounts users** and gain the permissions from it
+    - Service accounts can be managed by Google or by Users
+        - if managed by google, the public and private keys are kept by Google and the private key will be hidden and rotated
+        - if user managed, then the user takes care of the private key responsibilities
+- **Best practices**:
+    - "principle of least privilege", know inheritance, audit the shit out of everything
+    - grant roles to groups
+    - giving service account roles will give the user, group, application access to all of the service functions
+        - be careful
+        - key rotate service accounts
+## Lab notes
+```bash
+# roles can be given with other users if the correct email or account or member is given.
+# these roles can determine the access of that user to the instance to the Project or Service
+
+# if given viewer permission of a Google Service like Cloud Storage will need to use the cli
+# list all objects in the cloud storage
+gsutil ls gs://[YOUR_BUCKET_NAME]
+
+# can create a service account and specify which user/member has access to the permissions that belong to the service account
+# a VM can also be created with a service account so that its permissions will also be limited by the service account
+```
+- **NOTE:** - **Roles** are an abstraction of job roles because the actual permissions aren't assigned to the user but the roles are which are then applied.
+- **NOTE:** - IAM members: Google Account, Cloud Identity, Workspace, Google Group, Service Account
