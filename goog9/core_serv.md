@@ -50,3 +50,35 @@ gsutil ls gs://[YOUR_BUCKET_NAME]
 ```
 - **NOTE:** - **Roles** are an abstraction of job roles because the actual permissions aren't assigned to the user but the roles are which are then applied.
 - **NOTE:** - IAM members: Google Account, Cloud Identity, Workspace, Google Group, Service Account
+# Storage and Databases
+- Unstructured data:
+    - file system: Filestore
+    - key-value: Cloud Storage
+- Structured data for analytics: Cloud Bigtable or Big Query
+    - if the data is document-based then Firestore
+    - if relational data (SQL): Cloud SQL
+        - If the data needs to scale horizontally without adding new hardware then: Cloud Spanner
+- **Cloud Storage**: scalable, fast, accessible
+    - **Standard Storage**: "hot data" best for data that are recently accessed. Most expensive.
+        - Good for storing data near Kubernetes clusters and instances
+        - Good for streaming videos, gaming
+    - **Nearline Storage**: highly durable storage: backups, long media content, archiving
+        - there is a minimum storage duration
+    - **Coldline Storage**: low cost durable storage service for storing infrequent data.
+        - lower availability.
+    - **Archive Storage**: data backup, diaster recovery.
+        - Data is available but has high cost for access 
+- **11 nine durability** (99.999...) meaning the data won't be lost
+- **Cloud Storage**: 
+    - data goes into buckets.
+    - access data by using gsutil command
+    - there is a default class for objects uploaded to the bucket
+    - Regional buckets can't be changed to multi-region
+        - However, objects can be moved from bucket to bucket
+    - Use IAM to determine who can see buckets and what's in them and access and make changes
+        - **ACL (Access Control List)** - determines who has access to the bucket and can edit it and the permissions
+            - **Scope** define who has roles and which ones
+            - **Permissions** which actions the users can make 
+        - **Signed URLs** - limited time tokens 
+            - gives access to a cloud storage resource
+            - a service account gives access to whoever holds the URL
