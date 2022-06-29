@@ -212,3 +212,12 @@ gcloud auth activate-service-account --key-file credentials.json
 
 # the shell will activate the service account from the json file and gain the permissions to the services of the service account
 ```
+- **Cloud SQL** - fully managed relational db by Google
+    - supports App Engine, auto patches, third-party SQL software
+    - High performance, scalable, supports MySQL, PostgresSQL, MicroSQL
+    - Has HA Configuration which is a failover db. Failsafe for db servers in different zones
+        - the query will be replicated to the other zone before transaction is completed
+    - There are backups.
+    - private IPs are better if the db server is located in the same region as the VMs making transactions
+    - Use **Cloud SQL Proxy** that handles auth, encryption, and key rotation to send queries to the db server over the public internet
+    - If want to control the traffic then use **SSL (secure sockets layer) certificates**
