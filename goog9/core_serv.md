@@ -345,3 +345,29 @@ GROUP BY
 ORDER BY
   total_cost DESC
 ```
+# Resource Monitoring
+- **Google Cloud Operation Suite (Stackdriver)** - monitoring, logging, diagnostics
+    - access to powerful data and analytics tools, fault tracing, debugger, error reporting, monitoring
+- **Monitoring** - important for site reliability engineering to deploy scalable systems. help maintain projects
+    - generates dashboards, charts, to view metrics and gain insights
+    - then create alerts from this info
+    - **metric scope** = root node that holds monitoring data and collected info. Things specified abover
+        - **Hosted project** - first project in the metric scope
+        - people who have access to a metric scope have access to all proejts in the scope
+        - **Alert policy** - have conditions and make alerts
+        - **Uptime checks** - check VMs, App Engines, URL status
+        - **Monitoring agent** - monitor VMs and workload. can be modified to have applications pass data to the agent
+## Lab notes
+```bash
+# Going to the monitoring tab in the Navigation will allow users to create dashboards and specify what they want to see in them
+# can create custom charts
+
+# The metrics explorer can automatically create charts and graphs to show the usage of resources
+
+# create an alerting policy for when usage of resources like VMs reach thresholds
+# create a Notifcation channel (method of contacting admin)
+
+# create a resource group that monitors things with a keyword
+
+# uptime monitoring for instances, app engines and other resources. can monitor things in a group
+```
