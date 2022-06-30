@@ -371,3 +371,49 @@ ORDER BY
 
 # uptime monitoring for instances, app engines and other resources. can monitor things in a group
 ```
+- **Cloud Logging** - store, search, monitor, analyze data events
+    - 30-day retention, but can export them
+    - Apps to view, filter, search logs
+    - Analyze logs in BigQuery and visualize in Data Studio. export data to them
+        - relocate VMs to move closer to IP addresses or Ban IPs
+    - Install a Logging agent on VMs
+    - Can stream data to Pub/Sub to connect logging data to other endpoints
+- **Error Reporting** - aggregate and display errors for running cloud services
+    - dashboard and notifications
+    - App Engine, Compute Engine, Cloud Functions
+    - supports a lot of backend programming languages
+- **Cloud Tracing** - collects latency data from apps and display
+    - analyzes all applications 
+- **Cloud Debugger** - inspect state of a running application in real time
+    - adds only 10ms of latency so not noticeable
+    - understand behavior of code in production and notice where the error occurs
+    - insert logging points during runtime
+## Lab notes
+```bash
+# download a python web app
+mkdir appengine-hello
+cd appengine-hello
+gsutil cp gs://cloud-training/archinfra/gae-hello/* .
+
+# run the web app
+dev_appserver.py $(pwd)
+
+# deploy the web app to App Engine by usign the app.yaml file for instructions
+gcloud app deploy app.yaml
+
+# display the app running on App Engine. there will be a link to the app
+gcloud app browse
+
+# use the sed command to replace a word which will cause an error
+sed -i -e 's/webapp2/webapp22/' main.py
+
+# quietly (won't ask for user input in configuring app and just use defaults)redeploying the app
+gcloud app deploy app.yaml --quiet
+
+# NOTE: App Engine, Kubernetes Engine, Cloud Functions have default Error Logging. 
+# Compute Engine is the one where you have to download to set it up
+# in the Navigation go to Error Reporting and you'll find a bunch of errors
+```
+- **Notes:** - **Google Site Reliability Engineering (SRE)** foundational usage is monitoring
+    - Google Cloud Operations Suite = reduce noise, helps fix problems faster, reduce overhead (excess computation time)
+    - 
