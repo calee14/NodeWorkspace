@@ -221,3 +221,33 @@ gcloud auth activate-service-account --key-file credentials.json
     - private IPs are better if the db server is located in the same region as the VMs making transactions
     - Use **Cloud SQL Proxy** that handles auth, encryption, and key rotation to send queries to the db server over the public internet
     - If want to control the traffic then use **SSL (secure sockets layer) certificates**
+## Lab notes
+```bash
+# create a mysql db server instance at a region. the number of vCPUs increase 
+# the througput bandwith of the network for the instance
+# can't reduce storage sizes only increase them
+# setup a private connection for the default network we're in
+
+# downloading the proxy server on the VM instance that's out of the region
+# of the db. making the Cloud SQL proxy an execubtable
+wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy && chmod +x cloud_sql_proxy
+
+# create a sql database and get the connection name
+export SQL_CONNECTION=[SQL_CONNECTION_NAME]
+
+# create the proxy instance and have it listen to the tcp port 3306
+# the proxy is listenting at 127.0.0.1:3306 which is localhost
+# and waiting for new connections
+./cloud_sql_proxy -instances=$SQL_CONNECTION=tcp:3306 &
+
+# the wordpress application should have been installed during the startup script
+# this command will get the external ip of the current vm instance
+curl -H "Metadata-Flavor: Google" http://169.254.169.254/computeMetadata/v1/instance/network-interfaces/0/access-configs/0/external-ip && echo
+# configure the wordpress app to use the port 127.0.0.1 (localhost) as the database ip
+# the proxy listens on that port to redirect queries and transactions to the Cloud SQL
+# server directly and securely
+
+# if the VM instance is located in the same region as the SQL server instance
+# then we can use private/internal IP addresses to communicate. Just paste
+# the private IP for the DB host link
+```
