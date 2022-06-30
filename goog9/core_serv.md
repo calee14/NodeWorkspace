@@ -249,5 +249,20 @@ curl -H "Metadata-Flavor: Google" http://169.254.169.254/computeMetadata/v1/inst
 
 # if the VM instance is located in the same region as the SQL server instance
 # then we can use private/internal IP addresses to communicate. Just paste
-# the private IP for the DB host link
+# the private IP for the DB host
 ```
+- **Cloud Spanner** - scale up to petabyte (horizontal), very consistent, availability, has schema data structure
+    - use it for financial and inventory apps
+    - uptimes for multi-regional: **5 nines** (99.999)
+    - replication (durability) is automatic
+    - a Spanner Instance replicates across multiple zones. Choose which region to put the db server in
+        - replication (backup data with other nodes) is syncronized accross zones using the fiber network
+    - outgrow single instance of relational db, sharding (partitioning) large db, very consitent, consolidate (combining, store in one space) dbs
+- **Firestore** - NoSQL document database that is serverless, cloud-native for apps
+    - auto synchronization, ACID (atomicity, consistency, isolation, durability) transactions (all or none)
+    - multi-region replication
+    - powerful NoSQl queries
+    - compatible with Datastore since its the next gen NoSQL db
+    - there is a **Native Mode** (for mobile and web apps):
+        - real-time updates, mobile and web client libraries
+- **BigTable** - 
