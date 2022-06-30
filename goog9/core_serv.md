@@ -271,6 +271,7 @@ curl -H "Metadata-Flavor: Google" http://169.254.169.254/computeMetadata/v1/inst
     - good for Ad Tech, Fintech, Storage for ML
     - uses a key-value mapping
         - column qualifiers use to represent stored data for a key (row)
+            - that's why it's called wide column db
         - there are **big table nodes** to handle the throughput of queries.
         - Tablets stored on Colossus 
 - **Memory Store** - managed Redis service. 
@@ -282,3 +283,65 @@ curl -H "Metadata-Flavor: Google" http://169.254.169.254/computeMetadata/v1/inst
 - **NOTES:** - BigQuery for datawarehouse and SWL interface for querying data
     - Cloud SQL good for migrating data to the cloud
     - Cloud Spanner offers ACID transactions and can scale globally
+# Resource Management
+- **Resource Manager** - manage resources by org, folder, and project (hierarchy)
+    - Child policies can't restrict access granted at parent level
+        - Thus unrestrictive access (more permissions) trump the stricter access
+    - Project accumulates the consumption of all its resources
+        - One project associated with one billing account. orgs contain them all.
+            - can track
+    - Organization node is the root node
+    - Resources are global, regional, or zonal
+        - **global** = images, networks, snapshots
+        - **regional** = external IP addresses
+        - **zonal** = instancea and disks
+- **Quotas** - aka. limits
+    - Max VPC 15 networks per project, 5 admin actions/sec, 25 cpus per region
+        - incrementally request more resources aka. increase quotas
+        - **Quota** is the limit of resources. not gaurentee that you can scale up to that limit though.
+- **Labels** - utility for organizing GCP resources
+    - key-value pairs attach to e.g. VMs, disks, snapshots, images
+    - keep inventory, filter resources, use for scripts to analyze 
+    - use labels for team organizing, distinguish components of app, indicate owner, states
+    - labels are user-defined strings in key-value format
+    - **tags** - user-defined strings applied to instances only for networks and firewall rules
+- **Billing** - set up budgets. get alerts to admins if billings reach certain marks, 
+    - program it with Cloud Pub/Sub -> Cloud Functions for automation
+    - Use BigQuery to store costs of labels
+    - **Data Studio** - billing dashboard, visualize it
+- **Export/Import Billing Data** - can proabably intuitively figure it out
+## Lab notes
+```SQL
+/* find the most recent 100 records where the cost column is greater than 0*/
+SELECT
+  product,
+  resource_type,
+  start_time,
+  end_time,
+  cost,
+  project_id,
+  project_name,
+  project_labels_key,
+  currency,
+  currency_conversion_rate,
+  usage_amount,
+  usage_unit
+FROM
+  `cloud-training-prod-bucket.arch_infra.billing_data`
+WHERE
+  Cost > 0
+ORDER BY end_time DESC
+LIMIT
+  100
+
+/* find the project with the highest aggregate cost */
+SELECT
+  product,
+  ROUND(SUM(cost),2) AS total_cost
+FROM
+  `cloud-training-prod-bucket.arch_infra.billing_data`
+GROUP BY
+  product
+ORDER BY
+  total_cost DESC
+```
