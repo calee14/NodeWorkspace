@@ -265,4 +265,20 @@ curl -H "Metadata-Flavor: Google" http://169.254.169.254/computeMetadata/v1/inst
     - compatible with Datastore since its the next gen NoSQL db
     - there is a **Native Mode** (for mobile and web apps):
         - real-time updates, mobile and web client libraries
-- **BigTable** - 
+- **BigTable** - NoSQL big data database service
+    - petabyte scale, consistent sub-10 ms latency
+    - scalability for throughput
+    - good for Ad Tech, Fintech, Storage for ML
+    - uses a key-value mapping
+        - column qualifiers use to represent stored data for a key (row)
+        - there are **big table nodes** to handle the throughput of queries.
+        - Tablets stored on Colossus 
+- **Memory Store** - managed Redis service. 
+    - In-memory data store service
+    - Focus on building great apps
+    - Makes high availability, failover, patching and monitoring easy
+    - sub-millisecond latency, instances up to 300 GB
+    - Network throughput of 12 Gb per sec
+- **NOTES:** - BigQuery for datawarehouse and SWL interface for querying data
+    - Cloud SQL good for migrating data to the cloud
+    - Cloud Spanner offers ACID transactions and can scale globally
