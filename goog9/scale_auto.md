@@ -1,0 +1,17 @@
+# Interconnecting Networks
+- **Cloud VPN** - connects on-premise network to your GCP VPC Network
+    - traffic between networks are encrypted by one gateway and decrypted by the receiving gateway. (safe over public the internet)
+    - good for low-vol. data connections
+    - 99.9% service availability, dynamic routes, IKEv1 and v2 ciphers
+        - dynamic routes are configured by Cloud Router
+    - on-premise VPN gateway can be a physical device in data center or an instance from another cloud provider
+        - the other gateway is the Cloud VPN gateway
+            - "alawys two there are"
+        - the VPN gateway has an external IP address
+    - must make two VPN tunnels to connect the two VPN gateways
+        - each tunnel defines the direction of its respective gateway.
+        - **Max Transmission Unit (MTU)** - for the VPN is 1460 bytes bc of encryption of packets
+    - Cloud VPN supports static and dynamic routes (IP addresses) but need to configure **Cloud Router**
+        - Router uses **Border Gateway Protocol (BGP)** - allows routes to be updated and exchanged without changing tunnet information
+        - BGPs must have their own IP addresses in the range 169.254.0.0/16 but they are not part of any networks and used for BGPs only.
+            - BGP connects between the two gateways to exchange new subnets or routes which will allow the instances in the subnets to communicate 
