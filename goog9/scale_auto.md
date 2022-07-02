@@ -34,5 +34,6 @@ gcloud compute target-vpn-gateways create vpn-2 --project=qwiklabs-gcp-04-c262c3
 # need to specify the subnet/region they are in
 # then we create the VPN gateway for a VPC network. make sure to give the IP address of reserved static IP for the gateway
 # also make a tunnel from the current VPN gateway to the other, so must give the other networks VPN gateway reserved IP
-# must create a key for encryption. specify the IP ranges between the gateway
+# must create a key for encryption. specify the IP ranges between the gateway. also specify that the gateway will be route-based
+# NOTE: the IP ranges is specified by the /24 but the main IP address is given by the 'internal IP/subnet IP addresses' of the other VM instance in the 'other network'
 ```
