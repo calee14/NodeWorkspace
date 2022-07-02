@@ -25,7 +25,7 @@ gcloud compute addresses create vpn-1-static-ip --project=qwiklabs-gcp-04-c262c3
 gcloud compute target-vpn-gateways create vpn-2 --project=qwiklabs-gcp-04-c262c3eb995e --region=europe-west1 --network=vpn-network-2 && gcloud compute forwarding-rules create vpn-2-rule-esp --project=qwiklabs-gcp-04-c262c3eb995e --region=europe-west1 --address=34.79.254.56 --ip-protocol=ESP --target-vpn-gateway=vpn-2 && gcloud compute forwarding-rules create vpn-2-rule-udp500 --project=qwiklabs-gcp-04-c262c3eb995e --region=europe-west1 --address=34.79.254.56 --ip-protocol=UDP --ports=500 --target-vpn-gateway=vpn-2 && gcloud compute forwarding-rules create vpn-2-rule-udp4500 --project=qwiklabs-gcp-04-c262c3eb995e --region=europe-west1 --address=34.79.254.56 --ip-protocol=UDP --ports=4500 --target-vpn-gateway=vpn-2 && gcloud compute vpn-tunnels create tunnel2to1 --project=qwiklabs-gcp-04-c262c3eb995e --region=europe-west1 --peer-address=35.202.226.9 --shared-secret=gcprocks --ike-version=2 --local-traffic-selector=0.0.0.0/0 --remote-traffic-selector=0.0.0.0/0 --target-vpn-gateway=vpn-2 && gcloud compute routes create tunnel2to1-route-1 --project=qwiklabs-gcp-04-c262c3eb995e --network=vpn-network-2 --priority=1000 --destination-range=10.5.4.0/24 --next-hop-vpn-tunnel=tunnel2to1 --next-hop-vpn-tunnel-region=europe-west1
 
 # created two different VM instances in two different VPC networks and in their own subnet within the respective VPC networks
-# firewall rules have been configured to allow ssh and icpm connections
+# firewall rules have been configured to allow ssh and icmp connections
 # without the VPN can only ping the other VM instance through the www internet
 # pinging requires two tunnels to be established. one going to the target and one from the target coming back
 # good to use tunnels to make connections between networks and instances bc relying on one single tunnel (external IP addresses) might be a source for failure
@@ -71,3 +71,41 @@ gcloud compute target-vpn-gateways create vpn-2 --project=qwiklabs-gcp-04-c262c3
         - it also exchanges routes to connect to the specific subnets and then the compute instances
     - however, each VPC network is dependent on the network's admin and the firewall rules they set up and their routing tables
         - might use VPNs or external IP address, however less security, more cost, and more network latency.
+# Load Balancing and Autoscaling
+- **Managed instance groups** - collection of identical VM instances that act as a single entity
+    - specify a new template to update all instances with an update
+    - easily scalable (automatically) for instances in the group
+    - _Regional managed instance groups_ is recommended over zonal ones because you can manage an group over multiple zones rather than just one
+        - Good for zonal failure. can if there is an unpredicted shutdown the app can still serve from another zone using load balacing services
+    - must make an compute engine instance template then the group manager populates the template to the group
+    - use instance groups for stateless server or batch workloads such as website frontend or image processing.
+    - can also user for stateful apps such as dataabses
+- Managed instance groups have autoscale based on increase or decrease in workloads and health check capabilities
+    -  will add or remove instances to fit workload target specified in template
+        - good for reducing costs
+        - based on CPU usage, load-balancing, Pub/Sub queues, monitoring metrics
+    - **Health Check** - feature with managed instance groups, which checks status of instances.
+        - Response times, success/failure ratio
+- **HTTPS Load Balancing** - app layer that handles message content, which allows routing decisions based on the message's URL
+    - gives **global load balancing** for HTTPS requests whose destination is for project's VM instances
+    - Thus, apps are available at a _single_ Anycast IP address, which simplies DNS
+    - HTTPS load balancing balances traffic to different types of requests to multiple backends instances from multiple regions
+        - HTTP req. are load balanced on port 80 or 8080.
+        - HTTPS req. are load balanced on port 443
+        - supports IPv4 and IPv6, is scalable, _no prewarming is needed_
+        - has content-based and cross regional load balancing
+    - specify URL maps that route some URls to one set of instances and another to a different set
+    - requests are set to the closest instance group
+- Steps of a HTTPS load balancer:
+    - incoming requests from the internet get redirected by the global forwarding rule to a HTTP proxy
+    - the target HTTP proxy checks each reqest against a URL map to determine the backend service for the request
+    - For example: www.ex.com/audio and www.ex.com/video can point to two different **back-end services** which do different things
+        - healthy back-end services can receive new requests while non-healthy can't
+        - *back-end services* direct requests to the appropriate backend based on bandwidth of a zone and instance
+            - these back-end services might contain more **backends (in this case, instance groups** along with a health check and time-out setting
+    - Round Robin algorithm to distribute requests among available instances
+        - However, use Session Affinity to send rqeuests from the same client to the same VM instance that handled prev. req.
+    - Backends in a Backend service have **balancing modes** to tell the load-balancer when its "full"
+        - load-balancing mode can be based off CPU utilization
+    - If requests for a back-end service in a region is full then it will go to the nearest available serving region
+        
