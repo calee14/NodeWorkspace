@@ -37,3 +37,37 @@ gcloud compute target-vpn-gateways create vpn-2 --project=qwiklabs-gcp-04-c262c3
 # must create a key for encryption. specify the IP ranges between the gateway. also specify that the gateway will be route-based
 # NOTE: the IP ranges is specified by the /24 but the main IP address is given by the 'internal IP/subnet IP addresses' of the other VM instance in the 'other network'
 ```
+- **Cloud Interconnect and Peering** - many different services available to connect current infrastructure to Google's network
+    - Dedicated connections are a direct connection to Google's network
+        - Layer 2 (uses VLAN): pipes directly into GCP env. giving access to internal IP addresses.
+        - Layer 3: gives access to G Suite services, Youtube, Google Cloud APIs with public IP addresses
+            - good to use Cloud VPN
+- **Dedicated _Interconnect_** provides direct physical connections to Google Cloud
+    - enables you to transfer a lot of data between instances without spending more on bandwidth over the public internet
+    - to use dedicated interconnect must establish 
+    - **cross-connect** between router (from on premise) and google network. 
+        - this cross-connections must happen in a subnet/zone that is shared between the networks
+    - for the routes to be exchanged through the interconnect it uses **BGP** (have to install and start a sesssion) to auto. update routes between networks
+    - To have a dedicated interconnect connection the on-premis network must meet Google's networks at a **Colocation facility**
+- If your on-premise network doesn't meet at network then use **Partner Interconnect**
+    - some service-providers have physcial connections to Google's network
+    - pay the service provider to give that access
+- **Comparing the Interconnect options:**
+    - IPsec VPN tunnel can work with an on-premise machine. 1.5-3 gbps
+    - Dedicated Interconnect requires connection to a colocation facility. 10 gbps
+    - Partner interconnect requires to get access to network over service provider. 50 mbps - 10 gbps
+- **Direct Peering** - when company needs access to Google Cloud properties
+    - allows companies to reach Google Workspace services through a public IP address
+    - Must access them through an **Edge Point of Prescence (where google networks connect with the rest of the internet)**
+- **Carrier Peering** - same as direct peering but go through a service provider to access Googe's networks and services
+    - main differences between direct and carrier is throughput, network capacity
+- **Shared (good for centralized projects)** allows an organization to connect resources from multi projects to a 'common' VPC network
+    - that way these projects can use internal IP addresses to securely communicate
+    - there's a **host project** that allows for connection/communication with clients externally, outside the netowrk
+        - then the other projects are service projects that are connected to the host project on a shared *VPC network*. Thus the projects communicate with the host project internally so there is no way to get to the service projects
+- **VPC peering (better for decentralized projects)** - allows private RFC 1918 connections between two VPC networks
+    - doesn't matter if the services are in the same project or organization
+    - establish peering connctions to allow two organizations to communicate privately with each other's projects compute engines using internal IP addresses
+        - it also exchanges routes to connect to the specific subnets and then the compute instances
+    - however, each VPC network is dependent on the network's admin and the firewall rules they set up and their routing tables
+        - might use VPNs or external IP address, however less security, more cost, and more network latency.

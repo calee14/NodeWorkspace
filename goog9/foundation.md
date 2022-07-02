@@ -149,7 +149,7 @@ gcloud compute instances list --sort-by=ZONE
 VM instances in the same network can ping and communicate with each other using internal addresses and network protocols
 VM instances that are outside of each others network need to use the external IP address
 However, VM instances in the same project but different network can communicate with each other through VPC Peering or VPNs.
-NOTE: VPCs are private virtual networks
+NOTE: VPCs are private virtual clouds that have their own virtual networks
 """
 ping -c 3 <Enter mynet-eu-vms external IP here>
 ```
