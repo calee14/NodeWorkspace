@@ -108,4 +108,29 @@ gcloud compute target-vpn-gateways create vpn-2 --project=qwiklabs-gcp-04-c262c3
     - Backends in a Backend service have **balancing modes** to tell the load-balancer when its "full"
         - load-balancing mode can be based off CPU utilization
     - If requests for a back-end service in a region is full then it will go to the nearest available serving region
-        
+- Indepth example of how HTTP Load Balancer works:
+    - requests incoming can be from US or from Europe.
+    - The *global fowarding rule* directs requests to a target HTTP proxy
+    - the HTTP proxy checks a *URL map* to direct the request to the correct *backend service*
+        - a *backend servce* can have several *backend instances* in different regions i.e. us-central, eur-west
+            - each *backend instance* is actually an instance group
+        - the *load-balancer* konws the IP of the user request and can pinpoint the origin. it also knows the capacity and usage of the instance groups
+            - so it can foward the request to the closest instance group
+- **Cross-region load balancing** = requests are directed to instance groups and regions that are closest to the origin.
+- **Content-paste load balancing** = two seperate backend services that are split by the load balancer depending on the URL header. For example: /video the traffic is sent to the backend video service and for everything else is sent to the web server
+    - This can all be achieved with a **single global IP address**. Same for cross-region load balancing
+- **HTTPS load balancer** - same structure as HTTP load balancer but differs in some ways
+    - it has a HTTPS proxy instead of HTTP proxy
+        - this HTTPS proxy requires at least one signed SSL certificate installed on the target HTTPS proxy for the load balancer
+        - Client SSL sessions terminate at the load balancer
+        - HTTPS load balancers support the quick transport layer protocol
+    - **QUIC** is a transport layer that allows for faster client connection initiation, removes head-of-line blocking in multiplex streams, and supports conenction migration when a client's IP address changes
+    - SSL certificates are only used with load balancing proxies such as HTTPS or SSL proxies.
+    - like a HTTP load balancer, HTTPS load balancershave a URL map to direct traffic to back-end services or buckets
+- **Network Endpoint Group (NEG)** - configuration object that specifies a group of back-end services (aka. endpoints)
+    - usually config is deployed in containers
+        - used for distributing traffic to applications running on back-end instances
+        - works for load balancers and Traffic Director
+    - Zonal and Internet NEGs define how endpoints should be reached, if possible and where they are located
+        - these 'endpoints' are VM instances or service running on VMs
+            - an 'endpoint' must have an IP address or IP address/Port combination
