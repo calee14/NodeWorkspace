@@ -141,6 +141,7 @@ gcloud compute target-vpn-gateways create vpn-2 --project=qwiklabs-gcp-04-c262c3
 
 # create a firewall rule that allows ingress connections from the load balancer to make health checks. tags usually placed on VMs and other instances
 # health check probes will come from the IP ranges 130.211.0.0/22 and 35.191.0.0/16.
+# NOTE: tcp port 80 is for HTTP
 gcloud compute --project=qwiklabs-gcp-02-57a1059d7e1a firewall-rules create fw-allow-health-checks --direction=INGRESS --priority=1000 --network=default --action=ALLOW --rules=tcp:80 --source-ranges=130.211.0.0/22,35.191.0.0/16 --target-tags=allow-health-checks
 
 # the VM backend instances will not be connected to the open internet so no external IP address
@@ -197,3 +198,40 @@ done
 # stress test the link from an adobe server
 ab -n 500000 -c 1000 http://$LB_IP/
 ```
+- **SSL proxy load balancing** - global load balancing service for encrypted non-HTTP traffic
+    - terminates user SSL connections at the load balancing layer (proxy), then balances (creates a new) connections to the instance groups using SSL or TCP protocols. (SSL is recommended)
+    - has intelligent routing, certificate management, security patching and SSL policies
+        - intelligent routing = route requests to backends where there is capacity
+        - GCP auto apply patches for SSL or TCP stack updates
+- **TCP Proxy load balancing** - global load balancing service for unencrypted, non-HTTP traffic
+    - like SSL, the TCP connection terminates at the load balancing layer (proxy) then directs the traffic to the VMs using SSL or TCP.
+        - SSL recommended when traffic is being sent from proxy to instance groups (VMs)
+        - a lot of the same features and security of the SSL proxy
+- **Network Load Balancing** - regional, non-proxied load balancing service
+    - all traffic is passed through the load balancer instead of being proxied
+    - can only be balanced with VM instances in the same region
+        - not a global load balancer
+    - uses forwarding rules to balance traffic based on teh IP protocol data, such as address, port, and protocol type
+        - protocol types such as UDP, TCP, SSL traffic
+        - good for traffic that run on ports not supported by TCP and SSL proxy load balancers
+    - backend service-based architecture:
+        - supports non-legacy health checks, TCP, SSL, HTTP, HTTPS and HTTP/2 autoscaling with instance groups, connection draining and failover policy.
+    - **target pool-based architechture**:
+        - a group of instances that receive traffic from forwarding rules.
+        - when traffic is sent to a target pool, the load balancer chooses an instance from the target pool based on an applied hash on the source IP address, port, and destination IP address and port
+        - all instances in a pool must be in the same region, which is the same for the network load balancer
+- **Internal TCP/UDP load balancing** - regional private load balancing for TCP and UDP-based traffic
+    - run and scale services behind a private load balancing IP address. load balancer only accessible through instances with internal IP addresses or VMs in the same region
+    - thus the internal TCP/UDP load balancer is a front end to the private backend services
+        - another benefit is that load balanced traffic stays inside the VPC network and region and there is lower latency
+    - Internal load balancing is software-defined and doesn't need an IP address to host the load balancing instance
+        - instead of terminating the request at the external load balancer, the internal load balancer directly delivers the traffic from the client to the backend service
+            - uses the Andromeda software to accomplish this
+    - The internal load balancer is proxy-based and regional. It enables one to run and scale services behind an internal load balancing IP address
+        - the backend services can use HTTP, HTTPS, HTTP/2 protocols
+    - After the internal load balancer has been configured, it uses **Envoy proxies** to direct traffic  
+    - Internal load balancing is good for the **3-tier model**
+        - none of the database or applicaion models will be exposed externally
+        - There is a public HTTPS Load Balancer
+            - traffic gets routed to the backend services located in multiple regions, which is a manged instance group
+                - the backend services access an internal load balancer which contain the application or internal tier of services
