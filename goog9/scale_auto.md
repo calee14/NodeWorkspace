@@ -126,7 +126,7 @@ gcloud compute target-vpn-gateways create vpn-2 --project=qwiklabs-gcp-04-c262c3
         - HTTPS load balancers support the quick transport layer protocol
     - **QUIC** is a transport layer that allows for faster client connection initiation, removes head-of-line blocking in multiplex streams, and supports conenction migration when a client's IP address changes
     - SSL certificates are only used with load balancing proxies such as HTTPS or SSL proxies.
-    - like a HTTP load balancer, HTTPS load balancershave a URL map to direct traffic to back-end services or buckets
+    - like a HTTP load balancer, HTTPS load balancers have a URL map to direct traffic to back-end services or buckets
 - **Network Endpoint Group (NEG)** - configuration object that specifies a group of back-end services (aka. endpoints)
     - usually config is deployed in containers
         - used for distributing traffic to applications running on back-end instances
@@ -134,3 +134,66 @@ gcloud compute target-vpn-gateways create vpn-2 --project=qwiklabs-gcp-04-c262c3
     - Zonal and Internet NEGs define how endpoints should be reached, if possible and where they are located
         - these 'endpoints' are VM instances or service running on VMs
             - an 'endpoint' must have an IP address or IP address/Port combination
+## Lab notes
+```bash
+# load-balancing is implemented at the 'edge' of Google's network. The edge consists of points of presence (PoP). 
+# Traffic directed to an HTTPS load balancer is sent to a PoP closest to the user then load balanced to a backend service in the Google network
+
+# create a firewall rule that allows ingress connections from the load balancer to make health checks. tags usually placed on VMs and other instances
+# health check probes will come from the IP ranges 130.211.0.0/22 and 35.191.0.0/16.
+gcloud compute --project=qwiklabs-gcp-02-57a1059d7e1a firewall-rules create fw-allow-health-checks --direction=INGRESS --priority=1000 --network=default --action=ALLOW --rules=tcp:80 --source-ranges=130.211.0.0/22,35.191.0.0/16 --target-tags=allow-health-checks
+
+# the VM backend instances will not be connected to the open internet so no external IP address
+# To connect to the open internet and Google services, use Cloud NAT, a gateway/instance of Cloud Router
+# this allows a VM to make outbound traffic and receive external/inbound traffic from the load balancer
+
+# need to make an image of a VM by copying the contents of the boot disk (contains a VM's OS and storage data)
+# the VM needs to have a tag to apply the firewall rule so that it will allow ingress connections from the Cloud Router/NAT
+
+# make a VM with no external IP address and allows for health checks and keeps boot disk when deleted
+gcloud compute instances create webserver --project=qwiklabs-gcp-02-57a1059d7e1a --zone=us-central1-a --machine-type=e2-medium --network-interface=subnet=default,no-address --metadata=enable-oslogin=true --maintenance-policy=MIGRATE --provisioning-model=STANDARD --service-account=802151231183-compute@developer.gserviceaccount.com --scopes=https://www.googleapis.com/auth/devstorage.read_only,https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring.write,https://www.googleapis.com/auth/servicecontrol,https://www.googleapis.com/auth/service.management.readonly,https://www.googleapis.com/auth/trace.append --tags=allow-health-checks --create-disk=boot=yes,device-name=webserver,image=projects/debian-cloud/global/images/debian-10-buster-v20220621,mode=rw,size=10,type=projects/qwiklabs-gcp-02-57a1059d7e1a/zones/us-central1-a/diskTypes/pd-balanced --no-shielded-secure-boot --shielded-vtpm --shielded-integrity-monitoring --reservation-affinity=any
+
+# the VM will run Apache2 the webserver software for HTTP
+sudo apt-get update
+sudo apt-get install -y apache2
+# start the apache2 server
+sudo service apache2 start
+# start the apache2 server whenever the VM boots
+sudo update-rc.d apache2 enable
+
+# be sure to save the VMs boot disk
+# create a compute engine image from the boot disk that we installed Apache on
+gcloud compute images create mywebserver --project=qwiklabs-gcp-02-57a1059d7e1a --source-disk=webserver --source-disk-zone=us-central1-a --storage-location=us
+
+# create an instance template from the boot disk we created earlier
+gcloud compute instance-templates create mywebserver-template --project=qwiklabs-gcp-02-57a1059d7e1a --machine-type=f1-micro --network-interface=network=default,no-address --metadata=enable-oslogin=true --maintenance-policy=MIGRATE --provisioning-model=STANDARD --service-account=802151231183-compute@developer.gserviceaccount.com --scopes=https://www.googleapis.com/auth/devstorage.read_only,https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring.write,https://www.googleapis.com/auth/servicecontrol,https://www.googleapis.com/auth/service.management.readonly,https://www.googleapis.com/auth/trace.append --tags=allow-health-checks --create-disk=auto-delete=yes,boot=yes,device-name=mywebserver-template,image=projects/qwiklabs-gcp-02-57a1059d7e1a/global/images/mywebserver,mode=rw,size=10,type=pd-balanced --no-shielded-secure-boot --shielded-vtpm --shielded-integrity-monitoring --reservation-affinity=any
+
+# make an instance group based off a instance template we created earlier
+# have the group auto scale and configure the metrics and health checks
+# create two groups in different regions
+gcloud beta compute health-checks create tcp http-health-check --project=qwiklabs-gcp-02-57a1059d7e1a --port=80 --proxy-header=NONE --no-enable-logging --check-interval=5 --timeout=5 --unhealthy-threshold=2 --healthy-threshold=2
+
+gcloud beta compute instance-groups managed create us-central1-mig --project=qwiklabs-gcp-02-57a1059d7e1a --base-instance-name=us-central1-mig --size=1 --template=mywebserver-template --zones=us-central1-c,us-central1-f,us-central1-b --target-distribution-shape=EVEN --health-check=http-health-check --initial-delay=60
+
+gcloud beta compute instance-groups managed set-autoscaling us-central1-mig --project=qwiklabs-gcp-02-57a1059d7e1a --region=us-central1 --cool-down-period=60 --max-num-replicas=2 --min-num-replicas=1 --mode=on --target-load-balancing-utilization=0.8
+
+# create a load balancer and configure it to direct internet to VMs or serverless service
+# make it a global HTTP loadbalancer
+# specify the backend services for the load balancer
+
+# configure the front end to define path rules to determine where the traffic will be directed
+# some traffic can go to one backend server based on the URL paths
+# NOTE: IPv6 requests are terminated at the global load balancing layer then proxied over IPv4 to backends
+# IPv6 addresses are in hexadecimal format
+
+# check if the load balancer is working
+LB_IP=[LB_IP_v4]
+while [ -z "$RESULT" ] ; 
+do 
+  echo "Waiting for Load Balancer";
+  sleep 5;
+  RESULT=$(curl -m1 -s $LB_IP | grep Apache);
+done
+# stress test the link from an adobe server
+ab -n 500000 -c 1000 http://$LB_IP/
+```
