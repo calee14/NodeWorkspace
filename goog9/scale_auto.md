@@ -235,3 +235,41 @@ ab -n 500000 -c 1000 http://$LB_IP/
         - There is a public HTTPS Load Balancer
             - traffic gets routed to the backend services located in multiple regions, which is a manged instance group
                 - the backend services access an internal load balancer which contain the application or internal tier of services
+## Lab notes
+```bash
+# Internal Load Balancer is located within a region
+# lets users hide and scale services behind a private load balancer that is only accessible to internal VMs
+
+# allow internal traffic connectivity from sources in the 10.10.0.0/16. thus internal instances can accept connections from other instances in that subnet range
+gcloud compute --project=qwiklabs-gcp-03-be9430baa81f firewall-rules create fw-allow-lb-access --direction=INGRESS --priority=1000 --network=my-internal-app --action=ALLOW --rules=all --source-ranges=10.10.0.0/16 --target-tags=backend-service
+
+# make a firewall rule that allow instances that the rule applies to, to accept connections from IPs 130.211.0.0/22,35.191.0.0/16. 
+# This is the address where the health checkers will probe for the status and health of instance groups
+gcloud compute --project=qwiklabs-gcp-03-be9430baa81f firewall-rules create fw-allow-health-checks --direction=INGRESS --priority=1000 --network=my-internal-app --action=ALLOW --rules=tcp:80 --source-ranges=130.211.0.0/22,35.191.0.0/16 --target-tags=backend-service
+
+# neet to make a Clout NAT router to hide backend services behind. 
+# this allows the backend servies to receive and make connections with the internet
+
+# instance template for a specific subnet and region
+# we will use the templates to make instance groups
+# add the backend-service tag to the template so the firewall rules apply (allow traffic from instances in the subnet)
+# the health check is also applied here;
+gcloud compute instance-templates create instance-template-1 --project=qwiklabs-gcp-03-be9430baa81f --machine-type=f1-micro --network-interface=subnet=subnet-a,no-address --metadata=startup-script-url=gs://cloud-training/gcpnet/ilb/startup.sh,enable-oslogin=true --maintenance-policy=MIGRATE --provisioning-model=STANDARD --service-account=758812653406-compute@developer.gserviceaccount.com --scopes=https://www.googleapis.com/auth/devstorage.read_only,https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring.write,https://www.googleapis.com/auth/servicecontrol,https://www.googleapis.com/auth/service.management.readonly,https://www.googleapis.com/auth/trace.append --region=us-central1 --tags=backend-service --create-disk=auto-delete=yes,boot=yes,device-name=instance-template-1,image=projects/debian-cloud/global/images/debian-11-bullseye-v20220621,mode=rw,size=10,type=pd-balanced --no-shielded-secure-boot --shielded-vtpm --shielded-integrity-monitoring --reservation-affinity=any
+
+# make an instance group from templates
+# auto scale is enabled here. need to define the scaling policy based on the workload
+# need to make an instance group for each subnet which is specified in the two templates we made
+gcloud compute instance-groups managed create instance-group-2 --project=qwiklabs-gcp-03-be9430baa81f --base-instance-name=instance-group-2 --size=1 --template=instance-template-2 --zone=us-central1-b
+
+gcloud beta compute instance-groups managed set-autoscaling instance-group-2 --project=qwiklabs-gcp-03-be9430baa81f --zone=us-central1-b --cool-down-period=45 --max-num-replicas=5 --min-num-replicas=1 --mode=on --target-cpu-utilization=0.8
+
+# we have another utility vm that would ping the load balancer which would direct the traffic to the backend service (instance groups)
+
+# Server Location and Server Hostname will give information about the location of the backend we're using
+
+# An internal load balancer directs traffic only between VMs.
+# We configure it to balance the traffic bewteen the two instance groups in different zones but same region
+# add the instance groups as backends and configure health checks
+# make a frontend IP address for the load balancer in the subnet we want to
+# if we ping the load balancer's internal IP then it will balance the requests
+```
