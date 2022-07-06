@@ -286,3 +286,48 @@ gcloud beta compute instance-groups managed set-autoscaling instance-group-2 --p
         - Internal TCP/UDP
         - Internal HTTP(S)
 - **NOTE:** - CPU utilization, Load Balancing Capacity Monitoring Metrics, Queue-based workloads can be policies for managed instance groups
+# Infrastructure Automation
+- Google Cloud Console if the service is new and prefer the UI.
+- Google Cloud Shell if user knows the specific service well and need to make resources quickly from the command line.
+- **Terraform** = infrastructure as code
+    - allows for quickly provisioning and removing infrastructure
+    - on-demand provisioning of deployment is powerful
+        - can be used into Continuous Integration pipeline
+        - Deployment complexity is managed in code.
+    - modularized using templates = abstraction of resources into resusable components
+    - supports IaC tools like Chef, Puppet, Ansible, Packer
+    - Use configuration files to declare sources needed such as VMs, containers, Storage and Networking
+        - **HashiCorp Configuration Language (HCL)** = concise description of blocks, arguments and expressions
+    - Specify a set of resources that would compose the application or service
+        - allows one to focus more on the code
+        - Terraform uses APIs of GCP to deploy resources
+    - Terraform language includes blocks that represent objects that can have labels
+        - inside objects are arguments that assign values to properties of the object i.e. name, expressions
+    - Example code with terraform. Make a auto network with a firewall rule
+        - the .tf file is like a blue print for the desired state of infrastructure
+    ```terraform
+    main.tf
+    provider "google" {
+    }
+    # [START vpc_auto_create]
+    resource "google_compute_network" "vpc_network" {
+        project = <actual project>
+        name = "auto-mode-net"
+        auto_create_subnetworks = true
+        mtu = 1460
+    }
+    # [START vpc_firewall_create]
+    resource "google_compute_firewall" "rules" {
+        project = <actual project>
+        name = "my-firewall-rule"
+        network = "vpc_network"
+            allow {
+                protocol = "tcp"
+                ports = ["80", "8080"]
+            }
+    }
+    ```
+    - the main.tf file specifies what resources we want to create
+        - use the `terraform init` command to make sure Google provider plug-ins are installed
+        - `terraform plan` = command to refresh resources unless it is disabled
+        - `terraform apply` creates the infrastructure defined in the file
