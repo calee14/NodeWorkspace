@@ -331,3 +331,93 @@ gcloud beta compute instance-groups managed set-autoscaling instance-group-2 --p
         - use the `terraform init` command to make sure Google provider plug-ins are installed
         - `terraform plan` = command to refresh resources unless it is disabled
         - `terraform apply` creates the infrastructure defined in the file
+## Lab notes
+```t
+'''
+/provider.tf
+'''
+# specify the provider of our infrastructure
+provider "google" {}
+
+# running terraform init will install the plugins for our Google provider
+'''
+/mynetwork.tf
+'''
+# Create the mynetwork network
+resource "google_compute_network" "mynetwork" {
+name = "mynetwork"
+#RESOURCE properties go here
+auto_create_subnetworks = true
+}
+
+# Add a firewall rule to allow HTTP, SSH, RDP and ICMP traffic on mynetwork
+# give resource variable name 'mynetwork' when intialize
+resource "google_compute_firewall" "mynetwork" {
+name = "mynetwork-allow-http-ssh-rdp-icmp"
+#RESOURCE properties go here
+network = google_compute_network.mynetwork.self_link
+allow {
+    protocol = "tcp"
+    ports    = ["22", "80", "3389"]
+    }
+allow {
+    protocol = "icmp"
+    }
+source_ranges = ["0.0.0.0/0"]
+}
+
+# Create the mynet-us-vm instance
+# link it to the network we previously created
+# this also generates an order in which the resources need to be created
+module "mynet-us-vm" {
+  source           = "./instance"
+  instance_name    = "mynet-us-vm"
+  instance_zone    = "us-central1-a"
+  instance_network = google_compute_network.mynetwork.self_link
+}
+# Create the mynet-eu-vm" instance
+module "mynet-eu-vm" {
+  source           = "./instance"
+  instance_name    = "mynet-eu-vm"
+  instance_zone    = "europe-west1-d"
+  instance_network = google_compute_network.mynetwork.self_link
+}
+
+'''
+instance/main.tf
+'''
+# modularize the VM instance by having variables that come from input
+# whoever calls the module will have to provide the values for variables
+variable "instance_name" {}
+variable "instance_zone" {}
+variable "instance_type" {
+     # default value means that it is not required when instantiating module
+    default = "n1-standard-1"
+}
+variable "instance_network" {}
+
+resource "google_compute_instance" "vm_instance" {
+    name = "${var.instance_name}"
+    #RESOURCE properties go here
+    zone         = "${var.instance_zone}"
+    machine_type = "${var.instance_type}"
+    boot_disk {
+        initialize_params {
+        image = "debian-cloud/debian-9"
+        }
+    }
+    network_interface {
+        network = "${var.instance_network}"
+        # an empty access_config means that the instance will get an
+        # ephemeral external IP address. For internal IP addresses remove
+        # access_config from the object
+        access_config {
+            # Allocate a one-to-one NAT IP to the instance
+        }
+    }
+}
+
+# run terraform fmt to reformat the files
+# terraform init again to install the plugins for the new files
+# terraform plan and then terraform apply to execute
+```
