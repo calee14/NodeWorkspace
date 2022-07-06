@@ -421,3 +421,31 @@ resource "google_compute_instance" "vm_instance" {
 # terraform init again to install the plugins for the new files
 # terraform plan and then terraform apply to execute
 ```
+- **Google Cloud Marketplace** = quickly deploy software packages that run on GC
+    - pre-created configurations based on Terraform
+        - can easily deploy them for project and scale them
+    - automatically fixed with updates
+# Managed Services
+- Google or third-parties offer services
+- **Big Query** - serverless, scalable, and cost effective data warehouse
+    - quickly dive into data analytics without admin and settign up resources
+    - scales up to petabytes of data in the warehouse
+        - fast queries as well
+    - run queries in Cloud Console or with APIs
+- **Cloud Dataflow** - transforms and enriches data from a stream or batches
+    - infrastructure is handled in the service
+    - the data pipeline can handle millions of queries per second
+    - can use SQL, JAVA, Python through APIs for pipeline development
+    - Connects with Stackdriver for monitoring of pipelines and the quality of the data going through pipeline
+    - Streamed data can come from Cloud Datastore or Cloud Pub/Sub
+    - After transforming the data one can analyze it in BigQuery, AI Platform, or Cloud Bigtable
+- **Dataprep** - service for visually exploring, cleaning and preparing structured and unstructured data for analysis and ML
+    - it's serverless and works at any scale (no need to provision instances)
+    - No need to write code for data transformation
+    - the service is partnered with Trifacta for their data-prep solution
+- **Dataproc** - service to run Apache Spark or Apache Hadoop clusters
+    - built-in integration with BigQuery, Cloud Storage, Bigtable, Stackdriver
+    - Quick start up times so quickly work with data
+    - Dataflow automatically provisions clusters
+        - Dataproc manually have to set up clusters but bootup time is fast
+    - Integrates with Spark or Hadoop to run jobs for data processing in parallel with worker nodes 
