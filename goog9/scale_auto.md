@@ -273,3 +273,16 @@ gcloud beta compute instance-groups managed set-autoscaling instance-group-2 --p
 # make a frontend IP address for the load balancer in the subnet we want to
 # if we ping the load balancer's internal IP then it will balance the requests
 ```
+- Choosing the right load balancer:
+    - GCP load balancers support IPV6 clients, specifically HTTPS, SSL, TCP proxy load balancers
+        - this means that the balancers can accept IPv6 requests and proxy them over to IPv4
+    - load balancer acts as a **reverse proxy** - termiantes the IPv6 client connection at proxy then makes a new request through an IPv4 connection to the backend services
+        - once the backend makes the IPv4 response, the load balancer makes a IPv6 connection back to the original client
+    - If the load balancer must be external then consider:
+        - HTTP or HTTPS traffic (HTTPS should be used as a **layer 7** load balancer = smart load balancer with more encryption and makes two connections from client to server)
+        - TCP and UDP proxy networks for other traffic
+    - If regional then consider:
+        - Network TCP/UDP
+        - Internal TCP/UDP
+        - Internal HTTP(S)
+- **NOTE:** - CPU utilization, Load Balancing Capacity Monitoring Metrics, Queue-based workloads can be policies for managed instance groups
