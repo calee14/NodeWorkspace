@@ -449,3 +449,5 @@ resource "google_compute_instance" "vm_instance" {
     - Dataflow automatically provisions clusters
         - Dataproc manually have to set up clusters but bootup time is fast
     - Integrates with Spark or Hadoop to run jobs for data processing in parallel with worker nodes 
+- **NOTE:** **serverless** means that the servers and instances are obfuscated so that user doesn't have to worry about infrastructure
+    - Dataproc isn't serverless because we need to configure the clusters
