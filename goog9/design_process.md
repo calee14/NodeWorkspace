@@ -1,0 +1,35 @@
+# Defining Services
+- Building **requirements** for a project ask the questiosn:
+    - who? - user, developers and stakeholders of app (who is being affected)
+    - what? - main areas of functionality of app but it has to be clear. 
+    - why? - reason for needing the system.
+    - when? - timeline for users and developers
+    - how? - how will the system work? number of users at a time? amount of data?
+        - average payload size of service requests? latency requirements?
+        - where users are
+- Roles represent the goal of a user. 
+    - However, it can also be a microservice talking to another service
+    - brainstorm roles of what users might do and then group together ones that belong to a specific action = role
+    - **Persona** - a typical person who takes a role.
+        - tells a story about that person and what they do
+    - **User stories** - describe what the user wants the app to do and why the want to do it
+        - **INVEST** criteria. evaluate user stories
+            - Independent, Negotiable, Valuable, Estimatable, Small, Testable
+- **Quantitative requirements** - measureable data based on constraints: time, finance, people
+    - availability (accessibility), latency (time), throughput (durability, how much we can handle)
+- **Key Performance Indicators (KPIs)** - measure success of product, app
+    - for business: ROI, EBIT, Employee turnover, Customer churn
+    - for tech: Page view, User registration, Clickthroughs, Checkouts
+    - KPI's indicate if you're on track to acheive the goal
+    - Need to define KPIs that mean success and signs that we're reaching the goal
+    - KPIs must be **SMART**
+        - Specific (more detail better), Measurable (know steps to reach objective), Achievable (attainable), Relevant (make sure it matters and is benefitial), Time-based (due dates, time available)
+- **Service Level Indicators** - measurement of features of a service
+    - Error rate, throughput, latency
+    - must be countable/measureable and bound by time
+        - Good to use percentile metrics for SLIs
+- **Service Level Objectives** - agreed target of values for a measurement from an SLI
+    - 
+- **Service Level Agreements** - agreement between service provider and consumer
+    - service provider defines responsibilities and consequences if service not met
+    - 
