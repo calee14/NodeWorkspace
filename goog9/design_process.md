@@ -95,4 +95,28 @@
         - considered as **Batch APIS** ^ 
     - Public-facing or external APIs - use JSON for passing representations between services
     - Internal services use gRPC
-- 
+- **HTTP requests** - 3 parts: request line, header variables, and request body
+    - request line has HTTP verb: GET, POST, PUT, etc.; requested URI and the protocol version
+    - header variables contain key value pairs: user agent (client software), metadata about message formats or preferred formats
+        - request body contains data to be sent to server for relevant HTTP commands such as POST and PUT
+    - HTTP protocol has nine verbs but GET, POST, PUT (create or alter existing data, should be **idempotent** net effect on data is the same even if same request is made multiple times), DELETE are mainly used in RESTful APIs
+- **HTTP responses** - returned responses defined by HTTP for a request. 3 parts: response line, header variables, and response body
+    - Response line has response codes: 100s = N/A, 200s = Okay (201 = object created), 400 = client request is in error (403 = forbidden, and 404 = resource not found), 500 = internal server encounted error (503 = server not available bc overloaded)
+    - Response header is a set of key-value pairs that indicate to the receiver the type of content in the body
+        - Response body has the resource representation in JSON, XMl, HTMl, etc.
+- **URI rules**:
+    - collections use plural and individual resource use singular noun (no action words/verbs)
+    - URI is case sensitive, thus consistent naming
+- Important to design consistent APIs for services
+    - for GCP each service has a REST API
+        - functions are in the form of the service(endpoint).collection.verb
+        - e.g. GET compute.googleapis.com/compute/v1/projects/{project}/zones/{zone}/instances
+            - collections are instances, instanceTemplates, etc.
+- **OpenAPI** - industry standard for exposing APIs to clients
+    - formats URIs and can help programmers understand services
+- **gRPC** = binary protocol that's lightweight for communication between services or instances
+    - supports languages and it's easy to implement
+    - works on Global Load Balancer, Cloud Endpoints, Kubernetes Engine, other GCP products
+- **Cloud Endpoint** - develop, deploy and manage APIs on Google Cloud Backend
+    - **Apigee** - API management platform built for enterprises where deployment might be cloud, on-premise or hybrid
+    - both services have tools for user auth, security, and monitoring for APIs
