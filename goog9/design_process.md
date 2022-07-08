@@ -7,6 +7,7 @@
     - how? - how will the system work? number of users at a time? amount of data?
         - average payload size of service requests? latency requirements?
         - where users are
+- **Qualatative requirements**:
 - Roles represent the goal of a user. 
     - However, it can also be a microservice talking to another service
     - brainstorm roles of what users might do and then group together ones that belong to a specific action = role
@@ -29,7 +30,38 @@
     - must be countable/measureable and bound by time
         - Good to use percentile metrics for SLIs
 - **Service Level Objectives** - agreed target of values for a measurement from an SLI
-    - 
+    - should improve user experience
+    - shouldn't be too ambitious and out of reach.
+        - _attainable_ and reasonable within costs
+    - divide the SLO into parts for more performance gauge
+        - 50% will be complete within 100 milliseconds
+    - start with lower SLOS and something simple
+    - don't deal in absolutes (100%)
+    - don't have too many SLOs. only need to cover the key app attributes (features users care about)
 - **Service Level Agreements** - agreement between service provider and consumer
     - service provider defines responsibilities and consequences if service not met
-    - 
+    - aka. a contract between the provider and the customer
+        - better to be conservative with SLAs
+            - there should be some saftey or threshold. lower than the SLO
+- **NOTE:** - user experience isn't measureable or time bound, thus it's not a good KPI
+    - user story = description of a feature written from the user's POV
+# Microservice Design and Architecture
+- **Microservices** = divide large program into independent services
+    - this enables teams to work together better and faster
+    - App Engine, Cloud Run, Kubernetes Engine, Cloud Functions help with building microservices 
+    - Each service needs to have its **own** datastore for independence
+    - better for scaling, logging errors, innovating, use different langauges for different services
+    - Challanges: hard to define clear boundaries between services
+        - more complex infrastructure between services: latency, security, different versions
+        - backward compatibility as services might update
+    - Microservices for an application should developed internalyl and be exposed through an API
+        - The next layer should be the architectual layer where apps should be User Interfaces (web, iOS, android)
+            - Last layer: Isolate services that provide data sharing by securing it with authentication
+    - **Stateful services** (service connected to database) - harder to scale, upgrade, need to backup
+        - avoid storign shared state in-memory on servers
+            - this requries sticky sessions for the load balancer, meaning requests from one client go to the same server instance aka. **session affinity**
+            - messes up elastic autoscaling
+            - to fix use stateful services like Datastore or CloudSQL. then cache data for faster access speeds using Memorystore
+                - allows for load balancer to scale backend and keep up with demand
+    - **Stateless services** - easier to scale, update versions, and deploy
+- **Twelve-Factor App** - 
