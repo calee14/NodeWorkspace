@@ -120,3 +120,21 @@
 - **Cloud Endpoint** - develop, deploy and manage APIs on Google Cloud Backend
     - **Apigee** - API management platform built for enterprises where deployment might be cloud, on-premise or hybrid
     - both services have tools for user auth, security, and monitoring for APIs
+# DevOps Automation
+- **Continuous Integraion Pipelines** - automate building applications
+    - developers check-in code -> run unit tests -> build deployment package (make docker image) -> deploy
+    - **Cloud Source Repositories** - push to a central repository of the app they want to deploy
+        - managed Git repos and control access with IAM
+        - integrated with Cloud Pub/Sub, Cloud Debugger
+    - Cloud Build - build system executes steps to make a deployment package or Docker image
+        - build software quickly (based off Docker)
+        - `gcloud builds submit --tag gcr.io/your-project-id/image-name`
+            - must use a docker file if use tag
+    - Build Triggers - watches for changes in the Git repo and starts the build
+        - build a container when code is pushed to a specific branch
+    - Container Registry - store Docker images or deployment packages for deployment
+        - Cloud Build images are auto saved can also use the docker command line to push and pull images to Registry
+- **Binary Authorization** - service based off Kritis specification
+    - must be enabled on a Kubernetes cluster
+    - allows that the images being deployed onto containers are trusted
+        - prevents images from being deployed with a certain amount of vulnerabilities
