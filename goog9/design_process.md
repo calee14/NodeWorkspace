@@ -138,3 +138,87 @@
     - must be enabled on a Kubernetes cluster
     - allows that the images being deployed onto containers are trusted
         - prevents images from being deployed with a certain amount of vulnerabilities
+- **Infrastructure as Code** - allows infrastructure to be automated which means less mistakes
+    - **Terraform** = code to quickly provision and remove infrastructure
+    - can be used for Continuous Integration pipeline and deployment
+    - Terraform deploys resources in parallel but will consider which ones need to be created first
+        - Blocks in Terraform can specify the resource type then give a label/name to that block for later reference
+    - Terraform is already installed in GC Shell
+        - There is a section for the Terraform Config to output to in the deployment to give information about the infra.
+## Lab notes
+```bash
+# first create a git repo using the Cloud Source service
+# use gcloud command to clone git repos
+gcloud source repos clone devops-repo
+
+# put the python app into a file
+from flask import Flask, render_template, request
+app = Flask(__name__)
+@app.route("/")
+def main():
+    model = {"title": "Hello DevOps Fans."}
+    return render_template('index.html', model=model)
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=8080, debug=True, threaded=True)
+
+# add templates for the static pages (html)
+# templates/layout.html
+<!doctype html>
+<html lang="en">
+<head>
+    <title>{{model.title}}</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        {% block content %}{% endblock %}
+        <footer></footer>
+    </div>
+</body>
+</html>
+
+# templates/index.html
+{% extends "layout.html" %}
+{% block content %}
+<div class="jumbotron">
+    <div class="container">
+        <h1>{{model.title}}</h1>
+    </div>
+</div>
+{% endblock %}
+
+# make a requirements.txt file
+# push changes to git repo
+# must set config of git config
+
+# to start using docker must make a Docker file
+# Dockerfile
+# specify the base image
+FROM python:3.7
+
+# copy the source code in the current directory into the /app folder
+WORKDIR /app
+COPY . .
+
+# run commands to install the python libraries
+# gunicorn is a web server that will run the app
+RUN pip install gunicorn
+RUN pip install -r requirements.txt
+
+# set an env variable to run the webserver on port 80
+ENV PORT=80
+CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 main:app
+
+# build the docker image
+# then upload it to Container Registry
+gcloud builds submit --tag gcr.io/$DEVSHELL_PROJECT_ID/devops-image:v0.1 .
+
+# can use the image deployed to Container Registry to make VMs
+# images are located here
+gcr.io/<your-project-id-here>/devops-image:v0.1
+
+# can automate builds by making a trigger at the Container Registry page and link it with a git repo
+# the trigger will make a new container with the name of the git repo
+# create a VM and link that deployment with the trigger-activated container
+```
