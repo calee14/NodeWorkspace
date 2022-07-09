@@ -221,4 +221,43 @@ gcr.io/<your-project-id-here>/devops-image:v0.1
 # can automate builds by making a trigger at the Container Registry page and link it with a git repo
 # the trigger will make a new container with the name of the git repo
 # create a VM and link that deployment with the trigger-activated container
+# the build link will look like
+gcr.io/<your-project-id-here>/devops-repo:<container-id>
 ```
+# Choosing Storage Solutions
+- multi-region data storage services have more availability with multi-regions than single regions (99.999 v 99.99)
+- durability = chances of losing data
+    - Cloud Storage = versioning
+    - Disks = snapshot jobs
+    - SQL = failover server, db server backups
+    - Spanner and Firestore = export jobs
+- Scale data and read and writes:
+    - Bigtable and Spanner scale horizontally by adding more nodes
+    - CloudSQL, Memorystore scale vertically by making machines larger
+    - Cloud Storage, BigQuery, Firestore scale automatically no limits
+- Consistency:
+    - Update all copies within one transaction and every gets the latest copy of the data
+        - Storage, CloudSQL, Spanner, Firestore
+    - Large vol. writes = eventual consistency (not immediate):
+        - Bigtable, Memorystore replicas
+- Bigtable and Spanner good for storing large amounts only
+- CloudStorage cheap but can't run database
+- Firestore less expensive but pay for read and writes
+- BigQuery is cheap but has no fast access records and pay per query
+- Relational DBs:
+    - CloudSQL - used for webframeworks: eCommerce. Scales to 30TB MySQL, PosgresSQL servers, fixed schemas
+    - Cloud Spanner - used for manufacturing, supply chains, FinTech. scales infinetely for regional or multiregional networks. fixed schema 
+- NoSQL:
+    - Firestore (Datastore) - mobile, web apps. user profiles, game states. managed document databse. schemaless
+    - Cloud Bigtable - heavy read/write events. used for AdTech, Fintech, IoT. scales infinitely, wide-column NoSQL. Schemaless
+- Object (binary):
+    - Cloud Storage - stores binary object data. used for images, media, backups, videos. infinitely scalable and managed service. schemaless
+- Warehouse:
+    - BigQuery - enterprise data warehouse. used for analytics, dashboards. managed SQL analysis. fixed schema
+- In memory:
+    - caching web and media apps, user sessions, game states. Managed Redis DB. Schemaless
+- Use Cloud Storage Transfer Service - to scedule backups and data transfers
+- Transfer Appliance to transfer large amounts of data
+    - fill up a rackable device (an appliance) then ship it to then upload to the Google network
+- **NOTE:** Cloud Spanner provides low latency and consistency over the world bc of multi-regional servers
+    - Store user preferences, product info, and reviews on Firestore is okay
