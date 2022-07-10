@@ -291,3 +291,4 @@ gcr.io/<your-project-id-here>/devops-repo:<container-id>
     - supports internet-facing and internal facing but for regional traffic only
 - **Network Intelligence Center** - visualize network topology and test network connectivity service
     - can test source and destination endpoints in VPC networks. VPC network from and to the Internet. VPC network to and from the on-premise networks
+- 
