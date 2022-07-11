@@ -261,3 +261,33 @@ gcr.io/<your-project-id-here>/devops-repo:<container-id>
     - fill up a rackable device (an appliance) then ship it to then upload to the Google network
 - **NOTE:** Cloud Spanner provides low latency and consistency over the world bc of multi-regional servers
     - Store user preferences, product info, and reviews on Firestore is okay
+# Google Cloud and Hybrid Network Architecture
+- Google has a global fiber network around the world.
+    - there are regions which are geographic locations with zones in them and data centers 
+    - PoPs are places where the Google Network is connected to the internet
+    - projects can have multiple virtual networks.
+        - these networks are collections of regional subnets
+    - IP ranges can't overlap
+    - Machines in the same VPC can communicate via the internal IP address regardless of the subnet region
+        - subnets can be expanded without downtime
+- VMs can be attached to many virtual networks using individual interfaces 
+- Shared VPC is a network that can be shared with other projects not in the same network 
+    - allows for multi project networking and offers better security because policies at controled by the host project that owns the network
+- Global load balancer - provides access to services deployed in multiple regions
+    - distribute traffic loads to mulitple instance groups
+    - one global anycast IP address is used for better DNS look up  
+    - use regional load balancer for instances deployed in one region only
+- Secure load balancers with SSL with public IP addresses
+- **Cloud CDN** - caches static content across the world using Google's edge-caching locations
+    - can be used with a HTTP global load balancer
+    - the static data can come from VMs, GKE pods, Cloud Storage buckets
+- HTTP(S) load balancing is a layer 7 load balancer
+    - HTTP and HTTPS including HTTP/2 traffic type
+    - supports load balancing for internet facing and internal as well as regional and global
+- TCP load balancing provides layer 4 balancing or proxy for applications that use TCP/SSL protocols
+    - can configure TCP or SSL proxy
+    - Internet facing and internal load balancing and regional and global
+- UDP load balancing is for applications that use UDP as a protocol
+    - supports internet-facing and internal facing but for regional traffic only
+- **Network Intelligence Center** - visualize network topology and test network connectivity service
+    - can test source and destination endpoints in VPC networks. VPC network from and to the Internet. VPC network to and from the on-premise networks
