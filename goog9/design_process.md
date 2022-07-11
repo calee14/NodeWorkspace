@@ -450,3 +450,81 @@ kubectl get services
 gcloud builds submit --tag gcr.io/$DEVSHELL_PROJECT_ID/cloud-run-image:v0.1 .
 # use cloud run to make a kubernetes cluster
 ```
+# Designing Reliable Systems
+- Reliable systems key performance metrics: 
+- Availability: percent of the time a system is running and can process requests. need to monitor
+    - must have health checks to predict problems
+    - include fault tolerance and don't have single points of failure
+        - should have backup systems
+- Durability: chance of losing data due to failure
+    - ensure that data is preserved with replication and backup
+    - data can be replicated over zones
+    - restore from backups regularly to know that the backups are working
+- Scalability: the systems ability to grow as user workload grows
+    - need to monitor metrics like CPU or memory that correlate with workload increasing
+- Design for reliabilty:
+- Avoid single points of failure
+    - deploy N+2 extra instances (2 extra) if need to upgrade instance, one server failing
+    - make sure that each unit can handle extra loads (don't max out the vCPUs. keep them a little low usage)
+    - make the units stateless clones
+- Know Correlated failures:
+    - if one machine fails then all other requests by the machine fails
+    - if a top-of-rock switch (hardware) fails then the entire rack fails
+    - zone or region is lost then the resources in that fail
+    - servers on teh same software run into the same issue
+    - if a global configuration sys. fails then the systems that depend on that config might fail too
+    - items that can fail together are called **failure domain**
+- Avoid Correlated Failures:
+    - decouple servers and use microservices among different failure domains
+    - use microservices 
+    - deploy to multiple regions and zones
+    - split responsibilities into multiple components and spread to other processes
+    - the microservices should be independent and loosely coupled
+- Know Cascading failures:
+    - one system fails causing other systems to fail due to overload
+        - i.e. message board queue is overloaded and the server to process them has failed
+    - use health checks to repair unhealthy instances
+    - ensure that server instances start fast and don't rely on other backends
+- Query of Death - request made to a service causes a failure in the service
+    - to avoid need to have good monitoring
+- Avoid Positive feedback cycle overload
+    - when adding to many instances to prevent overload might backfire
+    - use the **exponential backoff pattern** to avoid positive feedback overload at the client
+        - if service fails try request again at expoentially increasing time intervals
+        - wait 1sec, try, wait 2sec, try, wait 4sec, stop at max time
+    - **circuit breaker pattern** to avoid the pos feedback loop
+        - if service is down and all clients are trying again. the increase requests will be bad
+        - protect service behind a proxy that monitors service health (the circuit breaker)
+            - if the service is not health then don't forward requests
+        - Kubernetes also has circuit breaker by default
+- Lazy deletion to recover data when users delete by default
+    - data is moved to trash and stays there for 30 days
+    - then the trash data is moved to soft-deletion for 60 days (admins can only recover)
+    - then hard-deletion data is gone
+- High availability = deploy to multiple zones in a region
+    - deploy multiple servers.
+    - orchestrate these multi servers with a managed instance group (regional)
+    - create a failover database in another zone or use a distributed db like Firestore or Spanner
+        - Cloud SQL can be configured to for high availability and replicas in other zones
+    - regional managed instance groups deploy VMs across many zones in a region
+    - Kubernetes clusters can be deployed to a single or multi zones
+    - create a health check for instance groups to enable auto healing
+        - the test endpoint (check probe) verifys that backend service is up and can handle more load
+        - if health check fails then removes the instance and make a new one 
+        - load balancers use health checks to send requests to healthy instances
+    - Multi-region storage buckets are a little more expensive for high availability
+    - Cloud SQL auto make failover replica for higher availability
+        - replica will be in another zone in same region.
+            - will be switched to if the master database has failed
+        - costs will be double
+    - Firestore and Spanner can be deployed in 1 or multiple regions
+- Diaster recovery: Cold standby
+    - create snapshots, machine images, and data backups into a multi-region storage (Cloud storage bucket)
+    - if a region fails then spin up servers in backup region
+        - Route requests to a new region
+        - test recovery procedures regularly
+- Diaster recovery: Hot standby
+    - create instance groups in multiple regions
+    - use a global load balancer
+    - store unstructured data in multi-region buckets
+    - for structured data use a multi-region db like Firestore and Spanner
