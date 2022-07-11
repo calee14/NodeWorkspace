@@ -321,3 +321,34 @@ gcr.io/<your-project-id-here>/devops-repo:<container-id>
     - can use a direction connection (Direct Interconnect) by connecting to a colocation facility. 10-200 gbps speeds
     - or can use a service connection (Partner Interconnect) by having a service provider give access to the Google Network. ~50 mbps speeds
     - Interconnect gives access to VPC resources using internal IP addresses
+- Compute Engine good if need control over OS, there is an application that's not in a container
+    - the application has a DB server that's self hosted
+- Managed Instances - create VMs based off a template
+    - defined the containers or boot disk of a VM
+    - the Instance group manager creates the VMs
+        - can configure health checks, auto healing, multizones availability, scales auto
+    - use one or more instance groups as backends for a load balancer
+    - backends in multiple regions around globe then use a global load balancers
+        - use a Cloud CDN for static content
+- Kubernetes Engine (GKE) - provides a managed enviroment/infrastructure for managing and scaling containers 
+    - Consists of clusters within it there are VMs
+    - Kubernetes provide access to use clusters, deploy apps, set policies and manage health
+    - Pods represent a single instance of a running process in a container
+        - Pods have one or more containers (Docker) that run services being deployed
+    - can run multiple services to the same cluster (optimize)
+- Cloud Run allows you to deploy containers to manage Kubernetes clusters
+    - services on Cloud Run must be stateless
+    - can automate deployment to the clusters
+- App Engine designed for microservices
+    - Each project can contain one application
+        - application can have one or more services
+        - each service can be versioned
+    - App Engine is the front-end of web and mobile clients
+        - the backend of the application is a bunch of services
+            - Cloud Storage for images, 
+            - Firestore for NoSQL data
+            - Cloud SQL for structured data, Memcache for caching queries
+            - There is a batch application that generates reports for management
+- Cloud Functions - for event-driven microservices
+    - activated by Pub/Sub, changes in the DB, webrequests
+    - scalable, inexpensive
