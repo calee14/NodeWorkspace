@@ -291,4 +291,33 @@ gcr.io/<your-project-id-here>/devops-repo:<container-id>
     - supports internet-facing and internal facing but for regional traffic only
 - **Network Intelligence Center** - visualize network topology and test network connectivity service
     - can test source and destination endpoints in VPC networks. VPC network from and to the Internet. VPC network to and from the on-premise networks
-- 
+- VPC Peering - connect two networks when both projects are in Google Cloud. Doesnt matter which org or project
+    - subnet ranges can't overlap
+    - firewall rules are independent and still apply for each individual virtual network
+    - network admins must approve the peering
+- Cloud VPN - connects on-premise network to a VPC network. 
+    - Encrypted by one VPN gateway then decrypted by the other VPN gateway (there are always two)
+    - good for low vol. data connections.
+    - supports site-to-site VPN, static routes, dynamic routes
+        - IKEv2 and v2 ciphers
+    - to connect need to configure:
+        - Cloud VPN gateway, on-premise VPN gateway, and two VPN tunnels
+        - the gateways are regional resources that have an external IP address
+            - a VPN tunnel connects the two gateways and is a virtual medium where the encrypted data is passed
+        - the traffic can only travel when two tunnels are established between gatways going both directions
+    - Max Transmission Unit - <1460 bytes because of the encrypted packets
+    - for the **High Availability VPN** there are two gateways and two interfaces. Thus there will be either 2 or 4 tunnels.
+        - must have dynamic routing
+        - also supports specific site-to-site configurations
+        - HA VPN to peer VPN gateway topology - has a backup VPN gateway for failover and or maintenance. essentially it connects to two VPN gateway devices
+        - HA VPN to AWs peer gateway - can use a virtual private gateway between both virtual networks or a transit gateway
+            - transit gateway supports **Equal Cost Multi Path ECMP (equally distributes traffic through all tunnels)**
+        - HA VPN to HA VPN gateway between two Google VPC networks. connect the two interfaces between the two HA VPNs to the others
+- Cloud Router enables dynamic discovery of routes between two networks that are connected to each other 
+    - can be used for VPN tunnels using Border Gateway Protocol (BGP)
+    - allows for routes to be updated and exchanged without changing tunnel configs. 
+        - advertise/share subnets between the two networks
+- Cloud Interconnect - extends on-premise networks to Google networks
+    - can use a direction connection (Direct Interconnect) by connecting to a colocation facility. 10-200 gbps speeds
+    - or can use a service connection (Partner Interconnect) by having a service provider give access to the Google Network. ~50 mbps speeds
+    - Interconnect gives access to VPC resources using internal IP addresses
