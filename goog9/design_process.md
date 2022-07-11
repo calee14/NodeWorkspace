@@ -352,3 +352,101 @@ gcr.io/<your-project-id-here>/devops-repo:<container-id>
 - Cloud Functions - for event-driven microservices
     - activated by Pub/Sub, changes in the DB, webrequests
     - scalable, inexpensive
+## Lab notes
+```bash
+# build a docker image of a py app using the Dockerfile
+docker build -t test-python .
+
+# to run a docker image into a local container on port 8080
+docker run --rm -p 8080:8080 test-python
+
+# make an app.yaml file to configure app engine
+# app.yaml specify the language runtime
+runtime: python37
+
+# create the app engine project in google cloud
+gcloud app create --region=us-central
+
+# deploy the app
+gcloud app deploy --version=one --quiet
+
+# redeploy the app if there are changes to the code
+# no promot will tell App Engine to continue serving request with the old version
+gcloud app deploy --version=two --no-promote --quiet
+
+# need to split traffic in the console interface to migrate requests to the new version
+
+# create a cluster of VMs to deploy multi apps to it
+# Kubernetes abstracts/hides the managment of VMs but automates and scales applications 
+
+# after creating the cluster with nodes in a region
+# see the nodes activity
+kubectl get nodes
+
+# make a KE config file
+# kubernetes-config.yaml
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devops-deployment
+  labels:
+    app: devops
+    tier: frontend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: devops
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        app: devops
+        tier: frontend
+    spec:
+      containers:
+      - name: devops-demo
+        image: <YOUR IMAGE PATH HERE>
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: devops-deployment-lb
+  labels:
+    app: devops
+    tier: frontend-lb
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 8080
+  selector:
+    app: devops
+    tier: frontend
+
+# the load balancer for the cluster will have a public IP
+# the cluster will have three instances/pods of a specified image (the image will be put into a container with other images maybe)
+
+# build an image and send it to Cloud Container Registry
+gcloud builds submit --tag gcr.io/$DEVSHELL_PROJECT_ID/devops-image:v0.2 .
+
+# paste the link in the output of the image location into the kubernete's config file
+
+# deploy the application to the kubernetes cluster
+kubectl apply -f kubernetes-config.yaml
+
+# check out all of the pod prcesses
+kubectl get pods
+
+# get the services of teh kubernetes cluster
+kubectl get services
+# we will see a load balancer with an external IP. use it to access the backends
+
+# for cloud run we need to make another image
+# build a new image
+gcloud builds submit --tag gcr.io/$DEVSHELL_PROJECT_ID/cloud-run-image:v0.1 .
+# use cloud run to make a kubernetes cluster
+```
