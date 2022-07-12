@@ -634,3 +634,25 @@ gcloud builds submit --tag gcr.io/$DEVSHELL_PROJECT_ID/cloud-run-image:v0.1 .
         - For Compute Engine can make new instance groups, add it to the load balancer as a backend service then migrate traffic
         - for Kubernetes can make new pods with the same labels as the other pods
         - App Engine has the split traffic functionality and can split a portion of the traffic
+- Capacity Planning then plan for costs:
+    - forecast, allocate, approve (analyze risk and rewards), deploy
+    - start small machines then scale out automatically
+        - understand committed use discounts, preemptible instances (use auto healing to recreate the VMs when destroyed)
+        - Google Cloud will let you know if resources are underutilized
+    - don't over allocate disk space
+        - know I/O (input, output) patterns SSDs are super expensive
+    - For lower network costs keep machines close to data
+        - charges internet egress and egress within instances in different zones but same region
+        - leverage GKE usage metering which can prevent over-provisioning in Kubernetes cluster
+    - Compare costs for different storage alternatives 
+        - Storing 1GB in Firestore is free vs. Storing 1GB in Cloud Bigtable is around $1400/month bc there are more than 3 Bigtable nodes for high availability
+        - Can use CDN, Memorystore (caching) for storing data to make it cheaper
+            - can also use Pub/Sub (messaging and queueing) rather than store states between two applications
+    - Pricing Calculator for estimating costs
+    - BigQuery and Data Studio for analyzing spending data
+- **Monitoring Dashboards** monitor services
+    - monitor things one pays for:
+        - CPU usage, storage capacity, reads and writes, network egress, 
+    - Monitor SLIs whether developers are meeting SLOs
+        - monitor **latency is important (golden rule)** because it can indicate when service is going down
+        - Failing an SLO means that the SLA is underthreat
