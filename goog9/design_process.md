@@ -566,8 +566,50 @@ gcloud builds submit --tag gcr.io/$DEVSHELL_PROJECT_ID/cloud-run-image:v0.1 .
 - Network security best practices:
     - remove external IP to prevent access by machines outside network
     - ways for internal VMs to access the internet
-        - can use **Bastion Host** for access to external machines
+        - can use **Bastion Host** for access to external machines, 
         - Identity-Aware Proxy to SSH into machines
         - Cloud NAT - provides egress connections for internal machines
     - whichever method to give VMs external access, all ingress conenctions should terminate at a Load Balancer, Firewall, or API gateway, or Cloud IAP
-    - 
+- Private access allows access to Google Cloud services (external IPs) for VMs with internal IP addresses only
+    - internal VM would be able to access a storage bucket
+- Configure firewall rules to allow access to VMs
+    - default: ingress denied on all ports, egress allowed for all ports
+    - for ingress connections from a load balancer firewall rules should be configured
+- Cloud Endpoints - API management gateway
+    - protect and monitor public APIs
+    - Control who has access to API
+        - uses JSON Web Tokens and Google API keys to validate every call
+        - Integrates with Identity Platform
+- all service endpoints use HTTPS (recommend using TLS)
+    - the service endpoints are configurable
+    - when making load balancers make sure it's secure (must have secure frontends)
+        - select the HTTPS protocl and use a SSL certificate
+- DDoS protection - for global load balancers through level 3 and level 4 traffic
+    - can also protect backends if enabled a CDN
+    - for load balancers - the DDoS attack will be detected then the connection is dropped (termianted)
+    - for CDNs the request is a cached hit and the request won't reach the backend
+- Cloud Armor - create network security policies
+    - make a whitelist (allow IP addresses) and blacklist (block attacks)
+        - this is layer 3 and 4 security
+    - layer 7 security - predefined rules for preventing common attacks like SQL injection, cross-site scripting
+        - can allow or deny traffic based off request headers, geo location, IP addresses, cookies, etc.
+        - filters HTTP requests essentially
+- Encryption:
+    - data stored at rest are encrypted by default
+        - uses AES-256 symmetric key (Data encryption key, DEK)
+    - the key is also encrypted by the **Key Encryption Keys (KEK)** service
+        - store the key next to the data for fast decryption
+        - to protect the encrypted keys they are stored in Cloud Key Management Service
+            - the keys are rotated periodically
+        - when accessing the data, its decrypted on the fly with no performance issues
+    - Users can manage their own encryption keys (**Customer Managed Encryption Keys, CMEK**)
+        - create keys in the cloud then specify their rotation frequency
+        - for storage resources, user can select the encryption key that should be used for buckets, or disks
+    - Users can make their own encryption keys too. (**Customer Supplied encryption keys (CSEK**)
+        - the keys are kept on premise not in the cloud
+            - they will be provided in the service API calls and be kept in memory for decrypting the payload data or returned data
+            - used for Cloud Storage and Compute Engine
+- Cloud Data Loss Prevention API - protect sensitive data by finding it and redacting it (hiding it)
+    - can detect this information in images, data in storage services
+        - some sensitive data such as emails, credit cards, tax IDs
+        
