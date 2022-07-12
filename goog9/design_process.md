@@ -614,3 +614,23 @@ gcloud builds submit --tag gcr.io/$DEVSHELL_PROJECT_ID/cloud-run-image:v0.1 .
         - some sensitive data such as emails, credit cards, tax IDs
 **NOTES:** - Cloud Storage - encryption is enabled by default
     - to prevent developers from getting access to production: make development and production projects and don't give developers access to production resources
+# Maintenance and Monitoring
+- microservices are good because they can be independently deployed
+    - the API service has to be protected and versioning is required. But the versions need to nbe backward compatible with previous versions
+    - should indicate the version in the URI
+        - changes in the version should also mean the service is backward compatible
+    - Rolling updates allow to deploy new API versios with no downtime
+        - the configuration to do so is to have multiple instances of a backend service behind a load balancer
+        - the rolling update will update one at a time
+        - this works ok if the two versions can operate at the same time during the update
+    - **Blue-green deployments** - use twofold deployment enviroments one for production and the other for testing
+        - when testing is done move workload to the green env (the testing one bc completed)
+        - can use DNS to migrate the requests to the different enviroments for Compute Engine
+        - Kubernetes Engine need to have service route to the new pods. Can use labels to accomplish
+        - App Engine allows one to split the traffic
+    - **Canary releases** come before rolling releases
+        - a small percentage of traffic is sent to the new deployments to monitor
+        - route more traffic once we know the deployment is good until 100% of traffic is routed
+        - For Compute Engine can make new instance groups, add it to the load balancer as a backend service then migrate traffic
+        - for Kubernetes can make new pods with the same labels as the other pods
+        - App Engine has the split traffic functionality and can split a portion of the traffic
