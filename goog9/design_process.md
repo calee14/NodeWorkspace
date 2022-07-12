@@ -612,4 +612,5 @@ gcloud builds submit --tag gcr.io/$DEVSHELL_PROJECT_ID/cloud-run-image:v0.1 .
 - Cloud Data Loss Prevention API - protect sensitive data by finding it and redacting it (hiding it)
     - can detect this information in images, data in storage services
         - some sensitive data such as emails, credit cards, tax IDs
-        
+**NOTES:** - Cloud Storage - encryption is enabled by default
+    - to prevent developers from getting access to production: make development and production projects and don't give developers access to production resources
