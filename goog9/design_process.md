@@ -528,3 +528,46 @@ gcloud builds submit --tag gcr.io/$DEVSHELL_PROJECT_ID/cloud-run-image:v0.1 .
     - use a global load balancer
     - store unstructured data in multi-region buckets
     - for structured data use a multi-region db like Firestore and Spanner
+# Security
+- "security" empowers innovation
+- if there are properly configured firewall rules and correct IAM then the enviroment is safe
+- Principle of least privilege:
+    - grant users/machines minimum roles to complete their duty
+    - use IAM to enforce this principle
+        - assign IAM roles to users and service accounts to restrict actions
+        - good to be able to identify users using service accounts and roles and/or login
+- Separation of duties: 1. prevent conflict of interest 2. detection of control failures
+    - security breaches and information theft.
+        - no one can change or delete data without being detected
+        - no one can steal data.
+        - not one person has all admin privileges on the system
+    - to solve use multiple proejcts, or folders to organize projects
+        - different people can be given different roles and permissions for different projects
+- Audit Google Cloud logs to discover attacks
+    - admin logs, data access logs, VPC flow logs, Firewall logs, system logs
+- Security Command Center - provide access to org and project security configurations
+- **Securing People** - add people to projects by assigning them roles 
+    - members are identified by login
+    - should add members to a group and the group holds all of the roles
+    - use least privilege with member roles
+    - remember there is inheritance with roles and the most-access role beats roles with less access
+    - Identity-Aware Proxy (IAP) - gives managed access to apps running in App Engine, Compute Engine, GKE. 
+        - No need for a VPN
+    - Identity Platform as Customer Identity and Access Management (CIAM) Platofrm for adding authentication for applications
+        - Need to select a service provider (twitter, apple, facebook)
+- Service account - used by applications, VMs, GKE node pool
+    - use it to make authorized API calls 
+    - identify a service and define permissions
+        - considered both an identity and a resource
+    - must assign who has access to give the service accounts to VMs
+        - there is a `ServiceAccountUser` role that would be given to a trusted member that would give the service account to apps, VMs
+        - there are public/private RSA key-pairs associated with service accounts
+            - sort of how tokens and JWT work??
+- Network security best practices:
+    - remove external IP to prevent access by machines outside network
+    - ways for internal VMs to access the internet
+        - can use **Bastion Host** for access to external machines
+        - Identity-Aware Proxy to SSH into machines
+        - Cloud NAT - provides egress connections for internal machines
+    - whichever method to give VMs external access, all ingress conenctions should terminate at a Load Balancer, Firewall, or API gateway, or Cloud IAP
+    - 
