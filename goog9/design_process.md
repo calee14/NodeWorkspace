@@ -656,3 +656,45 @@ gcloud builds submit --tag gcr.io/$DEVSHELL_PROJECT_ID/cloud-run-image:v0.1 .
     - Monitor SLIs whether developers are meeting SLOs
         - monitor **latency is important (golden rule)** because it can indicate when service is going down
         - Failing an SLO means that the SLA is underthreat
+## Lab notes
+```bash
+# download a repo and enable google cloud profiler to monitor resources in App Engine
+gcloud services enable cloudprofiler.googleapis.com
+
+# the app in the App Engine will also have to start the profiler service by making a function call
+# for python it looks like this:
+import googlecloudprofiler
+try:
+    googlecloudprofiler.start(verbose=3)
+except (ValueError, NotImplementedError) as exc:
+    print(exc)
+
+# create a docker image and then run it to test it in a local container
+docker build -t test-python .
+docker run --rm -p 8080:8080 test-python
+
+# create a configuration file for App Engine 
+# make a python language enviroment 
+# app.yaml
+runtime: python37
+
+# create the App Engine application
+gcloud app create --region=us-central
+
+# deploy the app to App Engine and make it live
+gcloud app deploy --version=one --quiet
+
+# App Engine has logs for the services in the app
+# The profiler should also be working and display CPU usage times and other metrics for each program
+
+# make a new compute engine instance to artificially make requests
+# install Apache Bench which is a web testing tool
+sudo apt update
+sudo apt install apache2-utils -y
+
+# make a bunch of connections with the site
+ab -n 1000 -c 10 https://<your-project-id>.appspot.com/
+
+# Look at the Profiler service to see what process is consuming too many resources in the program
+# The Trace List service will track the requests and latency and availability in charts
+```
