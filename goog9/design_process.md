@@ -698,3 +698,6 @@ ab -n 1000 -c 10 https://<your-project-id>.appspot.com/
 # Look at the Profiler service to see what process is consuming too many resources in the program
 # The Trace List service will track the requests and latency and availability in charts
 ```
+**NOTES:** - preemptible machines are cost-effective, but have frequent downtimes. not a total downside if downtime is acceptable
+    - Uptime check monitors availability
+    - Rolling update is when one wants to deploy service with no downtime
