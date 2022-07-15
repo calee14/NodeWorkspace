@@ -131,3 +131,50 @@ sudo cp index.nginx-debian.html /var/www/html
 - **NOTE:** - customers that need to manage resources for a product being consumed should make a billing account at the product folder in the resource hierarchy to limit spending with quotas and make budgets and alerts
     - Measured service = pay for resources that one consumes
     - when making a new product for organization, make a new folder representing that product with projects inside of it to use the resources
+# Introduction to Containers and Kubernetes
+- virtualization helps with running multiple (virtual) servers on OS on the same physical computer
+    - **hypervise** = software that breaks the dependencies of an OS with its underlying harware, to allow several virtual machines share that same hardware
+        - KVM is a pop. hypervisor
+    - this means that resources are wasted less and more portable
+    - however, VMs still need time to boot and multiple applications on the same VM might starve the VM of its resources for the other apps
+- to solve the dependency problems of multiple apps on the same VM is to virtualize (abstract) the operating system
+    - only need to abstract the **userspace** which is the code that sits above the kernel, which includes the apps and dependencies
+    - this is essentially **containers** - isolated user spaces for running application code
+        - containers are lightweight bc they don't carry the full OS
+        - fast to start up because its just starting and stopping processes (containers are just a process). not booting a VM and OS
+        - its packaged code with all the dependencies it needs and the **engine** executing the container will be responsible for making them available at runtime
+    - this allows developers to make assumptions about the hardware
+    - containers are good microservices designs
+- **Image** = application with its dependencies
+    - container = running instance of the image (like process with program)
+    - Docker = tool to run apps and containers
+    - containers are based off a Linux feature called the **linux process**
+        - linux processes have their own virtual memory address spaces, separate from others
+    - **containers** use **linux namespaces** to control what the app can see (linux namespaces != kubernetes namespaces)
+        - also uses linux **cgroups** to determine what the app can use:
+            - CPU time, memory, I/O bandwidth, etc.
+    - **union file systems** to encapsulate apps and their dependencies into a set of _clean minimal layers_
+        - container image is structured in layers.
+            - tool (Docker) used to build the image reads instructions from a container manifest (file)
+                - for docker the container manifest is called Dockerfile
+                - each instruction in the Dockerfile specifies a layer inside the container image
+                - each layer is read only
+- **Container manifest** (Dockerfile) example:
+    - line 1: `FROM ubuntu: 18.04` - adds layer which specifies the ubuntu linux runtime env. about 184mb
+    - line 2: `COPY ./app` - copies some files from developer local curr dir.
+    - line 3: `RUN make /app` - builds application using the make command
+    - line 4: `CMD python /app/app.py` - command to specify what to run when container is launched
+    - each line is a layer. organize from least likely to change to most
+    - Pros make a seperate container using only what's necessary to run app for production.
+        - test dev. containers are messy
+    - when launching a container from an image, the container runtime makes a new layer at the top
+        - this layer is called the **container layer**
+            - changes to the container such as writing, deleting files are written to this layer
+        - container layers are deleted when the container stops and is removed (the image still remains intact)
+        - thus when storing data permanently then must do so from outside the containers
+- multiple containers can share access to the same image but have different data states bc of container layer
+    - this allows containers to pull down less layers from the image since there are similarities with the other containers on the same image
+        - thus when building a container it creates a layer with just the differences and for the layers that are the same and shared it can refer to it
+    - allows for fast start up times
+- can get public containers premade
+    - can use Cloud Registry and Cloud Build to securely store and build images
