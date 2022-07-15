@@ -178,3 +178,5 @@ sudo cp index.nginx-debian.html /var/www/html
     - allows for fast start up times
 - can get public containers premade
     - can use Cloud Registry and Cloud Build to securely store and build images
+- **NOTE:** - union file systems hold the apps and the dependencies in layers. this is why its good for containers
+    - top most layers is the container layer. it will be deleted permanently when the container stops running and applications in the container can modify it bc the app will be making changes to files within the container itself.
