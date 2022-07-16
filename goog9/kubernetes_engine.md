@@ -231,3 +231,23 @@ images:
 # build the image then run the created image with an argument fail
 # if the test failed then there would be an output
 ```
+- Kubernetes - manage container infrastructure on-premise or cloud
+    - manages automatically deployment, scaling, load balancing, logging, monitoring, etc.
+    - fascilitates some infrastructure features such as user preferences and configuration
+    - declarative config rather than listing a bunch of commands
+        - kubernetes works to meet state of declaration
+    - can also use imperative configuration = for quick fixes
+    - good for stateless apps and stateful
+        - support batch jobs and daemon tasks
+        - auto scale in and out
+        - specify resource request levels and limits
+- Kubernetes Engine - powerful for managing, scaling, deploying kubernetes enviroments for containerized apps
+    - part of the GCP compute offerings.
+    - fully managed, has an optimal OS for containers, auto upgrade clusters of kubernetes software
+    - the VMs in the clusters are called **nodes**
+        - can auto repair unhealthy nodes
+    - supports scaling containers and the cluster itself (nodes)
+    - easily integrates with Cloud Build and Registry
+        - works with IAM and can control access to the clusters
+    - logs and monitors applications in the containers 
+    - uses the integrated networking of Google Cloud
