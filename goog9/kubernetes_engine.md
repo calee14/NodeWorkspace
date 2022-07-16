@@ -265,4 +265,22 @@ images:
     - serverless because the infrastructure is auto managed
 - **NOTE:** compute engines give fine-grained control of costs because of the per-second billing and customizable VMs
 # Kubernetes Architecture
-- 
+- How kubernetes works:
+    - **Object model** - represents a resource that Kubernetes manages and you can manage and change the states and attributes
+        - aka. persistent entity that represents state of something running in the cluster (the desired and current state)
+        - some objects represent containzed apps, resource available to them, and policies that affect apps
+        - two important elements of obj:
+            - **Object spec** - desired state described by dev
+            - **Object status** - current state described by **Kubernetes control plane** (part of GKE cluster)
+        - **Pods** = basic building block of Kubernetes module. also smallest deployable Kubernetes object
+            - embody the env where containers live. (can have one or more containers). 
+                - thse containers share networks and storage and other resources
+            - each pod has a unique IP address
+                - the containers in the pods share the network namepsace including IP address and network ports 
+                    - the containers can communicate through localhost
+        - Example of pods:
+            - declare the Pods object to run three nginx containers. Have kubernetes run those pods and keep in existence
+            - when initially declared and ran Kubernetes compares the desired state with the current state
+                - the **Kubernetes Control Plane** will monitor and launch actions to bring the env to the desired state
+    - **Declarative management** - programmer tells the state of the object and the Kubernetes management will work to bring the env to that state and keep it there
+        - uses the **'watch loop'**
