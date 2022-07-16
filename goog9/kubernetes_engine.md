@@ -251,3 +251,15 @@ images:
         - works with IAM and can control access to the clusters
     - logs and monitors applications in the containers 
     - uses the integrated networking of Google Cloud
+- Use compute engine for absolute control of OS and virtual hardware. easily migrate apps to the cloud. very flexible
+- Use app engine for focusing on coding. can use to build websites, mobile apps, gaming backends, RESTful APIs
+- Use Kubernetes Engine for orchestrating containers using Kubernetes software
+    - automatically works with GCP resources and services
+    - supports cluster scaling, persistent disks, upgrades, node repairs, 
+    - portable and can work on any premise or cloud
+    - use for container apps, cloud distributed systems, or hybrid systems
+- Use Cloud Run because its serverless the infrastructure is abstracted away. good for stateless containers (only)
+    - scales up or down automatically
+    - good for APIs because it listens for requests or events
+- Use Cloud Functions for event-driven compute service.
+    - serverless because the infrastructure is auto managed
