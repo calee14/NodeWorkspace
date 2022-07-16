@@ -284,3 +284,34 @@ images:
                 - the **Kubernetes Control Plane** will monitor and launch actions to bring the env to the desired state
     - **Declarative management** - programmer tells the state of the object and the Kubernetes management will work to bring the env to that state and keep it there
         - uses the **'watch loop'**
+- Kubernetes Components:
+    - GKE clusters need computers. In GKE, those computers are usually VMs
+        - one computer is a control plane and the others are nodes
+        - the nodes are to run the parts (contaized apps)
+        - the control plane is to coordinate the entire cluster (all nodes)
+    - In the control plane there are some critical components:
+        -  the main interactive comp. is called **kube-APIserver** - accept commands that view or change the cluster such as launching pods
+            - interact with this API using the `kubectl` command in the cli
+            - requests are automatically authenticated and authorized
+        - **etcd** - another comp. that is the clusters DB. stores the state of the cluster. stores cluster config and dynamic info such as nodes in the cluster, pod status and details
+            - never a direct interaction with etcd but the kube-APIserver interacts with it
+        - **kube-scheduler** - schedule pods onto nodes
+            - evaluates requirements of each pod and selects which node is suitable
+            - writes the name of the node into pod object for another service to launch the pod
+            - will choose nodes based on current data of the pods and dev-defined policies
+        - **kube-controller-manager** - monitors state of the cluster through kube-APIserver.
+            - when the current state doesn't match desired then it will make changes to match
+            - **controllers** = loops of code that handle remediation (fixing something broken/diff)
+            - there are many types of controllers. one is controller object is called **deployment**
+                - this contorller keeps them running and scales them and group them to a frontend
+        - **kube-cloud-manager** - manages controllers that interact with cloud providers
+            - if working with Google Cloud, then its responsible for bringing cloud features like load balancers and storage when needed
+- Each node in a kubernetes cluster needs a control plane component
+    - this control plane is called **kubelet** = a kubernetes agent on each node 
+    - when kube-APIserver wants to start a pod then it connects to the Node's Kubelet
+        - kubelet then uses the **container's runtime** to start the pod and monitors it to report back to kube-APIserver
+        - the term containe runtime means the software to launch a container from an image
+            - GKE uses the Linux distributed runtime called Containerd, part of Docker
+    - Inside the Node there is the **Kube-proxy** component, which maintains the network connectivity among the pods in a cluster
+        - in Kubernetes, it uses the firewall capabilities of IP tables, which are part of the linux kernel
+        
