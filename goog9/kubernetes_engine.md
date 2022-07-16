@@ -353,3 +353,25 @@ images:
 - In practice the **Deployment Controller Object** would launch the three nginx pods. It would do so using a **ReplicaSet** object to manage the pods
     - The deployment controller has a feature where it can make a rolling update.
         - It would make a new ReplicaSet and increase the pods in the new set while decreasing the older one
+- **NOTE:** - the Deployment object will manage a set of Pods, meaning it will make sure that new Pods are launched if the desired set of Pods isn't met
+- there are three main **Services** in Kubernetes that give load-balanced access to Pods:
+    - ClusterIP - expose service on an IP address that is accessible to only devices within the cluster (default value)
+    - NodePort - expose service on an IP address of each node in the cluster at a specified port
+    - LoadBalancer - expose the service externally, using a load balancing service provided by a cloud service
+        - the load balancer for GKE by default give regional network load balancing.
+        - can get access to Global HTTP(S) Load Balancing but need an Ingress Obj
+- here are some controller objects in Kubernetes:
+- **ReplicaSet Controller** - ensure that a group of identical pods are running at the same time. ReplicaSets are managed by the Deployment Controller object which allows for declarative policies. 
+    - Can declare updates to the ReplicaSets and Pods from the Deployment object
+- **Deployment Controller Object** - create, update, roll back, and scale pods using the ReplcaSets controller. Can handle rolling updates by making a second ReplicaSet and increasing pods in the new set while decreasing the old
+- **Replication Controllers object** - work similarly to the combination of ReplicaSets and Deployments
+-  **StatefulSet controller object** - gives Pods created by this controller the ability to have their applications maintain a local state.
+    - this means that they have unique persistent ids with network identity and disk storage
+- **DaemonSet controller object**- ensures that a specific pod is running on all/subset of nodes
+    - **daemon** - means non-interactive process that provides services to other processes
+    - the DaemonSet might ensure a logging agent like fluent is running on all nodes in the cluster
+- **Job controller** creates one or more Pods requred to run a task. after completing the task the pods created for the task will be terminated
+    - related to CronJob, which runs pods on a time-based schedule
+- **NOTE:** - **Service** in Kubernetes Engine is for allowing Pods to be exposed to the internet or to others devices in an internal network. 
+    - Service also is a load-balancing network endpoint for Pods
+    - 
