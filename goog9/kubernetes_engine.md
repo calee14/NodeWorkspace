@@ -180,3 +180,54 @@ sudo cp index.nginx-debian.html /var/www/html
     - can use Cloud Registry and Cloud Build to securely store and build images
 - **NOTE:** - union file systems hold the apps and the dependencies in layers. this is why its good for containers
     - top most layers is the container layer. it will be deleted permanently when the container stops running and applications in the container can modify it bc the app will be making changes to files within the container itself.
+# Lab notes:
+```bash
+# make sure to enable cloud build and registry apis for project
+# make a shell script quickstart.sh
+#!/bin/sh
+echo "Hello, world! The time is $(date)."
+
+# make a Dockerfile to specify the layers of the image
+# build the alpine linux base image
+FROM alpine
+# copy the quickstart file from the local dir and add it to the / dir of the image
+COPY quickstart.sh /
+# run the following commands when the container is created
+CMD ["/quickstart.sh"]
+
+# make the quickstart shell script executable
+chmod +x quickstart.sh
+
+# build the docker container image in Cloud Bulid
+# the . at the end specifies the location of the source code in the working dir
+gcloud builds submit --tag gcr.io/${GOOGLE_CLOUD_PROJECT}/quickstart-image .
+
+# how to make a softlink, training data is a cloned repo
+ln -s ~/training-data-analyst/courses/ak8s/v1.1 ~/ak8s
+# visit a dir using softlink
+cd ~/ak8s/Cloud_Build/a
+
+# we can use configuration files for Cloud Build
+cat cloudbuild.yaml
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/quickstart-image', '.' ]
+images:
+- 'gcr.io/$PROJECT_ID/quickstart-image'
+# the instructions include telling Cloud Build to use Docker to build an image with the Dockerfile in the current '.' dir. then push image to Container Registry
+
+# run the config file using
+gcloud builds submit --config cloudbuild.yaml .
+
+# another example of the cloud build config file is to run tests
+cat cloudbuild.yaml
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/quickstart-image', '.' ]
+- name: 'gcr.io/$PROJECT_ID/quickstart-image'
+  args: ['fail']
+images:
+- 'gcr.io/$PROJECT_ID/quickstart-image'
+# build the image then run the created image with an argument fail
+# if the test failed then there would be an output
+```
