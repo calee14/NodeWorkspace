@@ -314,4 +314,42 @@ images:
             - GKE uses the Linux distributed runtime called Containerd, part of Docker
     - Inside the Node there is the **Kube-proxy** component, which maintains the network connectivity among the pods in a cluster
         - in Kubernetes, it uses the firewall capabilities of IP tables, which are part of the linux kernel
-        
+- `kubeadm` command can set up the initial Kubernetes cluster, but nodes will have to be manually maintained
+    - in a GKE cluster all components are managed, including the control plane comp.
+    - exposes the cluster with an IP address
+    - Kubernetes doesn't make nodes but the cluster admin does. 
+        - GKE automates this process by launching VMs and registers as nodes
+        - can make **node pools** = group of nodes in a cluster where the nodes share VM configs (vCPU, mem.)
+        - NOTE: some of each nodes CPU and mem. will be used to run GKE and Kubernetes components
+- by default clusters launches in one compute zone with three identical nodes all in one node pool
+    - can also make GKE regional clusters
+        -  the control planes and nodes are sprad accross multiple zones in a region
+    - there is a single API endpoint for the cluste
+    - regional or zonal cluster can be set up as a private cluster
+        - can be accessed by internal IP addresses, can have Private Google Accesss for outbound connections, set up firewalls for authorized IP ranges
+- Object Management:
+    - Example: run 3 nginx webservers using GKE
+    - Goal: declare three Pod objects and specify state: create an nginx container from image
+    - define objects with YAML file for GKE
+        - can define the Kubernestes version we want, specify the type of object we want to make and the metadata (properties of obj.)
+        - objects can have unique names to identify them along with a UID
+        - objects can also be assigned labels for organizing objects
+        - pods are meant to be epheremal (meant go away and start again new)
+    - can declare a controller object whose job is to manage state of pods
+        - use the **deployment controller obj.** 
+            - deployment controller will manage the pods and launch new ones if health is bad
+        - can use the deployment yaml to launch three replicas of the same container
+            - can specify num. replicas, the container to replicate, etc.
+        - **namespace** = a list of names of objects within a cluster
+            - there are no duplicates names in a namespace.
+            - namespaces used to identify objects. this lets you set resource quotas across the cluster
+        - **labels** = namespace alternative
+        - default namespace, 
+        - there are three initial namespace
+            - the default namespace for workload resources that don't have anywhere to go yet
+            - kube-system namespace for objects created by the Kubernetes sys. itself
+            - kube-public namespace for objects that are publicly readable to all users
+        - better to apply namespaces at the commandline level rather than in the YAML. this makes the YAML files more flexible
+- In practice the **Deployment Controller Object** would launch the three nginx pods. It would do so using a **ReplicaSet** object to manage the pods
+    - The deployment controller has a feature where it can make a rolling update.
+        - It would make a new ReplicaSet and increase the pods in the new set while decreasing the older one
