@@ -263,3 +263,6 @@ images:
     - good for APIs because it listens for requests or events
 - Use Cloud Functions for event-driven compute service.
     - serverless because the infrastructure is auto managed
+- **NOTE:** compute engines give fine-grained control of costs because of the per-second billing and customizable VMs
+# Kubernetes Architecture
+- 
