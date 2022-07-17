@@ -410,3 +410,36 @@ gcloud beta container --project "qwiklabs-gcp-02-03683b7e9df8" clusters create "
     - best to have the namespaces: test, staging, and production then add policies (resrouce quotas) for the test and staging namespaces so that production can be prioritized
     - When deploying stateful apps in containers for GKE, must create **Volumes?** using network based storage. this provides durable storage remotely to the pods. However, must specify these remote storage devices to the pods
     - In the GKE, control plane nodes are not billed against the account. if the default pool in the default zone is configured then the other zones copy the default zone. there are three zones by default in a regional cluster
+# Introduction to Kubernetes Workloads
+- `kubectl` = utility used by admin of Kubernetes clusters
+    - used for communicating with the kube-APIserver
+    - one command `get pods` is transformed into an API call to kube-APIserver through HTTPS
+        - the server processes requests by querying etcd return returns the results
+    - kubectl needs to be authenticated in order to connect with clusters
+        - use the gcloud command (needs to be auth first with an admin user) to retrieve the credentials
+            - this is how we configure the kubectl commandline interface
+    - kubectl can only administer the internal state of an existing cluster
+        - use gcloud commands to access the GKE control plane and create or change shape of clusters
+    - `kubectl [command] [type] [name] [flags]`
+        - command specifies the action wanted to perform: get, describe, logs, exec (some are view and others change state)
+        - type specifies the kubernetes object that the command is acting on
+            - pods, deployments, nodes, or other obj. or cluster itself
+        - name specifies the object specified in type
+        - flags = are special requests. some are for formatting an output in a certain way.
+            - `-o=yaml` is one of those ways to give output in YAML format
+            - `-o=wide` is a way to display output in a wide format. this means more information
+    - be sure to configure the kubectl commandline so that the commands act on the intended cluster
+- **Deployments** describe a desired state of Pods
+    - its defined by a declarative policy so that the GKE will make sure that the configuration is running exactly
+    - to roll out new updates, the pods with the new version are put into a new ReplicaSet and slowly increased until the old ReplicaSet is totally gone and replaced
+    - can be configured to manually or automatically manage the workload of Pods
+    - best designed for stateless applications
+    - the desired state is written in a Deployment YAML
+        - contains info on Pods, and how to run them and their lifecycle events
+        - once submitting this file to the GKE control plane it makes a **deployment controller** that makes the desired state into reality and keeps it that way
+            - **controllers** = loop process created by kubernetes that is a routine task to keep desired state of an object in the cluster matching with the current state
+            - During initial creation of Pods, a **ReplicaSet controller** is made to ensure a number of Pod replicas are running at any time
+    - has three states:
+        - **progressing** indicates that a task has been performed to make a new ReplicaSet or scale up or down a Replica set
+        - **complete** indicates that all new replicas are updated to the latest version. no old replicas are running
+        - **failed** indicates when the creation of a new ReplicaSet could not be completed. 
