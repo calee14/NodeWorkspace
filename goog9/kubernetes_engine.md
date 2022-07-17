@@ -443,3 +443,46 @@ gcloud beta container --project "qwiklabs-gcp-02-03683b7e9df8" clusters create "
         - **progressing** indicates that a task has been performed to make a new ReplicaSet or scale up or down a Replica set
         - **complete** indicates that all new replicas are updated to the latest version. no old replicas are running
         - **failed** indicates when the creation of a new ReplicaSet could not be completed. 
+- 3 ways to make a deployment:
+    - create a deployment declaratively using a YAML file (manifest file) then run the **kubectl apply** command 
+    - imperatively make a deployment using the kubectl run command specifying params
+    - use the GKE workloads tab in the GCP console
+        - this tab also gives the YAML format for the deployment
+- REVIEW: the ReplicaSet is created by the deployment obj and ensures that a given num of pods are running and up
+    - auto launches a new pod, if one fails or is evicted
+- Can scale a deployment manually with a kubectl command or Cloud Console
+    - can auto scale with the shell or Cloud Console
+    - scaling the pods is called **Horizontal Pod Autoscaler**
+        - scales the deployment and not the cluster
+- Making chagnes to a deployment pod's specification will make an automatic rollout (only occurs with Pod's specs)
+    - can use the `kubectl apply` command or `kubectl set/edit` commands for imperative changes
+    - can also change the deployment manifest from the Cloud Console
+    - REVIEW: Rolling updates launch a new ReplicaSet with the new Pods
+        - the new pods are slowly launched while the old pods from the old ReplciaSet are deleted
+        - this is called a **ramped strategy** (takes time and no control over how traffic is directed to old or new pods)
+- Pods themselves are **transient**??
+    - **Kubernetes Service** is a static IP address that represents a service or function in the infrastructure
+        - its a network abstraction for a set of Pods that deliver that service (directs traffic to the pods)
+            - hides the ephemeral (gets deleted and restarted) nature of the pods
+- Blue/Green deployment with Kubernetes:
+    - creates a new deployment with the newer version
+    - when the pods in the new Deployment are ready then all traffic can be switched from the old blue version to the new green version
+    - switching from the two versions uses a **Kubernetes Service**
+        - manages the network traffic to a selection of Pods using labels
+    - this allows rollouts to be instantanious
+- **Canary Deployments** - update strategy based on the blue/green method
+    - traffic is gradually shifted to the new version
+    - The Kubernetes service that directs traffic to the pods uses labels
+        - it has a selector specification and chooses pods with a certain label regardless of version
+        - thus, scale up the new pods and down the old
+        - can quickly roll back
+    - each request is treated independently so a request might go from a Pod with the old version to the new which might cause issues
+        - can use session affinity so that the client connects to the same Pod
+- **A/B testing** = used to make business decisions to route a subset of users to new functionality
+    - compare two versions and route users based on HTTP headers, geolocation
+        - choose the most effective software then make that the production env
+    - can **traffic shadow tet** by mirroring the request to the new version. (lets test with real production traffic)
+- Rollback a deployment - can use commands
+    - can view the history of deployments and rollback from there
+- Pause rollouts so group minor changes into one. less clutter
+    - can also easily delete deployments and GKE will remove all running resources like pods
