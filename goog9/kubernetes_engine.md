@@ -383,3 +383,25 @@ gcloud beta container --project "qwiklabs-gcp-02-03683b7e9df8" clusters create "
 # can deploy containers to the cluster using the workloads tab
 # this will create pods in each node
 ```
+- **Migrate for Anthos** - gets workloads into containerized deployments on GC
+    - moves existing apps into a Kubernetes env.
+    - all automated, can be on-premise moving to cloud
+    - most migrations are under 10 min.
+        - can also migrate app data to the cloud by moving it in one go or streaming it
+    - Anthos is installed on a GKE processing cluster. Builds all the deployment elements then ships it to a production cluster 
+- **Migrate for Compute Engine** - brings existing apps into VMs
+    - can make a pipeline for streaming or migrating data from on-premises to cloud
+- Migration is a multi-step process:
+    - create a processing cluster. Install Migrate for Anthos on it
+        - need to be a GKE admin to create the cluster
+        - need filewalls in place to allow communications migrate for anthos and compute engine (for creating processing cluster)
+        - once created need to install Migrate for Anthos software
+    - then it needs a migration source: VMware, AWS, Azure, GC
+    - generate a YAML file to template the cluster
+        - the plan can be created using a `migctl` command
+    - next will need to generate container images (artifacts) for apps in the YAML files for deployment
+        - there is another `migctl` command for generating the artifacts
+            - the YAML config file created defines the resources to deploy. can be edited
+    - test the artifacts
+    - if the tests are successful then deploy to the production clusters
+        - another `migctl` command to deploy the workload
