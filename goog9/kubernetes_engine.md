@@ -292,6 +292,7 @@ images:
     - In the control plane there are some critical components:
         -  the main interactive comp. is called **kube-APIserver** - accept commands that view or change the cluster such as launching pods
             - interact with this API using the `kubectl` command in the cli
+            - is the point of control of Kubernetes cluster
             - requests are automatically authenticated and authorized
         - **etcd** - another comp. that is the clusters DB. stores the state of the cluster. stores cluster config and dynamic info such as nodes in the cluster, pod status and details
             - never a direct interaction with etcd but the kube-APIserver interacts with it
@@ -405,3 +406,7 @@ gcloud beta container --project "qwiklabs-gcp-02-03683b7e9df8" clusters create "
     - test the artifacts
     - if the tests are successful then deploy to the production clusters
         - another `migctl` command to deploy the workload
+- **NOTES:** placing containers in the same Pod minimizes latency because they are scheduled together in the same node
+    - best to have the namespaces: test, staging, and production then add policies (resrouce quotas) for the test and staging namespaces so that production can be prioritized
+    - When deploying stateful apps in containers for GKE, must create **Volumes?** using network based storage. this provides durable storage remotely to the pods. However, must specify these remote storage devices to the pods
+    - In the GKE, control plane nodes are not billed against the account. if the default pool in the default zone is configured then the other zones copy the default zone. there are three zones by default in a regional cluster
