@@ -486,3 +486,124 @@ gcloud beta container --project "qwiklabs-gcp-02-03683b7e9df8" clusters create "
     - can view the history of deployments and rollback from there
 - Pause rollouts so group minor changes into one. less clutter
     - can also easily delete deployments and GKE will remove all running resources like pods
+## Lab notes
+```bash
+# premade clusters and define zone
+export my_zone=us-central1-a
+export my_cluster=standard-cluster-1
+# activate the tab completion for the kubectl command
+source <(kubectl completion bash)
+# get the credentials for the cluster for the kubectl commandline tool
+gcloud container clusters get-credentials $my_cluster --zone $my_zone
+# then clone a git repo and then make a shortcut to it
+git clone https://github.com/GoogleCloudPlatform/training-data-analyst
+ln -s ~/training-data-analyst/courses/ak8s/v1.1 ~/ak8s
+cd ~/ak8s/Deployments/
+
+# the deployment manifest which is configured to run three pod replicas 
+# each pod has a single nginx container and each pod is listening on TCP port 80
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.7.9
+        ports:
+        - containerPort: 80
+# deploy the manifest to the cloud
+kubectl apply -f ./nginx-deployment.yaml
+# view the current deployments
+kubectl get deployments
+
+# can scale up or down the pods in GKE > workloads tab
+# or can do it in the commandline with kubectl
+kubectl scale --replicas=3 deployment nginx-deployment
+
+# update a deployment template to cause a rollout. in command update the image version
+# updates such as scaling deployment doesn't affect. labels and container images do affect
+kubectl set image deployment.v1.apps/nginx-deployment nginx=nginx:1.9.1 --record
+# view the rollout status
+kubectl rollout status deployment.v1.apps/nginx-deployment
+
+# view the rollout history
+kubectl rollout history deployment nginx-deployment
+# roll back to a previous deployment
+kubectl rollout undo deployments nginx-deployment
+# viewing the rollout history will show that there's a new revision point
+# get more information about the latest deployment
+kubectl rollout history deployment/nginx-deployment --revision=3
+# it should display information about the containers and the pod templates. it should have the new image version
+
+# Kubernete Services can be configured to be ClusterIP, NodePort, or LoudBalancer
+# service-nginx.yaml Kubernetes manifest file for putting a Kubernetes service (Load Balancer) behind the pods to connect traffic on the TCP port 60000 to port 80 for the containers with the label = app: nginx
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+spec:
+  type: LoadBalancer
+  selector:
+    app: nginx
+  ports:
+  - protocol: TCP
+    port: 60000
+    targetPort: 80
+# deploy the manifest file to add the service to the GKE cluster
+kubectl apply -f ./service-nginx.yaml
+# defines a service and applies it to the pods that are in the selector
+# this manifes applies to the containers created earlier
+# get the Kubernetes service and the external IP for it. external IP looks like (http://[EXTERNAL_IP]:60000/)
+kubectl get service nginx
+
+# to perform a canary deployment make a manifest file like this:
+# this file deploys a new single pod with the new version of nginx
+# this new pod uses the label app:nginx so that the Kubernetes Service will route traffic to it still
+# thus, the canary deployment and the original deployment get traffic
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-canary
+  labels:
+    app: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+        track: canary
+        Version: 1.9.1
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.9.1
+        ports:
+        - containerPort: 80
+# apply the deployment to the cluster
+kubectl apply -f nginx-canary.yaml
+# see the deployments and there is a new deployment with the new image
+kubectl get deployments
+
+# can scale down the old deployment to 0 pods
+kubectl scale --replicas=0 deployment nginx-deployment
+
+# can add sessionAffinity property field to route requests to the same pod add the following:
+sessionAffinity: ClientIP
+
+```
