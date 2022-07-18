@@ -640,3 +640,37 @@ sessionAffinity: ClientIP
             - works independent of the cluster, meaning they exist whether the cluster and nodes do or not
             - managed by Kubernetes
         - can be created by an admin or dynamically created
+- **Ephemeral Volume** types:
+    - **emptyDir volume** = empty dir that allow containers within pods to read and write to it
+        - exists as long as the pod exists.
+            - usually a local disk or a memory-based file sys.
+        - should be used for short term purposes
+    - **configmap volume** = volume that is set up in a tree of files and directories.
+        - best used for a webserver in a pod. use it for a config map to set the webserver parameters
+    - **secrets volume** = like Configmap but used to pass sensitive information
+        - based in-memory file sys. better security for secrets
+        - obfuscate (unintelligible/obscure/not understandable) the values by using base64 encoding
+    - **downwardAPI** = makes pod data available to the containers
+        - can give unique data about the pod to the container
+    - all these volumes are based off the emptyDir volume
+        - these volumes are created when the node creates a pod and attaches it lifecycle to the pod (ephemeral)
+        - data in emptyDir volumes are safe for container crashes
+    - emptyDir use cases = scratch space, disc-based merge sort, checkpoint for long computation, recovery from crashes, hold files that is beign retrieved while a webserver serves the data (streaming?)
+- **PersistentVolume** has two components:
+    - PersistentVolume = durable, persistent storage at the cluster level
+        - data exists despite a pod that might have been deleted
+        - Persistent disks by GKE are called PersistentVolumes
+    - **PersistentVolumeClaims (PVC)** = requests made by pods to use the volumes
+        - in a claim, define volume size, access mode, and storage class
+        - the claim is bounded to the PersistentVolume
+        - decouples storage admin from the application configuration (don't worry about maintaining disk space. abstracted away)
+    - to make a PersistentVolume must specify in the kubectl manifest yaml file
+        - there are `storageClassName` fields to define the type of PV storage one wants to use
+        - can also define custom storage classes
+            - make it so that the storage is an ssd
+    - can define a PersistentVolumeClaim object in the manifest file then reference the name in the pod
+        - what if the claims excede the volumes has??
+## Lab notes
+```bash
+
+```
