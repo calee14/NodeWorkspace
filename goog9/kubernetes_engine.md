@@ -631,3 +631,12 @@ sessionAffinity: ClientIP
                 - uses this IP address range to divide amongst the nodes
                     - thus each node is allocated a `/24 block`(250 addresses) for the pods
                     - = 1000 nodes with 100 pods each
+- **Volumes** - storage abstractions = objects that manage storage without worrying about implementation
+    - Volumes are accessible to all containers in a pod
+    - attached to pods not containers
+        - some are ephemeral = last as long as the pod they are attached to
+        - some are persistent and last after pod is destroyed
+        - **PersistentVolume** - manage durable storage in a cluster. backed by a persistent disk
+            - works independent of the cluster, meaning they exist whether the cluster and nodes do or not
+            - managed by Kubernetes
+        - can be created by an admin or dynamically created
