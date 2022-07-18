@@ -605,5 +605,29 @@ kubectl scale --replicas=0 deployment nginx-deployment
 
 # can add sessionAffinity property field to route requests to the same pod add the following:
 sessionAffinity: ClientIP
-
 ```
+- **Pod networking** 
+    - REVIEW: Pod = a group of containers with shared storage and networking
+    - each pod has a single, unique IP address
+        - the containers in the pod share the same network namespace
+        - the containers despite running on diff TCP ports, they appears as if they are on the same machine
+        - the containers can communicate with each other by establishing connections to each other through **localhost** on the TCP ports
+    - pods are connected to each other through the nodes **root network namespace**
+        - pods can communicate with other pods on the same node
+    - the VM's **NIC** allows the root network namespace to maek forwarding traffic out of node
+        - this also means that the IP addresses of the pods must be routable on the network that the node is connected to.
+        - where do the IP addresses come from for the pods?
+            - GKE nodes will give pods the IP addresses from the address range assigned by the VPC
+            - REVIEW: **VPC** = virtualized isolated networks that provide connectivity for resources in GCP
+                - VPC can be made up IP subnets in regions all over the world
+                - VPC by default has a IP subnet for each region in the world
+                    - then the IP addresses in the subnet are given to the compute instances
+            - Nodes are VMs thus they are assigned IP addresses from the VPC subnet the VMs are in
+            - In GCP, **Alias IPs** allow user to configure secondary IP addresses or IP ranges for Compute Engine VMs
+            - NOTE: GKE clusters auto create an Alias IP range to reserve 4000 IP addresses for cluster-wide Services for later use
+            - NOTE: GKE clusters also make Alias IP range for pods  
+                - Each pod must have a unique address so this address space will be large
+                - uses a `/14` block which contains 250000 IP addresses
+                - uses this IP address range to divide amongst the nodes
+                    - thus each node is allocated a `/24 block`(250 addresses) for the pods
+                    - = 1000 nodes with 100 pods each
