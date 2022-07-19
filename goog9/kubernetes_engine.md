@@ -672,5 +672,155 @@ sessionAffinity: ClientIP
         - what if the claims excede the volumes has??
 ## Lab notes
 ```bash
+# set up the env. variables for the zone and clusters.
+# also download the git repo with the manifest files for GKE
+# also set up the kubectl tab completion for the kubectl commandline tool
+# also get the credentials to the cluster using the gcloud sdk
+# create short links to the repo and navigate there
+export my_zone=us-central1-a
+export my_cluster=standard-cluster-1
+source <(kubectl completion bash)
+gcloud container clusters get-credentials $my_cluster --zone $my_zone
+git clone https://github.com/GoogleCloudPlatform/training-data-analyst
+ln -s ~/training-data-analyst/courses/ak8s/v1.1 ~/ak8s
+cd ~/ak8s/Storage/
 
+# don't need to configure a PersistentVolume object
+# instead create a PersistentVolumeClaim and Kubernetes auto provides a persistent disk for you
+# this is how to create a PVC in the yaml manifest file
+# pvc-demo.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: hello-web-disk
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 30Gi
+
+# run this command to show all the PersistentVolumeClaims made
+# should be none right now
+kubectl get persistentvolumeclaim
+# have GKE read the manifest file to make a PVC 
+kubectl apply -f pvc-demo.yaml
+
+# here we're attaching the PersistentVolumeClaim to a pod
+# we're mounting the storage to the directory /var/www/html inside the container
+# data/files saved to that directory in the container will be saved on the persistent volume/disk whether or not the pod exists
+# pod-volume-demo.yaml
+kind: Pod
+apiVersion: v1
+metadata:
+  name: pvc-demo-pod
+spec:
+  containers:
+    - name: frontend
+      image: nginx
+      volumeMounts:
+      - mountPath: "/var/www/html"
+        name: pvc-demo-volume
+  volumes:
+    - name: pvc-demo-volume
+      persistentVolumeClaim:
+        claimName: hello-web-disk
+# create the pod by sending the manifest to GKE
+kubectl apply -f pod-volume-demo.yaml
+# list the pods in our GKE cluster. there should be one
+kubectl get pods
+
+# run this command to gain shell access to our pod
+kubectl exec -it pvc-demo-pod -- sh
+# echo a piece of text to a file in the directory where our PVC is located
+echo Test webpage in a persistent volume!>/var/www/html/index.html
+chmod +x /var/www/html/index.html
+# display what's in the file and exit the interactive shell on the nginx container
+cat /var/www/html/index.html
+exit
+
+# delete a pod in a cluster. this is meant to demonstrate that our PVC and its content persisted
+# the number of pods should be zero and the PVC should be one
+kubectl delete pod pvc-demo-pod
+kubectl get persistentvolumeclaim
+# redeploy the claim and connect with the pod using shell
+# display what's in the PVC which should be the same thing
+kubectl apply -f pod-volume-demo.yaml
+kubectl get pods
+kubectl exec -it pvc-demo-pod -- sh
+cat /var/www/html/index.html
+
+# delete the old pod
+kubectl delete pod pvc-demo-pod
+kubectl get pods
+
+# created a 'StatefulSet' which is a cluster that involes a LoadBalancer Service and the StatefulSet controller object
+# also 3 replicas of a Pod containing an nginx container and a volumeClaimTemplate for 30 GB PVCs with the name hello-web-disk
+# the PVC template is a guide for GKE on how to create PVC for each pod
+# attach the template to the specs of the pods
+# the nginx containers mount the PVC to the dir /var/www/html
+# statefulset-demo.yaml
+kind: Service
+apiVersion: v1
+metadata:
+  name: statefulset-demo-service
+spec:
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 9376
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: statefulset-demo
+spec:
+  selector:
+    matchLabels:
+      app: MyApp
+  serviceName: statefulset-demo-service
+  replicas: 3
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: MyApp
+    spec:
+      containers:
+      - name: stateful-set-container
+        image: nginx
+        ports:
+        - containerPort: 80
+          name: http
+        volumeMounts:
+        - name: hello-web-disk
+          mountPath: "/var/www/html"
+  volumeClaimTemplates:
+  - metadata:
+      name: hello-web-disk
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 30Gi
+# make the changes to the GKE cluster
+kubectl apply -f statefulset-demo.yaml
+# describe the state of the StatefulSet cluster
+# should be able to view the status of the pods and the template of the pods
+kubectl describe statefulset statefulset-demo
+
+# when displayin the pods should be able to see the them numbered
+# demo-0, demo-1, demo-2
+kubectl get pods
+
+# getting the PVCs should display all of the VPCs in the cluser
+# there should be four: one for each pod with them numbered and the VPC created earlier
+# hello-web-disk, demo-0, demo-1, demo-2
+kubectl get pvc
+
+# command to display details of a VPC
+# shows capacity and other details of storage type
+kubectl describe pvc hello-web-disk-statefulset-demo-0
 ```
