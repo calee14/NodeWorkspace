@@ -26,3 +26,82 @@
 - Profiler - profiles CPU and the heap. 
     - improves performance by seeing what processes consume most or too many resources
 - **NOTE** Logging service is important for analyzing data, too. Not just collecting
+# Avoiding Customer Pain
+- **Site Reliability Engineering SRE**:
+    - monitoring disply real-time data from a system
+    - great products need to be deployed into great enviroments
+    - plan resources ahead of time
+    - need to test new versions and updates with continuous integration and dev.
+    - analyze root cause or problems and then have
+        - need to be transparent of when things go wrong
+    - all these actions rely on monitoring. improve experience of clients and customer pain
+- Why monitor?
+    - continually improve product.
+        - good for business analysts for bettering product, security
+    - create dashboards to view logs and data
+        - combined with alerts
+    - alert when things go wrong
+        - notify a human when system needs attention
+    - be able to debug where the errors occur
+        - **triggers** are system failures that send a signal and an alert
+        - there is a response where the failure is analyzed and there is an **initial response** to the issue (notify customer)
+        - then after the issue is resolved there is a **postmortem**. contain future documentation that analyze the issue and ways to prevent it
+- When setting expectations for monitoring use KISS (Keep it simple, dumbass)
+    - focus on a system one at a time and from multiple perspectives
+    - "use single pane of glass" rule. view several dashboards of projects. not all of the projects available but group them reasonably
+    - monitoring systems should address (what vs. why)
+        - what? = symptom or error indicator (what is broken)
+        - why? = cause or reason for what is causing the error
+- White vs. black box:
+    - black box = testing public behaviors such as that of a consumer
+    - white box = monitoring based on internal logs and systems
+- There are business metrics and technical metrics
+    - how to define a metric?? use SMART [Specifc, Measurable, Achievable, Relevant, Time bound (should be a rate)]
+    - can start with a metric using the **Four Golden Signals**
+        - **Latency**: how long for a system to return a result. Ex:
+            - num. req. wating for a thread
+            - time until first resp.
+        - **Traffic**: how many requests hitting your system. Ex:
+            - num. HTTP req. placed per sec.
+            - num. active connections
+        - **Saturation**: how full a service is on capacity of resources
+            - % CPU usage, etc.
+        - **Errors**: system failures are measured. might indicate an SLO violation and need to make a customer response
+            - Wrong answers/content
+            - num. 400/500 HTTP codes
+- **Service Level Indicator** = quantifiable measure of service's reliability. Good events = Valid events
+- **Service Level Objective** = target of reliability. needed by services
+    - availability = measure service to run when needed
+    - reliability = measure services ability to perform its intended function
+        - hard for developers to work with operators (devops) to improve reliability
+    - find the optimal level of availability/reliability and level of happiness such that the happiness is barely met
+        - "barely met" bc no need to expend more resources for better performance. 
+    - should include some room for error
+    - should have shorter time windows (around 28 days) for evaluating performance
+    - error budgets are usually burned by feature releases, system changes, or failure in hardware, networks
+        - can also define downtime in the SLA
+- **Service Level Agreement** = minimal level of service before breaking the agreement and then paying them for building a shitty product
+    - SLO target should be higher than the SLAs or else you pay customers
+- **Customers** = subset of users who pay for service
+- How to choose a good SLI?
+    - the metric should measure the performance that the consumer is getting
+        - Response time, data processing, Storage
+    - metrics should also also be visible and with less noise
+        - this helps with defining good and bad events
+    - want a SLI that correlates with happiness
+        - SLI = good events / valid events (it's a ratio)
+            - valid events should not include the error events bc it will ruin budgeting
+    - should have aroudn 3-5 SLIs for each user journey
+    - what are the users expectations?
+    - how does a user interact with the service?
+- SLO also represent the line where users are happy or not
+    - too reliable SLOs means it risks breaking agreements
+    - not too reliable SLOs means that it costs more to keep customers
+- set SLOs and reliability targets early and base it off previous data as possible
+- Each user journey:
+    - define an SLI and then refine them
+        - Response time, data processing, Storage
+        - (refine) be clear what is being measured and how we define a sucessful event
+    - base them off previous performance and business data
+        - choose cut off point from historical data
+- SLI must capture multiple journeys, consider edge cases, analyzed for cost benefit
