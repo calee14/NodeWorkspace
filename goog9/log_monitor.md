@@ -105,3 +105,8 @@
     - base them off previous performance and business data
         - choose cut off point from historical data
 - SLI must capture multiple journeys, consider edge cases, analyzed for cost benefit
+- **NOTE:** - The error budgets are calculated as 100% minus the SLOs (error budget is very small)
+    - The error budget is not close to 100%
+    - New features can be developed as long as its within the error budget
+    - There should be alerts if a service is consuming a large amount of the error budget
+    - Four golden signals = latency, traffic, saturation, errrors
