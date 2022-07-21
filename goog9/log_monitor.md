@@ -178,3 +178,14 @@
 - **NOTE:** - Uptime check is good to monitor applications then get notified if they are down
     - Health checks are good to monitor VMs from Compute Engine
     - Monitoring dashboards require the Monitoring Viewer role
+- Services should install a **monitoring agent** to send metric data to **Cloud Monitoring**
+    - some services like App Engine, GKE, Cloud Run have monitoring auto configured
+    - make sure the monitoring agent has the correctl access scope (access control list)
+    - must create a service account and download the crentials to give the monitoring agent access to writing data
+- Should also install a **OS logging agent** to stream logs from system software (VMs)
+    - should only install it on Compute Engine VMs bc other services have it preconfigured
+    - should also create a service account and give the credentials to the logging agent
+- Can bake the installation of monitoring and logging agents into startup scripts of VMs
+    - use Packer to build images automatically. thus can include installing monitorign agents
+- GKE has an external tool **Prometheus** that monitors clusters
+- 
