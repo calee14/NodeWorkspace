@@ -110,3 +110,65 @@
     - New features can be developed as long as its within the error budget
     - There should be alerts if a service is consuming a large amount of the error budget
     - Four golden signals = latency, traffic, saturation, errrors
+# Alerting Policies
+- Alerting = generating when things need to change due to danger or issues
+    - SLO = achievable target, SLI = what is measured
+    - alerts are timebased and summarized in a period
+    - **Detection time** - how long for system to notice issue and then fire the alert
+    - **Reset time** - how long until another alert can be fired after the issue is fixed
+    - **Precision** - relevant alerts / total alerts
+    - **Recall** - Relevent alerts / relevant alerts + the alerts missed
+- Window Length - smaller windows allow for faster alert detection
+    - the window is the time period where errors get accounted
+        - if the errors pass the error budget then the SLO is broken
+    - longer windows allow for more precision. 
+- **Duration** = something added for better precision
+    - errors spotted are treated as an anomally until a duration
+        - downside is that errors that occur within the duration get ignored (cost more then)
+- Use multiple confiditons for better Precision and Recall
+- prioritize alerts based on Customer Impact
+- **Alert Policies** - conditions are super important for an alert
+    - what are aligners?
+        - help define window/time period to compare metrics
+    - can use multiple conditions
+    - notifcation channels determine how the alert is sent (email, sms, slack)
+- Can add alerts to uptime checks and log-based metrics
+    - also attach alerts to a group of GCP resources
+        - can add resources to groups based on criterion    
+        - will search all resources and add based on criteria
+- Make alerts using the Console, Shell, or API (yaml file, too)
+## Lab notes
+```bash
+
+```
+- Service monitoring helps with maintaining SLOs
+    - tracks error budgets too
+- Error Budget Details:
+    - 1 error every 1000 requests, thus reliability is 99.9%
+    - can set SLA to be 5 errors every 1000 requests thus error budget is 5 errors
+- window-based vs request-based SLOs
+    - window-based hides burst related errors (not fun for customer)
+- can make alerts when SLO is burning faster than expected
+## Lab notes
+```bash
+```
+- **NOTE:** alerting policies: precision = proportion of events detected (doesn't have to be accurate) that were signifcant
+    - signficant means that we wanted that alert. whereas the all events detected could include events we didn't want to be alerted
+    - another way to evaluate the alert policy is to use recall = proportion of alerts detected that were signficant to the amount of alerts that were significant plus the alerts that didn't fire (called missed alerts)
+# Monitoring Cricial Systems
+- Monitor workspace so you have a single-pane of glass
+    - view multiple project status and metrics and data
+    - can view AWS projects as well
+    - each project can have only one workspace for monitoring
+    - smaller workspaces so people has less access to too many projects
+- some services need service account to write metrics to the Monitoring workspace
+- Google auto adds charts and dashboards for your resources in the Project
+    - GKE, Compute Engine, App Engine
+    - there are metric types, metric data type and other descriptors used by dashboards and collected by Google Monitoring
+- can filter data on charts (remove noise and focus on data with specific criteria)
+    - group data and then combine them in charts
+    - can choose the design of a chart that give off some information of data
+- **Aligners** = break data points into time buckets (alignment period)
+- Dashboards are configurable
+    - can view many charts and export the dashboards
+- 
