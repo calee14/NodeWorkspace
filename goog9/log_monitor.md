@@ -171,4 +171,10 @@
 - **Aligners** = break data points into time buckets (alignment period)
 - Dashboards are configurable
     - can view many charts and export the dashboards
-- 
+- **Uptime checks** = finds issues at protocols, hosts, and ports
+    - understands if a response is a failure or success
+- Error budget = allow for some errors to occur
+    - this means that errors are a currency and can experiement with code
+- **NOTE:** - Uptime check is good to monitor applications then get notified if they are down
+    - Health checks are good to monitor VMs from Compute Engine
+    - Monitoring dashboards require the Monitoring Viewer role
