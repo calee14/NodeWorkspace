@@ -188,4 +188,33 @@
 - Can bake the installation of monitoring and logging agents into startup scripts of VMs
     - use Packer to build images automatically. thus can include installing monitorign agents
 - GKE has an external tool **Prometheus** that monitors clusters
-- 
+- Cloud Run also has auto features to log and monitor software running in containers
+- Custom metrics = defined by user using Cloud Monitoring API or OpenCensus Tracing library
+- OpenCensus = helps capture and export traces and metrics
+    - supports popular languages
+- Metrics structure:
+    - measure = represent the metric being recorded
+        - has props: name, desc, unit
+    - measurement = a data point of a recorded measure
+- **View** represents the combining (**Aggregation**) of measurements
+- **NOTE:** make sure to install logging agents in VMs if the application writes logs but it isn't in Cloud Logging
+    - Add labels to GCP resources so that managment can analyze logs of specific groups
+    - each project can be in only one workspace???
+# Adavanced Logging and Analysis
+- **labeling** helps identify resources
+    - apply labels programmatically
+    - simple labels are best. less labels the better
+- Log Viewer = displays logs from projects and resources.
+    - can filter and query specific logs in resources
+    - there is an advanced query in Log Viewer
+        - using comparison operators and grouping and boolean expressions
+- can create custom labels that combine many labels into one
+- Log architecture:
+    - can store logs using **Log Router**
+        - the router sends it to the correct storage service
+        - can exclude logs in the Cloud Logger
+        - Cloud Logger has default logs that will be accepted no matter what
+    - Cloud Log Export - exports logs to BigQuery or backup
+    - Dataflow can accept logs to process them
+    - Can create a secure logging project giving access to specific logs to a user
+    
