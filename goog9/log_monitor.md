@@ -197,6 +197,9 @@
         - has props: name, desc, unit
     - measurement = a data point of a recorded measure
 - **View** represents the combining (**Aggregation**) of measurements
+## Lab notes
+```bash
+```
 - **NOTE:** make sure to install logging agents in VMs if the application writes logs but it isn't in Cloud Logging
     - Add labels to GCP resources so that managment can analyze logs of specific groups
     - each project can be in only one workspace???
@@ -217,4 +220,20 @@
     - Cloud Log Export - exports logs to BigQuery or backup
     - Dataflow can accept logs to process them
     - Can create a secure logging project giving access to specific logs to a user
-    
+    - **Aggregation sinks**: export logs from multiple projects, folders
+        - The View will display the aggregated data
+    - BigQuery can accept incoming logs and query them using SQL and make tables
+- Error reporting:
+    - finds code crashes in cloud services
+    - centralizes error management and can view them in a dashboard
+    - needs an **Error Reporting Writer IAM role**
+    - there is an error reporting library for many supported languages
+        - services like Cloud Run will automatically detect exception handlers in apps and report it
+    - Errors can be filtered in the view portal
+        - errors can also be clicked on for more details
+## Lab notes
+```bash
+```
+- **NOTE:** use cloud storage single-region bucket with the archival class when the log data needs to be stored for a long period of time (ex: 5 years)
+    - if managers need to see a daily report of the resource utilization logs then export sink it to BigQuery where the managers can run queries to simplify and understand the data
+    - if one wants to monitor an application in real time use Pub/Sub for messaging and streaming data to be analyzed
