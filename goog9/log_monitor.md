@@ -299,3 +299,58 @@
 ```
 - **NOTE:** data access logs are turned off by default because they have VPC access issues
     - thus need to configure service accounts and permissions to allow them to write
+# Managing Incidents
+- **Incident** = alert that indicates something bad is happening
+    - something bad = SLO is going to be violated
+    - incident is declared at the start of the incident response
+        - notify the correct person (know priorities)
+- Resolve the incident by fixing it.
+    - needs to be organized, thus follow rules and protocols
+    - document fix and issue
+- Incident lifecycle
+    - alert, issue detectted
+    - triage (examine the severity)
+    - declare an incident
+    - working to mitigate the issue or remove it
+        - after fixing the issue then need to analyze the issue and root cause
+    - resolved the incident and must document the issue about the situation and how to fix
+- User trust = build on incident response
+    - want reliable and available service with fast incident response
+- develop apps based on structured incident response
+    - know who is doing what and have fast response
+        - have a clear chain of command
+        - know clear roles
+        - find incidents early and often
+        - document fixes
+- Incident Management role:
+    - commander (IC)
+        - communications lead (CLI)
+            - communicates with Users and stakeholder
+        - operational lead (OL)
+            - allocates resources for the action plan
+            - works with responders primary and secondary
+    - communication channels: slack, pagerduty, other message networks
+- establish clear criteria to declare an incient
+    - communicate through a channel
+    - train and conduct practice
+- Declaring an incident:
+    - first define clear guidelines to declare
+    - assess an event based on the impact of the incident
+        - declare the impact and send it to communication
+- Stop bleeding:
+    - check the symptoms in the playbook
+    - have there been changes recently?
+    - is connectivity is down?
+    - replacement system?
+    - need to logically troubleshoot the issue by segmenting the space
+        - manually step through the system
+        - add more monitoring to gain more insight and data
+    - there can be multiple factors thus move on to the next possible issue
+    - notify users and stakeholds that the incident has been mitigated
+    - find the root cause. need specifics
+        - **archive** = store olds files into a storage location to clear up space
+- Postmortem Report:
+    - blameless report that contains the root cause, action items, and descriptions about the incident
+        - essentially a letter to future self and team
+        - there are templates for writing incident reports
+    - should practice writing this stuff
