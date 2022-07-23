@@ -237,3 +237,65 @@
 - **NOTE:** use cloud storage single-region bucket with the archival class when the log data needs to be stored for a long period of time (ex: 5 years)
     - if managers need to see a daily report of the resource utilization logs then export sink it to BigQuery where the managers can run queries to simplify and understand the data
     - if one wants to monitor an application in real time use Pub/Sub for messaging and streaming data to be analyzed
+# Monitoring Network Security and Audit Logs
+- VPC Flow Logs sample one out of every 10 packets
+    - logs also work for subnets (optional)
+    - details of log include details of a packet, IP destination, port, source IP address
+    - can export log data to BigQuery and Data Studio
+- **VPC Firewall rules** = policies that allow or deny connections based on connection conifg
+    - these can be logged to track connetions req., traffic, if rule is causing apps to break
+    - generate a lot of data so expensive
+    - can export these logs to BigQuery
+    - firewall rules provide **micro-segmentation/VM-centric**
+        - provides protection from an unsecure outside network to an on-premise network
+        - these firewall rules sit inbetween the VM and the router for extra security
+        - test if firewall rules causing no traffic: add a low priority rule that would certainly allow traffic to and from VM
+            - If it works then you know its the rule
+- **Cloud NAT** = allows VM without a public IP address to send packets to the internet
+    - its fully managed by GCP.
+    - it is also more secure, available, scalable, performance prone
+    - has a logging feature for TCP and UDP traffic only
+    - can filter logs in the explorer as well
+- **Packet Mirroring**= clones VPC instance traffic and forwards it for examination
+    - captures all ingress and egress traffic
+    - consumes more bandwidth despite this process happening in the VM
+    - used for security analysis
+- **Network Intelligence Center** = monitor and visibility into network in a centralized portal
+    - topology = view VPC topology
+        - displays the topology as a graph
+    - connectivity tests = evaluate conenctivity to and from VPC resources
+        - diagnose connectivity issues to prevent outages
+    - performance dashboard = VPC packet loss and latency metrics
+        - aggregates data across zones
+    - firewall insights = visibility into firewall usage and config issues
+        - help set configs for firewall rules to optimize
+- Cloud Audit Logs = info about "who did what, where and when"
+    - tracks admin activity, data access, system event (records non-human actions that change config)
+    - **Access Transparency Logs** = view who logs and other audit logs
+- Data access logs - track admin read, data read, data write (records operations that write data to storage bucket)
+    - can programatically allow audit access by creating IAM polcies
+        - then assign those policies to the auditLogConfig
+- Audit Log Entries/Payload = has a proto payload field
+    - that field contains an audit log object that stores the audit logging data
+    - describes what access type was used and what service used it
+- Infrastucture as Code = good for automating storing audit logs
+    - Use terrafrorm: OSS
+    - Should plan and test the audit log system
+        - org level hierarchy can be useful for control data access
+    - be sure to filter exports
+- Senario: operation monitoring
+    - CTO: has the org. admin role to assign permission to a security team and service account
+    - Security team has logging viewer role for admin activity and data access activity
+    - all permissions should be assigned at the org level
+- Senario: dev team monitor audit logs
+    - security team has same logging viewer role due to the org level permissions given to the security team
+    - dev team has logging viewer role at folder level
+        - this viewer role will allow admin activity and data access logs
+## Lab notes
+```bash
+```
+## Lab notes
+```bash
+```
+- **NOTE:** data access logs are turned off by default because they have VPC access issues
+    - thus need to configure service accounts and permissions to allow them to write
