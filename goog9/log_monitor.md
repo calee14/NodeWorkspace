@@ -375,3 +375,18 @@
     - profiling in production systems is important
         - gathers CPU and memory usage to identify parts of application that consume a lot of resources
     - **Flame Graphs** - organizes processes and child process and how they make up the total resources used
+## Lab notes
+```bash
+```
+# Optimizing Costs of Monitoring
+- logs cost a lot of money
+- there are free tiers and free allotments 
+- Know costs and spending (good if have previous info already)
+    - know what you're buying
+    - set alerts when spending reaches percentage of budget
+- Can exclude 90% of Load Balancer logs and VPC Flow logs
+    - a small amount of traffic from these services are good enough
+    - exclude 200 HTTP status code 
+- Spans are charged by count thus watch out for loops
+- some logging agents from third-party software are too much
+    - can omit the agent installation
