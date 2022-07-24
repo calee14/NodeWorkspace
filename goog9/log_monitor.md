@@ -243,6 +243,19 @@ while true; do curl -s https://$DEVSHELL_PROJECT_ID.appspot.com/random-error -w 
 - **View** represents the combining (**Aggregation**) of measurements
 ## Lab notes
 ```bash
+# can use one project to hold the Monitoring Workspace to monitor the other projects
+# launch nginx deployments in each worker project (2 of them one for monitoring)
+
+# set up the monitoring project to monitor the others in the Settings of the Monitor page
+# the dashboards will be auto populated with the resources in the projects you're monitoring
+# can also monitor groups based on criteria like tags
+# can also make subgroups within a group
+
+# make an uptime check that applies to a group 
+# the uptime checks will also be logged and explored in the Logging explorer
+
+34.142.227.119 worker 1
+34.168.103.118 worker 2
 ```
 - **NOTE:** make sure to install logging agents in VMs if the application writes logs but it isn't in Cloud Logging
     - Add labels to GCP resources so that managment can analyze logs of specific groups
