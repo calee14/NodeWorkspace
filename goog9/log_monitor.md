@@ -139,7 +139,37 @@
 - Make alerts using the Console, Shell, or API (yaml file, too)
 ## Lab notes
 ```bash
+# download a flask application in the GCP console using git
+# the flask app renders an index page and listens on localhost at port 8080
+# run the application 
 
+# make a app.yaml file to configure the runtime env for the flask app
+# it thinks the local dir of the project is a python app and it app starts at main.py
+# app.yaml
+gcloud app create --region=us-central
+
+# create the app engine app in the cli
+gcloud app create --region=us-central
+# deploy the app to app engine
+gcloud app deploy --version=one --quiet
+# can view the logs from the app engine window
+
+# set the metric graph to aggregator mean and aligner 99th percentile
+# go the alerts page and make a policy that checks if the mean res latency is over 8s then make an alert
+# update the python app to sleep for 10 sec before returning res.
+# redeploy the app
+gcloud app deploy --version=two --quiet
+
+# generate some fake requests by looping over again
+while true; do curl -s https://$DEVSHELL_PROJECT_ID.appspot.com/ | grep -e "<title>" -e "error";sleep .$[( $RANDOM % 10 )]s;done
+
+# make a file to store the config of the alert policy
+# app-engine-error-percent-policy.json
+# the policy tracks the amount of HTTP error requests and when the amount exceeds one percent there will be an update
+
+# change the python app to throw errors
+# then simulate a bunch of requests in the shell
+while true; do curl -s https://$DEVSHELL_PROJECT_ID.appspot.com/ | grep -e "<title>" -e "error";sleep .$[( $RANDOM % 10 )]s;done
 ```
 - Service monitoring helps with maintaining SLOs
     - tracks error budgets too
