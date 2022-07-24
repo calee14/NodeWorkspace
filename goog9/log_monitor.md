@@ -8,7 +8,7 @@
 - Monitoring Resources
     - BigQuery, CloudRun, Applications, Compute send signals with data
         - these services have automatic logging
-    - the signals and data get sent to monitoring tools like ObservabilitSuite
+    - the signals and data get sent to monitoring tools like Observability Suite
 - Logging is about collecting, analyzing, exporting, retaining the logs
     - **Cloud audit logs** track admin activity and who or what (users or system) uses GCP resources
     - **Agent Logs** track sys software and third party apps
@@ -253,13 +253,58 @@ while true; do curl -s https://$DEVSHELL_PROJECT_ID.appspot.com/random-error -w 
 
 # make an uptime check that applies to a group 
 # the uptime checks will also be logged and explored in the Logging explorer
-
-34.142.227.119 worker 1
-34.168.103.118 worker 2
 ```
 - **NOTE:** make sure to install logging agents in VMs if the application writes logs but it isn't in Cloud Logging
     - Add labels to GCP resources so that managment can analyze logs of specific groups
     - each project can be in only one workspace???
+# Configure Cloud Services for Observability
+## Lab notes
+```bash
+# create compute engine VM and install nginx in it
+# create a GKE cluster
+
+# visit the ssh of the webserver and install the logging agents
+sudo service google-fluentd status
+sudo service stackdriver-agent status
+# define scopes before checking the status of the service
+curl --silent --connect-timeout 1 -f -H "Metadata-Flavor: Google" \
+http://169.254.169.254/computeMetadata/v1/instance/service-accounts/default/scopes
+# download the script to install the monitoring agent
+curl -sSO https://dl.google.com/cloudagents/add-monitoring-agent-repo.sh
+sudo bash add-monitoring-agent-repo.sh --also-install
+# start the monitoring agent
+sudo service stackdriver-agent start
+
+# install the loggin agent onto the VM
+curl -sSO https://dl.google.com/cloudagents/add-logging-agent-repo.sh
+sudo bash add-logging-agent-repo.sh --also-install
+# run the service status commands again
+# also restart the nginx server
+sudo service google-fluentd status
+
+# enable the nginx monitoring plugin
+(cd /opt/stackdriver/collectd/etc/collectd.d/ && sudo curl -O https://raw.githubusercontent.com/Stackdriver/stackdriver-agent-service-configs/master/etc/collectd.d/nginx.conf)
+# restart the monitoring agent
+sudo service stackdriver-agent restart
+
+# switch to GKE cluster
+# enable google apis for project
+gcloud services enable cloudbuild.googleapis.com
+# download the repo to put onto GKE
+git clone https://github.com/haggman/HelloLoggingNodeJS.git
+# build the container for the application and store it in container registry at the location below
+gcloud builds submit --tag gcr.io/$DEVSHELL_PROJECT_ID/hello-logging-js .
+# there is a kubernetes yaml file to create three replicated pods and then expose it through a load balancer
+
+# connect to the GKE cluster through the command line
+gcloud container clusters get-credentials gke-cluster --zone us-central1-c --project qwiklabs-gcp-00-35fb29e9d407
+# apply the declarative manifest file to GKE to create the service
+# run the kubectl services command to get the IP of the load balancer
+kubectl get services
+# the url will be located at the external IP address and PORT
+# visit the Monitoring Service to view status and monitoring of GKE cluster
+# 
+```
 # Adavanced Logging and Analysis
 - **labeling** helps identify resources
     - apply labels programmatically
@@ -290,6 +335,7 @@ while true; do curl -s https://$DEVSHELL_PROJECT_ID.appspot.com/random-error -w 
         - errors can also be clicked on for more details
 ## Lab notes
 ```bash
+
 ```
 - **NOTE:** use cloud storage single-region bucket with the archival class when the log data needs to be stored for a long period of time (ex: 5 years)
     - if managers need to see a daily report of the resource utilization logs then export sink it to BigQuery where the managers can run queries to simplify and understand the data
