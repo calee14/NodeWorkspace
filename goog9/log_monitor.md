@@ -354,3 +354,24 @@
         - essentially a letter to future self and team
         - there are templates for writing incident reports
     - should practice writing this stuff
+# Investigating Application Performance Issues
+- Run **Debugger** for code written in Java, Python, Go, Node.js and other languages
+    - the debugged code can run on GCP resources
+    - debugger must be enabled in the application
+    - GCP resources will need to have the **Cloud Debugger Agent Role** in a service account for the Debugger API to work
+- Debugger needs access to the source code
+    - the debugger can also make snapshots by setting breakpoints
+        - the snapshots will capture variables and other data
+        - can add logs at breakpoints
+- **Cloud Trace** tracks latency of apps
+    - trace = a collection of spans
+        - spans capture the latency and timeline of functions of an app
+    - there is a trace list window to view summary of the latency of requests
+    - there are automatic reports generated of latency
+    - enable Trace by enabling the API for language
+        - the data needs to be offloaded to GCP
+            - thus there needs to be service accounts for the VM that give write access to write trace data
+- Cloud Profiler = understand performance of applications
+    - profiling in production systems is important
+        - gathers CPU and memory usage to identify parts of application that consume a lot of resources
+    - **Flame Graphs** - organizes processes and child process and how they make up the total resources used
