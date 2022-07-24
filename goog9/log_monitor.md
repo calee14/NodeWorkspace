@@ -181,6 +181,20 @@ while true; do curl -s https://$DEVSHELL_PROJECT_ID.appspot.com/ | grep -e "<tit
 - can make alerts when SLO is burning faster than expected
 ## Lab notes
 ```bash
+# download the nodejs app and deploy it
+# the nodejs index.js file has all of the logging modules installed and configured
+# the app.yaml file has the nodejs env.
+# the package.json has the startup scripts for the app
+
+# make a req. to the url that generates errors in the app
+while true; do curl -s https://$DEVSHELL_PROJECT_ID.appspot.com/random-error -w '\n' ;sleep .1s;done
+
+# view the Monitoring service in app engine and Cloud Monitoring
+# create a SLO in Monitoring
+# make it an availability metric that is rolling and the period is 7 days
+# the goal should be 99.5%
+
+# make an alert for the SLO if the passes a 1.5 threshold meaning there is a movement of 1.5 percentage points
 ```
 - **NOTE:** alerting policies: precision = proportion of events detected (doesn't have to be accurate) that were signifcant
     - signficant means that we wanted that alert. whereas the all events detected could include events we didn't want to be alerted
