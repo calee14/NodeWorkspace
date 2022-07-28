@@ -516,6 +516,14 @@ gcloud compute instances create web-server --project=qwiklabs-gcp-04-c243bf58d7d
     - **Flame Graphs** - organizes processes and child process and how they make up the total resources used
 ## Lab notes
 ```bash
+# enable cloud services
+# after creating the python application at App Engine can create snapshots
+# the snapshots will wait for the application to reach a line of code to snap 
+# and capture local var and state
+
+# we previously created a Node.js error reporting and logging app
+# this node project will generate errors by throwing them
+# can view these errors in the Error Reporting area
 ```
 # Optimizing Costs of Monitoring
 - logs cost a lot of money
