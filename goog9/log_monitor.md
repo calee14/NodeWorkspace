@@ -335,7 +335,7 @@ kubectl get services
         - errors can also be clicked on for more details
 ## Lab notes
 ```bash
-
+# create a node.js app that can generate errors randomly for testing purposes
 ```
 - **NOTE:** use cloud storage single-region bucket with the archival class when the log data needs to be stored for a long period of time (ex: 5 years)
     - if managers need to see a daily report of the resource utilization logs then export sink it to BigQuery where the managers can run queries to simplify and understand the data
