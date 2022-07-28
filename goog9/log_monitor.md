@@ -336,6 +336,19 @@ kubectl get services
 ## Lab notes
 ```bash
 # create a node.js app that can generate errors randomly for testing purposes
+# also make a shell script to build the container and deploy it to Cloud Run
+# rebuildService.sh
+gcloud builds submit --tag gcr.io/$GOOGLE_CLOUD_PROJECT/hello-logging:1.0
+gcloud run deploy hello-logging --image gcr.io/$GOOGLE_CLOUD_PROJECT/hello-logging:1.0 --region us-central1 --quiet --allow-unauthenticated --concurrency 80 --max-instances 3 --labels stage=dev,department=training
+# run the shell file to build and depoy
+# store the url to an env file
+URL=$(gcloud run services list --platform managed --format="value(URL)" | grep hello-logging)
+
+# can go to logging app and view all logs by the Cloud Run app
+# can filter out all successful HTTP requests
+
+# can make own metric based off stdouts (print statements to the console
+# to access the properties of a log need to output in json
 ```
 - **NOTE:** use cloud storage single-region bucket with the archival class when the log data needs to be stored for a long period of time (ex: 5 years)
     - if managers need to see a daily report of the resource utilization logs then export sink it to BigQuery where the managers can run queries to simplify and understand the data
