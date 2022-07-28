@@ -409,6 +409,18 @@ URL=$(gcloud run services list --platform managed --format="value(URL)" | grep h
         - this viewer role will allow admin activity and data access logs
 ## Lab notes
 ```bash
+# enable audit logs for admin read, user data read and write
+# can perform some admin read and write actions
+# such as:
+gsutil mb gs://$DEVSHELL_PROJECT_ID
+echo "Hello World!" > sample.txt
+gsutil cp sample.txt gs://$DEVSHELL_PROJECT_ID
+gsutil ls gs://$DEVSHELL_PROJECT_ID
+gcloud compute networks create mynetwork --subnet-mode=auto
+gcloud compute instances create default-us-vm \
+--zone=us-central1-a --network=mynetwork
+gsutil rm -r gs://$DEVSHELL_PROJECT_ID
+# can view the audit actions in the Activity in the Cloud Overview page
 ```
 ## Lab notes
 ```bash
