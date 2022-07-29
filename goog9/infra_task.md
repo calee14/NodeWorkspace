@@ -57,3 +57,29 @@ DATA=$(printf 'Hello World!'|base64) && gcloud functions call helloWorld --data 
 # view the logs of the function
 gcloud functions logs read helloWorld
 ```
+# Cloud Pub/Sub: Qwik Start - Python
+```bash
+# Pub/Sub reliably sends messages to app
+# apps subscribe to these channels and receive the messages posted
+
+# create a python virtual enviroment
+# install the pubsub libraries
+pip install --upgrade google-cloud-pubsub
+
+# topic is the channel or board where apps connect with one another
+# publishing is when someone pushes messages to the Cloud Pub/Sub topic
+# Subscribers will need to subscribe to that topic to pull messages form it
+
+# install the python API to install the scripts for running pubsub
+git clone https://github.com/googleapis/python-pubsub.git
+# use the python script to make a topic 
+python publisher.py $GOOGLE_CLOUD_PROJECT create MyTopic
+# use the python script to make a subscription
+python subscriber.py $GOOGLE_CLOUD_PROJECT create MyTopic MySub
+# publish messages
+gcloud pubsub topics publish MyTopic --message "Hello"
+# pull messages from the topic using the subscription
+python subscriber.py $GOOGLE_CLOUD_PROJECT receive MySub
+
+# topics are strings that allow apps to connect with one another
+```
