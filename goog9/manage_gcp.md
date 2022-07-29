@@ -134,7 +134,7 @@ while true; do curl -m1 $IPADDRESS; done
 # these frontends are distributed globally using the Google Global Network
 # the VMs need to be in instance groups. traffic is router to the closest and most capacity VM
 # create the template for the compute instance that's going to sit in the Load Balancer
-gcloud compute instance-templates create lb-backend-template \
+gcloud compute instance-templates create lb-backend-template2 \
    --region=us-east4 \
    --network=default \
    --subnet=default \
@@ -142,19 +142,16 @@ gcloud compute instance-templates create lb-backend-template \
    --machine-type=e2-medium \
    --image-family=debian-11 \
    --image-project=debian-cloud \
-   --metadata=startup-script='#!/bin/bash
-     apt-get update
-     apt-get install apache2 -y
-     a2ensite default-ssl
-     a2enmod ssl
-     vm_hostname="$(curl -H "Metadata-Flavor:Google" \
-     http://169.254.169.254/computeMetadata/v1/instance/name)"
-     echo "Page served from: $vm_hostname" | \
-     tee /var/www/html/index.html
-     systemctl restart apache2'
+   --metadata=startup-script="cat << EOF > startup.sh
+#! /bin/bash
+apt-get update
+apt-get install -y nginx
+service nginx start
+sed -i -- 's/nginx/Google Cloud Platform - '"\$HOSTNAME"'/' /var/www/html/index.nginx-debian.html
+EOF"
 # create a managed instance group based on the VM template
-gcloud compute instance-groups managed create lb-backend-group \
-   --template=lb-backend-template --size=2 --zone=us-east4-b 
+gcloud compute instance-groups managed create lb-backend-group3 \
+   --template=lb-backend-template2 --size=2 --zone=us-east4-b 
 # create a fowarding firewall rule to allow health checks from IP addresses
 # the health checking systems are located in the IP ranges specified
 gcloud compute firewall-rules create fw-allow-health-check \
@@ -199,4 +196,87 @@ gcloud compute forwarding-rules create http-content-rule \
     --global \
     --target-http-proxy=http-lb-proxy \
     --ports=80
+```
+# Create and Manage Cloud Resources: Challenge Lab
+```bash
+# set the zone and region
+gcloud config set compute/zone us-east1-b
+# create a GKE cluster
+gcloud container clusters create --machine-type=e2-medium lab-cluster 
+
+# have gcloud auth the shell session to access the cluster
+# it will init the kube configuration
+gcloud container clusters get-credentials lab-cluster 
+# manually create a deployment rather than using a declarative manifest
+kubectl create deployment hello-server --image=gcr.io/google-samples/hello-app:2.0
+# send the deployment to GKE 
+# expose it to the load balancer and have the deployment sit at port 8080
+kubectl expose deployment hello-server --type=LoadBalancer --port 8080
+
+# to make an HTTP Load Balancer then need to create a Google Front End. 
+# these frontends are distributed globally using the Google Global Network
+# the VMs need to be in instance groups. traffic is router to the closest and most capacity VM
+# create the template for the compute instance that's going to sit in the Load Balancer
+gcloud compute instance-templates create lb-backend-template2 \
+   --region=us-east1 \
+   --network=default \
+   --subnet=default \
+   --tags=allow-health-check \
+   --machine-type=e2-medium \
+   --image-family=debian-11 \
+   --image-project=debian-cloud \
+   --metadata=startup-script="
+#! /bin/bash
+apt-get update
+apt-get install -y nginx
+service nginx start
+sed -i -- 's/nginx/Google Cloud Platform - '"\$HOSTNAME"'/' /var/www/html/index.nginx-debian.html"
+# create a managed instance group based on the VM template
+gcloud compute instance-groups managed create lb-backend-group \
+   --template=lb-backend-template2 --size=2 --zone=us-east1-b 
+# create a fowarding firewall rule to allow health checks from IP addresses
+# the health checking systems are located in the IP ranges specified
+gcloud compute firewall-rules create permit-tcp-rule-776 \
+  --network=default \
+  --action=allow \
+  --direction=ingress \
+  --source-ranges=130.211.0.0/22,35.191.0.0/16 \
+  --target-tags=allow-health-check \
+  --rules=tcp:80
+# create a global static IP address for the HTTP load balancer and give it an ID
+gcloud compute addresses create lb-ipv4-1 \
+  --ip-version=IPV4 \
+  --global
+# create a health check for the Load Balancer
+gcloud compute health-checks create http http-basic-check \
+  --port 80
+# create a backend service that uses the health check created previously and uses the HTTP protocol
+gcloud compute backend-services create web-backend-service \
+  --protocol=HTTP \
+  --port-name=http:80 \
+  --health-checks=http-basic-check \
+  --global
+# connect the managed instance group created prior to the backend service
+gcloud compute backend-services add-backend web-backend-service \
+  --instance-group=lb-backend-group \
+  --instance-group-zone=us-east1-b \
+  --global
+# route incoming requests to the default backend service using a URL map
+# URL maps route HTTP(s) requests to a backend service 
+# remember backend services can have totally different functionalities so...
+# the URL Map can route requests if the URLs are different
+# Ex: https://example.com/images map to the image router
+gcloud compute url-maps create web-map-http \
+    --default-service web-backend-service
+# create a HTTP proxy to route requests from the internet to the URL map
+gcloud compute target-http-proxies create http-lb-proxy \
+    --url-map web-map-http
+# use the address created earlier and have a Global forwarding rule to route incoming
+# requests to the HTTP proxy
+gcloud compute forwarding-rules create http-content-rule \
+    --address=lb-ipv4-1\
+    --global \
+    --target-http-proxy=http-lb-proxy \
+    --ports=80
+
 ```
