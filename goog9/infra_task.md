@@ -23,5 +23,37 @@ sudo systemctl status google-cloud-ops-agent"*"
 # can also make alerts for the metrics that one is monitoring
 # make dashboards to monitor metrics
 # view logs at the Logger Explorer
+```
+# Cloud Functions: Qwik Start - Commandline
+```bash
+# cloud functions are event based and can be triggered by Pub/Sub
+# they are also serverless and the infrastructure is automatically handled
 
+# function code
+/**
+* Background Cloud Function to be triggered by Pub/Sub.
+* This function is exported by index.js, and executed when
+* the trigger topic receives a message.
+*
+* @param {object} data The event payload.
+* @param {object} context The event metadata.
+*/
+exports.helloWorld = (data, context) => {
+const pubSubMessage = data;
+const name = pubSubMessage.data
+    ? Buffer.from(pubSubMessage.data, 'base64').toString() : "Hello World";
+console.log(`My Cloud Function: ${name}`);
+};
+# deploy a function. code is stored in a local dir
+# trigger can be one of three: topic, bucket, http
+gcloud functions deploy helloWorld \
+  --stage-bucket [BUCKET_NAME] \
+  --trigger-topic hello_world \
+  --runtime nodejs8
+# check status of functions
+gcloud functions describe helloWorld
+# tests the function by calling an event
+DATA=$(printf 'Hello World!'|base64) && gcloud functions call helloWorld --data '{"data":"'$DATA'"}'
+# view the logs of the function
+gcloud functions logs read helloWorld
 ```
