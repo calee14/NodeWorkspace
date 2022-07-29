@@ -4,3 +4,24 @@
 # can upload files and then change permissions
 # the permissions can be controlled by principals of the bucket
 ```
+# Cloud IAM: Qwik Start
+```bash
+# within the Projects IAM one can see the users and their permissions
+# change IAM permissions and roles for users to affect access to GCP resources
+# these changes should affect shell access and Google Console access as well
+```
+# Cloud Monitoring: Qwik Start
+```bash
+# make a VM and run apache on it yadiyadiyaaa
+# install the Op agents for collecting logs and metrics and sending it to Cloud Logging and Cloud Monitoring 
+curl -sSO https://dl.google.com/cloudagents/add-google-cloud-ops-agent-repo.sh
+sudo bash add-google-cloud-ops-agent-repo.sh --also-install
+# check status of agent
+sudo systemctl status google-cloud-ops-agent"*"
+
+# can create uptime checks in the Monitoring section
+# can also make alerts for the metrics that one is monitoring
+# make dashboards to monitor metrics
+# view logs at the Logger Explorer
+
+```
