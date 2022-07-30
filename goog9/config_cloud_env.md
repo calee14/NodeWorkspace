@@ -93,3 +93,66 @@ ping -c 3 <internal IP address of vm> # works
 # here's the commandline to make the VM that is connected to many networks and the subnets
 gcloud compute instances create vm-appliance --project=qwiklabs-gcp-04-4281fedd4f69 --zone=us-east1-c --machine-type=e2-standard-4 --network-interface=network-tier=PREMIUM,subnet=privatesubnet-us --network-interface=network-tier=PREMIUM,subnet=managementsubnet-us --network-interface=network-tier=PREMIUM,subnet=mynetwork --metadata=enable-oslogin=true --maintenance-policy=MIGRATE --provisioning-model=STANDARD --service-account=262959039289-compute@developer.gserviceaccount.com --scopes=https://www.googleapis.com/auth/devstorage.read_only,https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring.write,https://www.googleapis.com/auth/servicecontrol,https://www.googleapis.com/auth/service.management.readonly,https://www.googleapis.com/auth/trace.append --create-disk=auto-delete=yes,boot=yes,device-name=vm-appliance,image=projects/debian-cloud/global/images/debian-11-bullseye-v20220719,mode=rw,size=10,type=projects/qwiklabs-gcp-04-4281fedd4f69/zones/us-east1-c/diskTypes/pd-balanced --no-shielded-secure-boot --shielded-vtpm --shielded-integrity-monitoring --reservation-affinity=any
 ```
+# Managing Deployments Using Kubenetes Engine
+```bash
+# Heterogenous deployments are called hybrid, multi-cloud, public-private deployments
+# challenges to an env or region
+# max out resources, limited geographic reach, limited availability, 
+# vendor lockin (can't import apps due to not enough resources), 
+# inflexible resources
+
+# set the zone for the deployment 
+gcloud config set compute/zone us-central1-a
+# get code for lab
+gsutil -m cp -r gs://spls/gsp053/orchestrate-with-kubernetes .
+cd orchestrate-with-kubernetes/kubernetes
+# create a cluster
+gcloud container clusters create bootcamp --num-nodes 5 --scopes "https://www.googleapis.com/auth/projecthosting,storage-rw"
+# get information about the deployment object
+kubectl explain deployment
+kubectl explain deployment --recursive
+
+# create a deployment of the auth container image described in the auth.yaml manifest file
+kubectl create -f deployments/auth.yaml
+kubectl get deployments
+# get the ReplicaSet for our Deployment (ReplicaSet manages the pods)
+kubectl get replicasets
+kubectl get pods
+# make a sevice for our specifc Deployments
+kubectl create -f services/auth.yaml
+# make the frontends for our services
+# this sits infront of the Service to our deployments
+# the frontend will be have our HTTP proxies and load balancers 
+# the services frontend will be a Load Balancer using TCP conenctions with the Backend Services
+# the load balancer is exposed at an External IP
+kubectl create secret generic tls-certs --from-file tls/
+kubectl create configmap nginx-frontend-conf --from-file=nginx/frontend.conf
+kubectl create -f deployments/frontend.yaml
+kubectl create -f services/frontend.yaml
+# describe what the replicas are
+kubectl explain deployment.spec.replicas
+# scale them up or down
+kubectl scale deployment hello --replicas=5
+kubectl scale deployment hello --replicas=3
+# editing the deployment by using the command then changing the manifest file
+kubectl edit deployment hello
+kubectl get replicaset # views all deployments
+# view the rollout history for a deployment
+kubectl rollout history deployment/hello
+# other commands for contoolling rollouts
+kubectl rollout pause deployment/hello
+kubectl rollout status deployment/hello
+kubectl rollout resume deployment/hello
+kubectl get pods -o jsonpath --template='{range .items[*]}{.metadata.name}{"\t"}{"\t"}{.spec.containers[0].image}{"\n"}{end}'
+# can undo the latest rollout
+kubectl rollout undo deployment/hello
+
+# create the canary deployment. this new deployment is just deploying another container with a new version of the apps
+# the main difference of the manifest file is that it has the label track:canary 
+# remember canary deployments rollout the new versions slowly for minimal downtime
+kubectl create -f deployments/hello-canary.yaml
+
+# blue-green deployments are mainly instantanious because it changes the Load Balancer to point to the new version only
+# to do this change the service manifest file to point to the new version
+# before switching to the new version must create a new deployment (green) of that new version
+```
