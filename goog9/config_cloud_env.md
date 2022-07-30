@@ -156,3 +156,43 @@ kubectl create -f deployments/hello-canary.yaml
 # to do this change the service manifest file to point to the new version
 # before switching to the new version must create a new deployment (green) of that new version
 ```
+# Set Up and Configure a Cloud Enviroment in Google Cloud: Challenge Lab
+```bash
+gcloud compute networks create griffin-dev-vpc --subnet-mode=custom --mtu=1460 --bgp-routing-mode=regional 
+gcloud compute networks subnets create griffin-dev-wp --network=griffin-dev-vpc --region=us-east1 --range=192.168.16.0/20
+gcloud compute networks subnets create griffin-dev-mgmt --network=griffin-dev-vpc --region=us-east1 --range=192.168.32.0/20
+
+gcloud compute networks create griffin-prod-vpc --subnet-mode=custom --mtu=1460 --bgp-routing-mode=regional 
+gcloud compute networks subnets create griffin-prod-wp --network=griffin-prod-vpc --region=us-east1 --range=192.168.48.0/20
+gcloud compute networks subnets create griffin-prod-mgmt --network=griffin-prod-vpc --region=us-east1 --range=192.168.64.0/20
+
+gcloud compute firewall-rules create griffin-dev-vpc-allow-icmp-ssh-rdp --direction=INGRESS --priority=1000 --network=griffin-dev-vpc --action=ALLOW --rules=tcp:22,tcp:3389,icmp --source-ranges=0.0.0.0/0
+
+gcloud compute firewall-rules create griffin-prod-vpc-allow-icmp-ssh-rdp --direction=INGRESS --priority=1000 --network=griffin-prod-vpc --action=ALLOW --rules=tcp:22,tcp:3389,icmp --source-ranges=0.0.0.0/0
+
+# connect to SQL instance
+gcloud sql connect griffin-dev-db --user=root --quiet
+
+# for the kubernetes section
+gcloud config set compute/zone us-east1-b
+gcloud container clusters create griffin-dev --num-nodes 2 --network=griffin-dev-vpc --subnetwork=griffin-dev-wp
+gsutil -m cp -r gs://cloud-training/gsp321/wp-k8s .
+
+# create the Volume and secrets for the cluster
+# the secrets are the username and password to the DB in the SQL instance
+kubectl create -f wp-env.yaml
+
+# add the service account to access the db for the kubernetes cluster
+gcloud iam service-accounts keys create key.json \
+    --iam-account=cloud-sql-proxy@$GOOGLE_CLOUD_PROJECT.iam.gserviceaccount.com
+kubectl create secret generic cloudsql-instance-credentials \
+    --from-file key.json
+
+# update the wp-deployment.yaml file to add the DB username and password to have access to the SQL instance
+# deploy the deployments and services to GKE
+kubectl create -f wp-deployment.yaml
+kubectl create -f wp-service.yaml
+
+kubectl get services
+kubectl get deployments
+```
