@@ -432,3 +432,71 @@ variable "name" {
 
 # all that to make a bucket
 ```
+# Managing Terraform State
+```bash
+# Terraform state stores information of resources into objects in a file
+# the files is called terraform.tfstate which can be stored locally or remotely for team
+# terraform will update the state file to match real infrastructure
+# this is good if resources need to be updated, or deleted in the future
+
+# terraform state is good for mapping terraform objects to the real instances
+# can have ambigurity without state and one block can represent multiple instances
+
+# the metadata that states provide, which include dependencies help terraform delete resources
+# containing the dependencies helps terraform delete the resources in the correct order
+# ex: VMs need to be deleted before the networks. networks are dependencies of VMs
+
+# terraform can also cache the attribute values of ALL resources in the state
+# this improves performance since terraform won't have to make requests to the API for all resources
+# good for large infrastructure
+
+# remote states can be synced across teams so that everyone has the same state
+# can also lock the state so no corruption of state file
+
+# each terraform conifguration has a backend where operations are run and data is stored into states
+# the state data of the backend is placed in a workspace
+# there can be many workspace thus the first workspace is the default one
+# terraform backends are good for working with teams because its in the cloud
+# backends also keep data of state in memory (no write to disks)
+# backends support remote calls to operations
+
+# configure the main.tf file to have the backend be local and store states in local dir
+terraform {
+#   backend "local" {
+#     path = "terraform/state/terraform.tfstate"
+#   }
+    # replace the backend with one in the cloud 
+    backend "gcs" {
+        bucket  = "# REPLACE WITH YOUR BUCKET NAME"
+        prefix  = "terraform/state"
+    }
+}
+# to create the backend run the 'init' command. 
+# the terraform code will make a resource (bucket) 
+provider "google" {
+  project     = "# REPLACE WITH YOUR PROJECT ID"
+  region      = "us-central-1"
+}
+resource "google_storage_bucket" "test-bucket-for-state" {
+  name        = "# REPLACE WITH YOUR PROJECT ID"
+  location    = "US"
+  uniform_bucket_level_access = true
+  force_destroy = true # this will delete the bucket no matter what is in the bucket
+}
+# after making changes to the terraform backend must run the command to have effect
+terraform init -migrate-state
+# this will create an object in cloud storage with the state 
+# refresh the state file. this won't change the infrastructrue code but might result in changes
+# the next time the 'apply' command is run again
+terraform refresh
+# this might result in changes to the attributes of the resources in the state
+
+# can run terraform inside a docker container
+docker run --name hashicorp-learn --detach --publish 8080:80 nginx:latest
+docker ps
+# the provider in the main.tf file is docker
+git clone https://github.com/hashicorp/learn-terraform-import.git
+terraform init
+# use the import command to attach the docker container to the docker_container.web resource created
+terraform import docker_container.web $(docker inspect -f {{.ID}} hashicorp-learn)
+```
