@@ -500,3 +500,96 @@ terraform init
 # use the import command to attach the docker container to the docker_container.web resource created
 terraform import docker_container.web $(docker inspect -f {{.ID}} hashicorp-learn)
 ```
+# Automating Infrastructure on Google Cloud with Terraform: Challenge Lab
+```bash
+# variables
+variable "region" {
+  default = ""
+}
+
+variable "project_id" {
+  default = ""
+}
+
+variable "zone" {
+  default = ""
+}
+# main.tf
+terraform {
+  required_providers {
+    google = {
+      source = "hashicorp/google"
+    }
+  }
+}
+# the provider block congures the project and config of where to put the resources
+provider "google" {
+  version = "3.5.0"
+  project = ""
+  region  = ""
+  zone    = ""
+}
+module "instances" {
+  source = "./modules/instances"
+}
+# instances.tf
+resource "google_compute_instance" "tf-instances-1" {
+  name = "tf-instances-1"
+  project      = ""
+  machine_type = "n1-standard-1"
+  zone         = var.zone
+  boot_disk {
+    initialize_params {
+      image = "debian-cloud/debian-10"
+    }
+  }
+  network_interface {
+    network = "default"
+    access_config {
+    }
+  }
+  metadata_startup_script=
+  allow_stopping_for_update = true
+}
+resource "google_compute_instance" "tf-instances-2" {
+  name = "tf-instances-2"
+  project      = ""
+  machine_type = "n1-standard-1"
+  zone         = var.zone
+  boot_disk {
+    initialize_params {
+      image = "debian-cloud/debian-10"
+    }
+  }
+  network_interface {
+    network = "default"
+    access_config {
+    }
+  }
+  metadata_startup_script=
+  allow_stopping_for_update = true
+}
+terraform import module.instances.google_compute_instance.tf-instance-1 <id>
+terraform import module.instances.google_compute_instance.tf-instance-2 <id>
+
+# for creating the firewall in terraform
+resource "google_compute_firewall" "tf_firewall" {
+  name    = "tf-firewall"
+  network = google_compute_network.default.name
+
+  allow {
+    protocol = "icmp"
+  }
+
+  allow {
+    protocol = "tcp"
+    ports    = ["80"]
+  }
+
+  soure_ranges = ["0.0.0.0/0"]
+}
+
+resource "google_compute_network" "default" {
+  name = "test-network"
+}
+```
