@@ -504,38 +504,39 @@ terraform import docker_container.web $(docker inspect -f {{.ID}} hashicorp-lear
 ```bash
 # variables
 variable "region" {
-  default = ""
+  default = "us-east1"
 }
 
 variable "project_id" {
-  default = ""
+  default = "qwiklabs-gcp-04-c75a26da9917"
 }
 
 variable "zone" {
-  default = ""
+  default = "us-east1-b"
 }
 # main.tf
 terraform {
   required_providers {
     google = {
       source = "hashicorp/google"
+      version = "3.50.0"
     }
   }
 }
 # the provider block congures the project and config of where to put the resources
 provider "google" {
   version = "3.5.0"
-  project = ""
-  region  = ""
-  zone    = ""
+  project = "qwiklabs-gcp-04-c75a26da9917"
+  region  = "us-east1"
+  zone    = "us-east1-b"
 }
 module "instances" {
   source = "./modules/instances"
 }
 # instances.tf
-resource "google_compute_instance" "tf-instances-1" {
-  name = "tf-instances-1"
-  project      = ""
+resource "google_compute_instance" "tf-instance-1" {
+  name = "tf-instance-1"
+  project      = "qwiklabs-gcp-04-c75a26da9917"
   machine_type = "n1-standard-1"
   zone         = var.zone
   boot_disk {
@@ -545,15 +546,19 @@ resource "google_compute_instance" "tf-instances-1" {
   }
   network_interface {
     network = "default"
+    # add subnetwork
+    # subetnwork = "subnet-02"
     access_config {
     }
   }
-  metadata_startup_script=
+  # metadata_startup_script = <<-EOT
+        #!/bin/bash
+    EOT
   allow_stopping_for_update = true
 }
-resource "google_compute_instance" "tf-instances-2" {
-  name = "tf-instances-2"
-  project      = ""
+resource "google_compute_instance" "tf-instance-2" {
+  name = "tf-instance-2"
+  project      = "qwiklabs-gcp-04-c75a26da9917"
   machine_type = "n1-standard-1"
   zone         = var.zone
   boot_disk {
@@ -563,33 +568,97 @@ resource "google_compute_instance" "tf-instances-2" {
   }
   network_interface {
     network = "default"
+    # add subnetwork
+    # subetnwork = "subnet-02"
     access_config {
     }
   }
-  metadata_startup_script=
+  # metadata_startup_script = <<-EOT
+        #!/bin/bash
+    EOT
   allow_stopping_for_update = true
 }
-terraform import module.instances.google_compute_instance.tf-instance-1 <id>
+
+terraform import module.instances.google_compute_instance.tf-instance-1 project id/zone/instance name
 terraform import module.instances.google_compute_instance.tf-instance-2 <id>
 
-# for creating the firewall in terraform
-resource "google_compute_firewall" "tf_firewall" {
-  name    = "tf-firewall"
-  network = google_compute_network.default.name
+# bucket time in /modules/storage.tf
+resource "google_storage_bucket" "tf-bucket" {
+  name     = "tf-bucket-890570"
+  location = "US"
+  force_destroy = true
+  uniform_bucket_level_access = true
+}
+# need to add a new module block to main.tf
+module "storage" {
+  source = "./modules/storage"
+}
 
-  allow {
-    protocol = "icmp"
+# add the backend snippet to main.tf
+backend "gcs" {
+  bucket  = "tf-bucket-890570"
+  prefix  = "terraform/state"
+}
+
+# add a third instance to instance.tf file
+resource "google_compute_instance" "tf-instance-236074" {
+  name = "tf-instance-236074"
+  project      = "qwiklabs-gcp-04-c75a26da9917"
+  machine_type = "n1-standard-2"
+  zone         = var.zone
+  boot_disk {
+    initialize_params {
+      image = "debian-cloud/debian-10"
+    }
   }
+  network_interface {
+    network = "default"
+    access_config {
+    }
+  }
+  metadata_startup_script=
+  allow_stopping_for_update = true
+}
+
+# taint and destroy the third instance
+terraform taint module.instances.google_compute_instance.tf-instance-785712
+
+# add the network config by using the module
+module "vpc" {
+    source  = "terraform-google-modules/network/google"
+    version = "~> 3.4.0"
+
+    project_id   = "qwiklabs-gcp-04-c75a26da9917"
+    network_name = "tf-vpc-294936"
+    routing_mode = "GLOBAL"
+
+    subnets = [
+      {
+        subnet_name = "subnet-01"
+        subnet_ip = "10.10.10.0/24"
+        subnet_region = "us-east1"
+      },
+      {
+        subnet_name = "subnet-02"
+        subnet_ip = "10.10.20.0/24"
+        subnet_region = "us-east1"
+      },
+    ]
+
+}
+
+# for creating the firewall in terraform
+resource "google_compute_firewall" "tf-firewall" {
+  name    = "tf-firewall"
+  network = "projects/qwiklabs-gcp-04-c75a26da9917/global/networks/tf-vpc-294936"
 
   allow {
     protocol = "tcp"
     ports    = ["80"]
   }
 
-  soure_ranges = ["0.0.0.0/0"]
+  source_tags = ["web"]
+  source_ranges = ["0.0.0.0/0"]
 }
 
-resource "google_compute_network" "default" {
-  name = "test-network"
-}
 ```
