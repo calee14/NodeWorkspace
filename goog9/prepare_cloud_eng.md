@@ -31,8 +31,25 @@
 - when transfering a SQL db to the cloud use a VM to install the MySQL db and restore the data to the new instance
     - can retrieve the data remotely
 # Ensuring Successful Operation of a Cloud Solution
-- the Ingress GKE object implements an HTTP(S) Load Balancer
+- Internal HTTP(s) load balancers can only use NEGs
+    - remember negs are a bunch of backend services.
+    - the service object will make the load balancer with a reference to a group of endpoints (aka. backend services aka NEG)
+- when making an instance group, should define a number of instances and health checks
+- when trying to change the storage type of a disk or db check the following conditions
+    - created before and matches storage class
+- to limit the amount of connections to a db backend limit the amount of db instances it can create
+- The Services GKE object provides access to logic in the cluster (aka. endpoints one defines)
+- `kubectl apply` - to declaratively update the GKE objects with the manifest file
 # Configuring Access and Security
 - machine-to-machine communication is handled by a service account
 - Use temporary credentials for authenticated an application with service APIs
     - **especially when both are internal to the cloud env**
+- When accessing individual GKE pods use a service account
+- Remember least-privilege so get to the most specifc resource hierarchy like folders or projects
+- Policy denied audit logs are always enabled and should be for security
+    - system event audit logs are enabled by default
+    - admin activity audit logs are disabled by default
+- for mobile apps use a service account that gives them access to a Pub/Sub channel
+- when trying to change a custom role that has been given to a group of admin users
+    - try changing the role then updating it
+    - rather than make a new role and pass it out to all the users and groups
