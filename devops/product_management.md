@@ -1,0 +1,49 @@
+# Prod. Management w/ Jason @UCSB DS Founder
+## History on Product Management
+- throughline npr
+	- follows the origins of american behaviors and how we got there
+		- e.g. tipping culture, eating sugar
+- procter and gamble
+	- the CEO hired brand managers -> eventually become product manager role
+		- neil mcelroy CEO 1930s created the brandman
+		- **brandman** - represent an product component end-to-end: price, design, utility
+	- worked closely with sales and marketing
+- as a product manager advocates for user (customer) needs and wants
+	- e.g. there is a product group for each individual component of the facebook app
+		- sign on, photos, posts
+- post-WWII Japan, economy in ruins an no liquidity
+	- led to the **lean manufacturing** rather than **whole sale**
+		- whole sale make a bunch of products and keep inventory
+	- **lean manufacturing** - a.k.a. just-in-time manufacturing
+- product managers in software managers focus on the product and user end experience
+## Product Management in practice
+- there is usually some friction between the product manager and the developer
+- product manager does whatever is required for the success of the product
+	- decides what gets built
+	- defines the user interface
+	- defines the metrics of success for the product
+- how to PMs decide what gets built
+	- interview the customer
+		- ask 'how do you do x currently'
+		- 'show me how you currently do x'
+	- user studies
+		- here's the product, now do x
+			- see how the user uses the app **correctly or incorrectly**
+	- product studies
+		- see how the user funnel's through the app
+		- visit web page, view service, use service, click payment, pay
+		- see what features user's like
+	- market
+		- business data, competitive analysis, gartner & forrester reports
+		- hacker news, reddit
+- user interface
+	- functional specification
+		- user and use cases
+	- as a x (student), i want to y (make a schedule) so that I have z (multiple schedules incase of conflicts)
+- success metrics
+	- how do you decide a success with the product
+		- user pays or gets their desire
+- gotta sit there to see how the users are messing up in using the product
+- do easy shit first (tech says get the low hanging fruit)
+	- economics: cost * benefit
+		- the low cost tasks will usually bring the most benefit
