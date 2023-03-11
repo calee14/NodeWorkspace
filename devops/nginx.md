@@ -1,0 +1,18 @@
+# NGINX: webserver overview
+- **nginx** is a webserver proxy that forwards incoming HTTP requests to applications/other servers (gunicorn)
+	- nginx is a webserver that efficiently processes HTTP requests
+		- it load balances requests and caches them too
+		- useful for media streaming, and email servers too
+		- good for distributing load traffic
+- **gunicorn** is also a server, but it handles http requests for Python applications
+	- nginx doesn't understand python so gunicorn takes the requests proxied by nginx and processes them for the python applications
+	- gunicorn them forwards the HTTP requests to the python processes
+	- a python process can be a Flask or Django application running
+- **Flask/Django** are web frameworks that describe how a web page/app works.
+	- it handles what/how data is processed by the application
+	- it will take the requests processed by gunicorn
+- The **flow**:
+	- client makes https request
+	- nginx accepts request, load balances across all applications/servers running app. proxies the request to them
+	- gunicorn a web server that can turn http requests into something understandable by python. runs the python apps into computer processes and fowards the http request
+	- Flask/Django are web frameworks that describe how the webpage works. will handle incoming http requests and what to do with them for the application
