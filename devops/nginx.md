@@ -11,7 +11,7 @@
 - **Flask/Django** are web frameworks that describe how a web page/app works.
 	- it handles what/how data is processed by the application
 	- it will take the requests processed by gunicorn
-	- there might be multiple flask/django app processes running
+	- there might be multiple flask/django app processes running in a gunicorn server
 		- this helps isolate each request for **concurrency**
 - The **flow**:
 	- client makes https request
