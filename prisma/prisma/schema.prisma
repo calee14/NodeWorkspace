@@ -11,8 +11,55 @@ datasource db {
 }
 
 model User {
-  // give id col for user table
-  id Int @id @default(autoincrement())
-  name String
+  // give id (attributes) col for user table
+  id             String          @id @default(uuid()) // @default(autoincrement())
+  name           String? // optional string
+  age            Int
+  email          String          @unique
+  isAdmin        Boolean
+  largeNumber    BigInt
+  preferences    Json
+  blob           Bytes
+  // 1 to many relationship
+  writtenPosts   Post[]          @relation("WrittenPosts")
+  favoritePosts  Post[]          @relation("FavoritedPosts")
+  userPreference UserPreference? // 1 to 1 reference
 
+  // block (model) level attributes with 2 @
+  @@unique([age, name])
+  // index user fields by email (makes querying by attributes faster)
+  @@index([email])
+}
+
+model UserPreference {
+  id           String  @id @default(uuid())
+  emailUpdates Boolean
+  user         User    @relation(fields: [userId], references: [id])
+  userId       String  @unique
+}
+
+model Post {
+  id            String     @id @default(uuid()) // @default(autoincrement())
+  title         String
+  averageRating Float // Decimal data type for more accurate
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  // fields specify which prop in Post ref another prop in the User model
+  // i.e. userId ref id from user table
+  author        User       @relation("WrittenPosts", fields: [authorId], references: [id])
+  authorId      String
+  favoirtedBy   User       @relation("FavoritedPosts", fields: [favoirtedById], references: [id])
+  favoirtedById String
+  // many to many relationship
+  categories    Category[] @relation("NewsCategory")
+
+  // block level attribute that id's post by two fields
+  // @@id([title, authorId])
+}
+
+model Category {
+  id    String @id @default(uuid()) // @default(autoincrement())
+  name  String @unique
+  // many to many relationship
+  posts Post[] @relation("NewsCategory")
 }
