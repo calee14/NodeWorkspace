@@ -54,13 +54,26 @@ async function main() {
     //         }
     //     }
     // });
+    // const user = await prisma.user.findMany({
+    //     where: {
+    //         name: {in: ["cappi", "capper"]}, // {not: "cappi"} // {equal: "cappi"}
+    //         age: {gt: 20},
+    //         email: { contains: "@test.com"},
+    //     }
+    // })
+
     const user = await prisma.user.findMany({
         where: {
-            name: {in: ["cappi", "capper"]}, // {not: "cappi"} // {equal: "cappi"}
-            age: {gt: 20},
-            email: { contains: "@test.com"},
+            AND: [
+                {OR: [
+                    {email: {endsWith: "test.com"}},
+                    {age: {gt: 20}},
+                ]},
+                {name: {endsWith: "pi"}},
+            ],
         }
     })
+
     // const user = await prisma.user.findFirst({
     //     where: {
     //         name: "cappi"
