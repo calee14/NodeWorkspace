@@ -12,18 +12,20 @@ datasource db {
 
 model User {
   // give id (attributes) col for user table
-  id             String          @id @default(uuid()) // @default(autoincrement())
-  name           String? // optional string
-  age            Int
-  email          String          @unique
-  isAdmin        Boolean
-  largeNumber    BigInt
-  preferences    Json
-  blob           Bytes
+  id               String         @id @default(uuid()) // @default(autoincrement())
+  name             String? // optional string
+  age              Int
+  email            String         @unique
+  isAdmin          Boolean?
+  largeNumber      BigInt?
+  preferences      Json?
+  blob             Bytes?
   // 1 to many relationship
-  writtenPosts   Post[]          @relation("WrittenPosts")
-  favoritePosts  Post[]          @relation("FavoritedPosts")
-  userPreference UserPreference? // 1 to 1 reference
+  writtenPosts     Post[]         @relation("WrittenPosts")
+  favoritePosts    Post[]         @relation("FavoritedPosts")
+  role             Role?
+  userPreference   UserPreference? @relation(fields: [userPreferenceId], references: [id])
+  userPreferenceId String?         @unique // add optional tag for migration
 
   // block (model) level attributes with 2 @
   @@unique([age, name])
@@ -34,8 +36,7 @@ model User {
 model UserPreference {
   id           String  @id @default(uuid())
   emailUpdates Boolean
-  user         User    @relation(fields: [userId], references: [id])
-  userId       String  @unique
+  user         User? // 1 to 1 reference 
 }
 
 model Post {
@@ -62,4 +63,9 @@ model Category {
   name  String @unique
   // many to many relationship
   posts Post[] @relation("NewsCategory")
+}
+
+enum Role {
+  BASIC
+  ADMIN
 }
